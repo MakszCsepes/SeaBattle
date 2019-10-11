@@ -1,5 +1,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "game.h"
+#define window_height 1000
+#define window_width 1000
 
 
 const int map_offset_x = 100;

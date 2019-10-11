@@ -9,10 +9,16 @@ void create_map (int **map) {
 
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < margin_heigth; j++) {
-            map[i][j] = 0;
+            map[i][j] = water_area;
         }
     }
 
+}
+
+void delete_map (int **map) {
+    for(int i = 0 ; i < 10 ; i++) {
+        delete[](map[i]);
+    }
 }
 
 void add_ship (ship *&head , ship *ship1) {
@@ -155,7 +161,8 @@ bool check_inversion (ship ship1) { // already inversed ship
 void make_inverse (ship *head , ship *current_ship) {
 
     current_ship->inverse = !current_ship->inverse;
-    if (check_inversion(*current_ship) && check_inverse(head, current_ship) && check_neighbours_down(head, *current_ship)) {//                 checking inversed ship
+    // TODO what`s the difference : check_inversion & check_inverse
+    if (check_inversion(*current_ship) && check_inverse(head, current_ship) && check_neighbours_down(head, *current_ship)) {
         return;
     } else {
         current_ship->inverse = !current_ship->inverse;
@@ -168,7 +175,6 @@ void make_inverse (ship *head , ship *current_ship) {
 bool check_collision (const ship &ship1 , const ship &ship2) {
     const int left_top_x = ship2.coord_x - 1;
     const int left_top_y = ship2.coord_y - 1;
-
 
     const int right_bottom_x = ship2.inverse ? ship2.coord_x + ship2.size : ship2.coord_x + 1;
     const int right_bottom_y = ship2.inverse ? ship2.coord_y + 1 : ship2.coord_y + ship2.size;
@@ -363,33 +369,39 @@ void put_mishits_on_map (int **map , int i_coord , int j_coord , int size , int 
     if (inverse) {
         for (int j = j_coord - 1 ; j < j_coord + size + 1 ; j++) {
             if (i_coord - 1 != -1) {
-                *(*(map + i_coord - 1) + j) = 1;
+                map[i_coord - 1][j] = mishit;
             }
 
             if (i_coord + 1 != 10) {
-                *(*(map + i_coord + 1) + j) = 1;
+                map[i_coord + 1][j] = mishit;
             }
         }
 
-        *(*(map + i_coord ) + j_coord - 1) = 1;
-        *(*(map + i_coord ) + j_coord + size ) = 1;
+//        *(*(map + i_coord ) + j_coord - 1) = 1;
+        map[i_coord][j_coord - 1] = mishit;
+//        *(*(map + i_coord ) + j_coord + size ) = 1;
+        map[i_coord][j_coord + size] = mishit;
 
     } else {
         for (int i = i_coord - 1 ; i < i_coord + size + 1 ; i++) {
             if (j_coord - 1 != -1 && i != -1 && i != 10) {
-                *(*(map + i ) + j_coord - 1) = 1;
+//                *(*(map + i ) + j_coord - 1) = 1;
+                map[i][j_coord - 1] = mishit;
             }
 
             if (j_coord + 1 != 10 && i != -1 && i != 10) {
-                *(*(map + i ) + j_coord + 1) = 1;
+//                *(*(map + i ) + j_coord + 1) = 1;
+                map[i][j_coord + 1] = mishit;
             }
         }
 
         if (i_coord - 1 != -1) {
-            *(*(map + i_coord - 1) + j_coord) = 1;
+//            *(*(map + i_coord - 1) + j_coord) = 1;
+            map[i_coord - 1][j_coord] = mishit;
         }
         if (i_coord + size != 10) {
-            *(*(map + i_coord + size) + j_coord) = 1;
+//            *(*(map + i_coord + size) + j_coord) = 1;
+            map[i_coord + size][j_coord] = mishit;
         }
 
     }
