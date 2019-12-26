@@ -1,4 +1,5 @@
-#include "game.h"
+//#include "game.h"
+#include "draw.h"
 #include <iostream>
 
 void create_map (int **map) {
@@ -9,7 +10,7 @@ void create_map (int **map) {
 
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < margin_heigth; j++) {
-            map[i][j] = water_area;
+            map[i][j] = WATER_AREA;
         }
     }
 
@@ -227,7 +228,7 @@ bool can_put_ship (ship *head , ship ship1) {
     return true;
 }
 
-bool can_move (const ship *moved_ship ,const  int cursor_x , const int cursor_y) {
+bool can_move (const ship *moved_ship ,const  int &cursor_x , const int &cursor_y) {
 
     if (moved_ship->inverse) {
         if ((cursor_x < 0 || cursor_x + moved_ship->size > margin_heigth) || (cursor_y < 0 || cursor_y > margin_width) ) {
@@ -242,82 +243,81 @@ bool can_move (const ship *moved_ship ,const  int cursor_x , const int cursor_y)
     return true;
 }
 
-ship *create_ship (const ship *head) {
-
-    if (head == NULL) {
-        ship *ship1 = new ship;
-
-        ship1->coord_x = 0;
-        ship1->coord_y = 0;
-        ship1->size = 4;
-        ship1->init = false;
-        ship1->inverse = true;
-        ship1->damage = 0;
-        ship1->next = NULL;
-
-        return ship1;
-    }
-
-    int three = 0;
-    int two = 0;
-    int one = 0;
-
+void count_ships(const ship *head, int &cruiser, int &destroyer, int &submarine) {
     const ship *s = new ship;
 
     s = head;
 
     while (s) {
         if (s->size == 3) {
-            three++;
+            cruiser++;
         } else if (s->size == 2) {
-            two++;
+            destroyer++;
         } else if (s->size == 1) {
-            one++;
+            submarine++;
         }
 
         s = s->next;
     }
+}
+ship *create_ship (const ship *head) {
 
-    if (three < 2) {
-        ship *ship1 = new ship;
+    if (head == NULL) {
+        ship *battleship = new ship;
 
-        ship1->coord_x = 0;
-        ship1->coord_y = 0;
-        ship1->size = 3;
-        ship1->init = false;
-        ship1->inverse = true;
-        ship1->damage = 0;
-        ship1->next = NULL;
+        battleship->coord_x = 0;
+        battleship->coord_y = 0;
+        battleship->size = ship_size;
+        battleship->init = false;
+        battleship->inverse = horizontal;
+        battleship->damage = 0;
+        battleship->next = NULL;
 
-        return ship1;
-    } else if (two < 3) {
-        ship *ship1 = new ship;
+        return battleship;
+    }
 
-        ship1->coord_x = 0;
-        ship1->coord_y = 0;
-        ship1->size = 2;
-        ship1->init = false;
-        ship1->inverse = true;
-        ship1->damage = 0;
-        ship1->next = NULL;
+    int cruisers = 0;
+    int destroyers = 0;
+    int submarines = 0;
 
-        return ship1;
-    } else if (one < 4) {
-        ship *ship1 = new ship;
+    count_ships(head, cruisers, destroyers, submarines);
 
-        if (one == 3) {
-            one = 3;
-        }
+    if (cruisers < 2) {
+        ship *cruiser = new ship;
 
-        ship1->coord_x = 0;
-        ship1->coord_y = 0;
-        ship1->size = 1;
-        ship1->init = false;
-        ship1->inverse = true;
-        ship1->damage = 0;
-        ship1->next = NULL;
+        cruiser->coord_x = 0;
+        cruiser->coord_y = 0;
+        cruiser->size = 3;
+        cruiser->init = false;
+        cruiser->inverse = horizontal;
+        cruiser->damage = 0;
+        cruiser->next = NULL;
 
-        return ship1;
+        return cruiser;
+    } else if (destroyers < 3) {
+        ship *destroyer = new ship;
+
+        destroyer->coord_x = 0;
+        destroyer->coord_y = 0;
+        destroyer->size = 2;
+        destroyer->init = false;
+        destroyer->inverse = horizontal;
+        destroyer->damage = 0;
+        destroyer->next = NULL;
+
+        return destroyer;
+    } else if (submarines < 4) {
+        ship *submarine = new ship;
+
+        submarine->coord_x = 0;
+        submarine->coord_y = 0;
+        submarine->size = 1;
+        submarine->init = false;
+        submarine->inverse = horizontal;
+        submarine->damage = 0;
+        submarine->next = NULL;
+
+        return submarine;
     } else {
         return NULL;
     }
@@ -369,39 +369,39 @@ void put_mishits_on_map (int **map , int i_coord , int j_coord , int size , int 
     if (inverse) {
         for (int j = j_coord - 1 ; j < j_coord + size + 1 ; j++) {
             if (i_coord - 1 != -1) {
-                map[i_coord - 1][j] = mishit;
+                map[i_coord - 1][j] = MISHIT;
             }
 
             if (i_coord + 1 != 10) {
-                map[i_coord + 1][j] = mishit;
+                map[i_coord + 1][j] = MISHIT;
             }
         }
 
 //        *(*(map + i_coord ) + j_coord - 1) = 1;
-        map[i_coord][j_coord - 1] = mishit;
+        map[i_coord][j_coord - 1] = MISHIT;
 //        *(*(map + i_coord ) + j_coord + size ) = 1;
-        map[i_coord][j_coord + size] = mishit;
+        map[i_coord][j_coord + size] = MISHIT;
 
     } else {
         for (int i = i_coord - 1 ; i < i_coord + size + 1 ; i++) {
             if (j_coord - 1 != -1 && i != -1 && i != 10) {
 //                *(*(map + i ) + j_coord - 1) = 1;
-                map[i][j_coord - 1] = mishit;
+                map[i][j_coord - 1] = MISHIT;
             }
 
             if (j_coord + 1 != 10 && i != -1 && i != 10) {
 //                *(*(map + i ) + j_coord + 1) = 1;
-                map[i][j_coord + 1] = mishit;
+                map[i][j_coord + 1] = MISHIT;
             }
         }
 
         if (i_coord - 1 != -1) {
 //            *(*(map + i_coord - 1) + j_coord) = 1;
-            map[i_coord - 1][j_coord] = mishit;
+            map[i_coord - 1][j_coord] = MISHIT;
         }
         if (i_coord + size != 10) {
 //            *(*(map + i_coord + size) + j_coord) = 1;
-            map[i_coord + size][j_coord] = mishit;
+            map[i_coord + size][j_coord] = MISHIT;
         }
 
     }

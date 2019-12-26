@@ -2,8 +2,10 @@
 #include "game.h"
 #define window_height 1000
 #define window_width 1000
+#define horizontal true
+#define vertical false
 
-
+const int ship_size = 4;
 const int map_offset_x = 100;
 const int  map_offset_y = 300;
 const int FRAME_SIZE = 37;

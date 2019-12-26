@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void put_kletka (SDL_Renderer *renderer , int x , int y ) {
+void put_kletka (SDL_Renderer *renderer, int x , int y ) {
     SDL_Rect r;
 
     r.x = x;
@@ -17,7 +17,7 @@ void put_kletka (SDL_Renderer *renderer , int x , int y ) {
     SDL_RenderFillRect(renderer, &r);
 }
 
-void draw_cursor (SDL_Renderer *renderer , world game) {
+void draw_cursor (SDL_Renderer *renderer, world game) {
     SDL_Rect cursor;
 
     cursor.x = game.cursor_x * FRAME_SIZE + map_offset_x + game.computer.offset - 1;
@@ -31,7 +31,7 @@ void draw_cursor (SDL_Renderer *renderer , world game) {
 
 }
 
-void draw_current_ship (SDL_Renderer *renderer , const ship &ship1) {
+void draw_current_ship (SDL_Renderer *renderer, const ship &ship1) {
     SDL_Rect ship;
     SDL_Rect ship_head;
 
@@ -62,7 +62,7 @@ void draw_current_ship (SDL_Renderer *renderer , const ship &ship1) {
     SDL_RenderFillRect(renderer , &ship_head);
 }
 
-void draw_hit (SDL_Renderer *renderer , int x , int y , int offset) {
+void draw_hit (SDL_Renderer *renderer, int x , int y , int offset) {
     SDL_Rect hit_left ;
 
     hit_left.x = x * FRAME_SIZE + map_offset_x + offset + 2;
@@ -89,7 +89,7 @@ void draw_hit (SDL_Renderer *renderer , int x , int y , int offset) {
     }
 }
 
-void draw_mishit (SDL_Renderer *renderer , int x , int y , int offset) {
+void draw_mishit (SDL_Renderer *renderer, int x , int y , int offset) {
     SDL_Rect low = {x * FRAME_SIZE + map_offset_x + offset + 2, y * FRAME_SIZE + map_offset_y + 18 , 3 , 3};
     SDL_Rect low_1 = {x * FRAME_SIZE + map_offset_x + offset + 2, y * FRAME_SIZE + map_offset_y + 10 , 3 , 3};;
     SDL_Rect mid = {x * FRAME_SIZE + map_offset_x + offset + 2, y * FRAME_SIZE + map_offset_y + 2 , 3 , 3};
@@ -119,15 +119,15 @@ void draw_mishit (SDL_Renderer *renderer , int x , int y , int offset) {
     }
 }
 
-void draw_hits (SDL_Renderer *renderer , const world &game) {
+void draw_hits (SDL_Renderer *renderer, const world &game) {
 
     for (int i = 0 ; i < margin_width ; i++) {
         for (int j = 0 ; j < margin_heigth ; j++) {
-            if (game.map_A[i][j] == hit) {
+            if (game.map_A[i][j] == HIT) {
 
                 draw_hit(renderer, j, i, game.player1.offset);
 
-            } else if (game.map_A[i][j] == mishit) {
+            } else if (game.map_A[i][j] == MISHIT) {
 
                 draw_mishit(renderer , j , i , game.player1.offset);
 
@@ -138,11 +138,11 @@ void draw_hits (SDL_Renderer *renderer , const world &game) {
 
     for (int i = 0 ; i < margin_width ; i++) {
         for (int j = 0 ; j < margin_heigth ; j++) {
-            if (game.map_B[i][j] == hit) {
+            if (game.map_B[i][j] == HIT) {
 
                 draw_hit(renderer, j, i, game.computer.offset);
 
-            } else if (game.map_B[i][j] == mishit) {
+            } else if (game.map_B[i][j] == MISHIT) {
 
                 draw_mishit(renderer , j , i , game.computer.offset);
             }
@@ -151,7 +151,7 @@ void draw_hits (SDL_Renderer *renderer , const world &game) {
     }
 
 }
-void draw_ship (SDL_Renderer *renderer  ,const ship &ship1 , int shift) {
+void draw_ship (SDL_Renderer *renderer , const ship &ship1 , int shift) {
 
     SDL_Rect ship_part;
     SDL_Rect ship_head;
@@ -187,7 +187,7 @@ void draw_ship (SDL_Renderer *renderer  ,const ship &ship1 , int shift) {
 
 }
 
-void draw_ships (SDL_Renderer *renderer , player player1) {
+void draw_ships (SDL_Renderer *renderer, player player1) {
 
     ship *p = new ship;
     int count = 0;
@@ -202,7 +202,7 @@ void draw_ships (SDL_Renderer *renderer , player player1) {
 
 }
 
-void draw_map (SDL_Renderer *renderer , player player1) {
+void draw_map (SDL_Renderer *renderer, player player1) {
     for (int y = map_offset_y , i = 0 ; i < margin_width ; i++ , y += FRAME_SIZE) {
         for (int x = map_offset_x + player1.offset, j = 0 ; j < margin_heigth ; j++ , x += FRAME_SIZE) {
 
@@ -211,7 +211,7 @@ void draw_map (SDL_Renderer *renderer , player player1) {
     }
 }
 
-void draw_results (SDL_Renderer *renderer , world game) {
+void draw_results (SDL_Renderer *renderer, world game) {
     int paddingW = 10;
     int paddingH = 10;
 
@@ -276,7 +276,7 @@ void draw_results (SDL_Renderer *renderer , world game) {
 
     SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 }
-void draw_world (SDL_Renderer *renderer , const world &game) {
+void draw_world (SDL_Renderer *renderer, const world &game) {
 
     int R_back = 63;
     int G_back = 141;
@@ -286,7 +286,7 @@ void draw_world (SDL_Renderer *renderer , const world &game) {
 
     SDL_RenderClear(renderer);
 
-    if (game.state == init_players_ships) {
+    if (game.state == INIT_PLAYERS_SHIP) {
         draw_map(renderer , game.player1);
 
         draw_results(renderer , game);
@@ -300,7 +300,7 @@ void draw_world (SDL_Renderer *renderer , const world &game) {
 
             draw_map(renderer , game.computer);
         }
-    } else if (game.state == play_game) {
+    } else if (game.state == PLAY_GAME) {
         destroyed(game.player1.head , game.computer.head , game.map_A , game.map_B);
 
         draw_map(renderer , game.player1);
@@ -312,11 +312,8 @@ void draw_world (SDL_Renderer *renderer , const world &game) {
         // COMPUTER
         draw_cursor(renderer , game);
 
-        //destroyed(game.computer.head , game.map_B);
-
-
         draw_hits(renderer , game);
-    } else if (game.state == endgame) {
+    } else if (game.state == ENDGAME) {
         destroyed(game.player1.head , game.computer.head , game.map_A , game.map_B);
 
         draw_map(renderer , game.player1);

@@ -13,23 +13,20 @@ int main() {
     }
 
     player person1 = {"Max", false, true, 0, 0, NULL};
-    int **map1 = new int *[10];
+    int **map1 = new int *[SHIP_QUANTITY];
     create_map(map1);
 
     player computer = {"PC", false, false, 0, 425, NULL};
-    int **map2 = new int *[10];
+    int **map2 = new int *[SHIP_QUANTITY];
     create_map(map2);
-
-    int **map = new int *[10];
-    create_map(map);
 
     int cursor_row = 0;
     int cursor_column = 0;
 
     ship *current_ship;
     ship *new_ship;
+    world game = {person1, computer, map1, map2, cursor_column, cursor_row, INIT_PLAYERS_SHIP, current_ship};
 
-    world game = {person1, computer, map1, map2, cursor_column, cursor_row, init_players_ships, current_ship};
 
     TTF_Init();
 
@@ -60,7 +57,7 @@ int main() {
                         case SDLK_RIGHT :
                             cursor_column++;
 
-                            if (game.state == init_players_ships) {
+                            if (game.state == INIT_PLAYERS_SHIP) {
                                 if (current_ship->inverse) {
                                     if (cursor_column + current_ship->size > margin_width) {
                                         cursor_column = 0;
@@ -70,7 +67,7 @@ int main() {
                                         cursor_column = 0;
                                     }
                                 }
-                            } else if (game.state == play_game){
+                            } else if (game.state == PLAY_GAME){
                                 if (cursor_column > margin_heigth - 1) {
                                     cursor_column = 0;
                                 }
@@ -79,7 +76,7 @@ int main() {
                         case SDLK_LEFT :
                             cursor_column--;
 
-                            if (game.state == init_players_ships) {
+                            if (game.state == INIT_PLAYERS_SHIP) {
 
                                 if (current_ship->inverse) {
                                     if (cursor_column < 0) {
@@ -90,7 +87,7 @@ int main() {
                                         cursor_column = margin_width - 1;
                                     }
                                 }
-                            } else if (game.state == play_game){
+                            } else if (game.state == PLAY_GAME){
                                 if (cursor_column < 0) {
                                     cursor_column = margin_heigth - 1;
                                 }
@@ -99,7 +96,7 @@ int main() {
                         case SDLK_DOWN :
                             cursor_row++;
 
-                            if (game.state == init_players_ships) {
+                            if (game.state == INIT_PLAYERS_SHIP) {
 
                                 if (current_ship->inverse) {
                                     if (cursor_row > margin_width - 1) {
@@ -110,7 +107,7 @@ int main() {
                                         cursor_row = 0;
                                     }
                                 }
-                            } else if (game.state == play_game){
+                            } else if (game.state == PLAY_GAME){
                                 if (cursor_row > margin_width - 1) {
                                     cursor_row = 0;
                                 }
@@ -119,7 +116,7 @@ int main() {
                         case SDLK_UP :
                             cursor_row--;
 
-                            if (game.state == init_players_ships) {
+                            if (game.state == INIT_PLAYERS_SHIP) {
                                 if (current_ship->inverse) {
                                     if (cursor_row < 0) {
                                         cursor_row = margin_width - 1;
@@ -129,27 +126,25 @@ int main() {
                                         cursor_row = margin_width - current_ship->size;
                                     }
                                 }
-                            } else if (game.state == play_game){
+                            } else if (game.state == PLAY_GAME){
                                 if (cursor_row < 0) {
                                     cursor_row = margin_width - 1;
                                 }
                             }
                             break;
                         case SDLK_i:
-                            if (game.state == init_players_ships) {
+                            if (game.state == INIT_PLAYERS_SHIP) {
                                 make_inverse(person1.head, current_ship);
                             }
                             break;
                         case SDLK_ESCAPE:
+                            recreate_files();
 
-                            run_game = false;
-
-//                            delete_map(game.map_A);
-//                            delete_map(game.map_B);
-
+                            delete_map(game.map_A);
+                            delete_map(game.map_B);
                             return 0;
                         case SDLK_SPACE:
-                            if (game.state == init_players_ships) {
+                            if (game.state == INIT_PLAYERS_SHIP) {
 
                                 if (can_put_ship(game.player1.head, *current_ship)) {
 
@@ -157,7 +152,7 @@ int main() {
 
                                     new_ship = create_ship(game.player1.head);
 
-                                    if (new_ship != NULL) {
+                                    if (new_ship) {
                                         current_ship = new_ship;
 
                                         game.current_ship = current_ship;
@@ -165,21 +160,20 @@ int main() {
                                         cursor_row = 0;
                                     } else {
                                         game.player1.init = true;
-                                        //init_computer(&game);// TODO init computer
-                                        game.computer.head = game.player1.head;
-                                        game.state = play_game;
+                                        init_computer(&game);// TODO init computer
+                                        game.state = PLAY_GAME;
                                         cursor_column = 0;
                                         cursor_row = 0;
                                     }
                                 }
-                            } else if (game.state == play_game) {
+                            } else if (game.state == PLAY_GAME) {
                                 if (was_hit(game.cursor_y , game.cursor_x , game.map_B)) {
                                     if (if_ship(&game, game.computer.head)) {
                                         game.player1.points++;
 
-                                        game.map_B[game.cursor_y][game.cursor_x] = 2;
+                                        game.map_B[game.cursor_y][game.cursor_x] = HIT;
                                     } else {
-                                        game.map_B[game.cursor_y][game.cursor_x] = 1;
+                                        game.map_B[game.cursor_y][game.cursor_x] = MISHIT;
                                         do_hit(game);
                                     }
                                 }
@@ -194,21 +188,21 @@ int main() {
             }
 
 
-            if(game.state == init_players_ships) {
+            if(game.state == INIT_PLAYERS_SHIP) {
                 if (game.player1.init && game.computer.init) {
-                    game.state = play_game;
+                    game.state = PLAY_GAME;
                 } else if(can_move(current_ship, cursor_column, cursor_row)) {
                     current_ship->coord_x = cursor_column;
                     current_ship->coord_y = cursor_row;
                 }
-            } else if(game.state == play_game) {
+            } else if(game.state == PLAY_GAME) {
                 if(game.player1.points == 20 || game.computer.points == 20) {
-                    game.state = endgame;
+                    game.state = ENDGAME;
                     break;
                 }
                 game.cursor_y = cursor_row;
                 game.cursor_x = cursor_column;
-            } else if(game.state != endgame){
+            } else if(game.state != ENDGAME){
                 draw_world(renderer, game);
             } else {
                 run_game = false;
@@ -216,9 +210,6 @@ int main() {
 
         }
     }
-
-    delete_map(game.map_A);
-    delete_map(game.map_B);
 
     return 0;
 }
