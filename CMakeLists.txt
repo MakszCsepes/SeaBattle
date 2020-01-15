@@ -9,5 +9,5 @@ add_executable(SeaBattle main.cpp game.cpp draw.cpp artifical_inteligence.cpp)
 find_package(SDL2 REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIR})
-
-target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARY} "SDL2_ttf")
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARY} "SDL2_ttf" lua dl)

@@ -1,9 +1,12 @@
 #include "draw.h"
 
-void init_computer (world *game) ;
-bool random_hit (world &game) ;
-void do_hit (world &game) ;
+#define NO_HIT_HERE 0
+#define WAS_HIT 1
+#define WAS_MISHIT 2
+#define WAS_KILL 3
 
-void add_ship (ship *&head , ship *ship1);
+void init_computer (world *game);
+void do_ai_hit (world &game);
+
+void add_ship_to_list (ship *&dest_head , ship *ship1);
 bool check_inverse(ship *head , ship *ship1);
-void recreate_files();

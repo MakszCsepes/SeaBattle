@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void put_kletka (SDL_Renderer *renderer, int x , int y ) {
+void put_cell (SDL_Renderer *renderer, int x , int y ) {
     SDL_Rect r;
 
     r.x = x;
@@ -20,8 +20,8 @@ void put_kletka (SDL_Renderer *renderer, int x , int y ) {
 void draw_cursor (SDL_Renderer *renderer, world game) {
     SDL_Rect cursor;
 
-    cursor.x = game.cursor_x * FRAME_SIZE + map_offset_x + game.computer.offset - 1;
-    cursor.y = game.cursor_y * FRAME_SIZE + map_offset_y - 1;
+    cursor.x = game.map_position_x * FRAME_SIZE + MAP_OFFSET_X + game.ai.offset - 1;
+    cursor.y = game.map_position_y * FRAME_SIZE + MAP_OFFSET_Y - 1;
     cursor.w = FRAME_SIZE;
     cursor.h = FRAME_SIZE;
 
@@ -35,24 +35,24 @@ void draw_current_ship (SDL_Renderer *renderer, const ship &ship1) {
     SDL_Rect ship;
     SDL_Rect ship_head;
 
-    ship.x = map_offset_x + ship1.coord_x * FRAME_SIZE ;
-    ship.y = map_offset_y + ship1.coord_y * FRAME_SIZE ;
+    ship.x = MAP_OFFSET_X + ship1.coord_x * FRAME_SIZE ;
+    ship.y = MAP_OFFSET_Y + ship1.coord_y * FRAME_SIZE ;
     ship.h = FRAME_SIZE;
     ship.w = FRAME_SIZE;
 
     SDL_SetRenderDrawColor(renderer , 200 , 10 , 10 , 0);
 
-    ship_head.x = map_offset_x + ship1.coord_x * FRAME_SIZE - 1 + 12;
-    ship_head.y = map_offset_y + ship1.coord_y * FRAME_SIZE - 1 + 12;
+    ship_head.x = MAP_OFFSET_X + ship1.coord_x * FRAME_SIZE - 1 + 12;
+    ship_head.y = MAP_OFFSET_Y + ship1.coord_y * FRAME_SIZE - 1 + 12;
     ship_head.w = 12;
     ship_head.h = 12;
 
     if (ship1.inverse) {
-        for (ship.x ; ship.x < ship1.size*FRAME_SIZE + map_offset_x + ship1.coord_x * 36 ; ship.x += FRAME_SIZE + 1) {
+        for (ship.x ; ship.x < ship1.size*FRAME_SIZE + MAP_OFFSET_X + ship1.coord_x * 36 ; ship.x += FRAME_SIZE + 1) {
             SDL_RenderFillRect(renderer , &ship);
         }
     } else {
-        for (ship.y ; ship.y < ship1.size*FRAME_SIZE + map_offset_y + ship1.coord_y * 36 ; ship.y += FRAME_SIZE + 1) {
+        for (ship.y ; ship.y < ship1.size*FRAME_SIZE + MAP_OFFSET_Y + ship1.coord_y * 36 ; ship.y += FRAME_SIZE + 1) {
             SDL_RenderFillRect(renderer , &ship);
         }
     }
@@ -65,15 +65,15 @@ void draw_current_ship (SDL_Renderer *renderer, const ship &ship1) {
 void draw_hit (SDL_Renderer *renderer, int x , int y , int offset) {
     SDL_Rect hit_left ;
 
-    hit_left.x = x * FRAME_SIZE + map_offset_x + offset + 2;
-    hit_left.y = y * FRAME_SIZE + map_offset_y + 2;
+    hit_left.x = x * FRAME_SIZE + MAP_OFFSET_X + offset + 2;
+    hit_left.y = y * FRAME_SIZE + MAP_OFFSET_Y + 2;
     hit_left.h = 3;
     hit_left.w = 3;
 
     SDL_Rect hit_right;
 
-    hit_right.x = x * FRAME_SIZE + map_offset_x + offset + FRAME_SIZE - 8;
-    hit_right.y = y * FRAME_SIZE + map_offset_y + 2;
+    hit_right.x = x * FRAME_SIZE + MAP_OFFSET_X + offset + FRAME_SIZE - 8;
+    hit_right.y = y * FRAME_SIZE + MAP_OFFSET_Y + 2;
     hit_right.h = 3;
     hit_right.w = 3;
 
@@ -90,11 +90,11 @@ void draw_hit (SDL_Renderer *renderer, int x , int y , int offset) {
 }
 
 void draw_mishit (SDL_Renderer *renderer, int x , int y , int offset) {
-    SDL_Rect low = {x * FRAME_SIZE + map_offset_x + offset + 2, y * FRAME_SIZE + map_offset_y + 18 , 3 , 3};
-    SDL_Rect low_1 = {x * FRAME_SIZE + map_offset_x + offset + 2, y * FRAME_SIZE + map_offset_y + 10 , 3 , 3};;
-    SDL_Rect mid = {x * FRAME_SIZE + map_offset_x + offset + 2, y * FRAME_SIZE + map_offset_y + 2 , 3 , 3};
-    SDL_Rect up_1 = {x * FRAME_SIZE + map_offset_x + offset + 10, y * FRAME_SIZE + map_offset_y + 2 , 3 , 3};
-    SDL_Rect up = {x * FRAME_SIZE + map_offset_x + offset + 18, y * FRAME_SIZE + map_offset_y + 2 , 3 , 3};;
+    SDL_Rect low = {x * FRAME_SIZE + MAP_OFFSET_X + offset + 2, y * FRAME_SIZE + MAP_OFFSET_Y + 18 , 3 , 3};
+    SDL_Rect low_1 = {x * FRAME_SIZE + MAP_OFFSET_X + offset + 2, y * FRAME_SIZE + MAP_OFFSET_Y + 10 , 3 , 3};;
+    SDL_Rect mid = {x * FRAME_SIZE + MAP_OFFSET_X + offset + 2, y * FRAME_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};
+    SDL_Rect up_1 = {x * FRAME_SIZE + MAP_OFFSET_X + offset + 10, y * FRAME_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};
+    SDL_Rect up = {x * FRAME_SIZE + MAP_OFFSET_X + offset + 18, y * FRAME_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};;
 
     SDL_SetRenderDrawColor(renderer ,  93 , 102 , 111 , 255);;
 
@@ -121,48 +121,47 @@ void draw_mishit (SDL_Renderer *renderer, int x , int y , int offset) {
 
 void draw_hits (SDL_Renderer *renderer, const world &game) {
 
-    for (int i = 0 ; i < margin_width ; i++) {
-        for (int j = 0 ; j < margin_heigth ; j++) {
-            if (game.map_A[i][j] == HIT) {
+    for (int i = 0 ; i < MARGIN_WIDTH ; i++) {
+        for (int j = 0 ; j < MARGIN_HEIGHT ; j++) {
+            if (game.user_map[i][j] == HIT) {
 
-                draw_hit(renderer, j, i, game.player1.offset);
+                draw_hit(renderer, j, i, game.user.offset);
 
-            } else if (game.map_A[i][j] == MISHIT) {
+            } else if (game.user_map[i][j] == MISHIT) {
 
-                draw_mishit(renderer , j , i , game.player1.offset);
+                draw_mishit(renderer , j , i , game.user.offset);
 
             }
 
         }
     }
 
-    for (int i = 0 ; i < margin_width ; i++) {
-        for (int j = 0 ; j < margin_heigth ; j++) {
-            if (game.map_B[i][j] == HIT) {
+    for (int i = 0 ; i < MARGIN_WIDTH ; i++) {
+        for (int j = 0 ; j < MARGIN_HEIGHT ; j++) {
+            if (game.ai_map[i][j] == HIT) {
 
-                draw_hit(renderer, j, i, game.computer.offset);
+                draw_hit(renderer, j, i, game.ai.offset);
 
-            } else if (game.map_B[i][j] == MISHIT) {
-
-                draw_mishit(renderer , j , i , game.computer.offset);
+            } else if (game.ai_map[i][j] == MISHIT) {
+                draw_mishit(renderer , j , i , game.ai.offset);
             }
 
         }
     }
-
 }
+
 void draw_ship (SDL_Renderer *renderer , const ship &ship1 , int shift) {
 
     SDL_Rect ship_part;
     SDL_Rect ship_head;
 
-    ship_part.x = map_offset_x + ship1.coord_x * FRAME_SIZE+ shift;
-    ship_part.y = map_offset_y + ship1.coord_y * FRAME_SIZE;
+    ship_part.x = MAP_OFFSET_X + ship1.coord_x * FRAME_SIZE + shift;
+    ship_part.y = MAP_OFFSET_Y + ship1.coord_y * FRAME_SIZE;
     ship_part.h = FRAME_SIZE ;
     ship_part.w = FRAME_SIZE ;
 
-    ship_head.x = map_offset_x + ship1.coord_x * FRAME_SIZE - 1 + shift + 12;
-    ship_head.y = map_offset_y + ship1.coord_y * FRAME_SIZE - 1 + 12;
+    ship_head.x = MAP_OFFSET_X + ship1.coord_x * FRAME_SIZE - 1 + shift + 12;
+    ship_head.y = MAP_OFFSET_Y + ship1.coord_y * FRAME_SIZE - 1 + 12;
     ship_head.w = 12;
     ship_head.h = 12;
 
@@ -192,7 +191,7 @@ void draw_ships (SDL_Renderer *renderer, player player1) {
     ship *p = new ship;
     int count = 0;
 
-    p = player1.head;
+    p = player1.ships_list_head;
 
     while (p) {
         draw_ship(renderer, *p , player1.offset);
@@ -203,81 +202,15 @@ void draw_ships (SDL_Renderer *renderer, player player1) {
 }
 
 void draw_map (SDL_Renderer *renderer, player player1) {
-    for (int y = map_offset_y , i = 0 ; i < margin_width ; i++ , y += FRAME_SIZE) {
-        for (int x = map_offset_x + player1.offset, j = 0 ; j < margin_heigth ; j++ , x += FRAME_SIZE) {
+    for (int y = MAP_OFFSET_Y , i = 0 ; i < MARGIN_WIDTH ; i++ , y += FRAME_SIZE) {
+        for (int x = MAP_OFFSET_X + player1.offset, j = 0 ; j < MARGIN_HEIGHT ; j++ , x += FRAME_SIZE) {
 
-            put_kletka(renderer, x, y );
+            put_cell(renderer, x, y);
         }
     }
 }
 
-void draw_results (SDL_Renderer *renderer, world game) {
-    int paddingW = 10;
-    int paddingH = 10;
-
-    TTF_Font *font = TTF_OpenFont("/usr/share/fonts/opentype/noto/NotoSansCJK.ttc", 25);
-
-    char text[] = "The results are";
-
-    int w = 0;
-    int h = 0;
-
-    SDL_Rect rectangle;
-
-    if ( TTF_SizeText(font, text, &w, &h) != 0) {
-        return;
-    }
-
-    rectangle.w = w + 2*paddingW;
-    rectangle.h = h + 2*paddingH;
-    rectangle.x = 380;
-    rectangle.y = 100;
-
-    SDL_Color text_color = {250, 250, 250};
-
-    SDL_Surface * surface = TTF_RenderText_Solid(font,text, text_color);
-
-    SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer,surface);
-
-    SDL_RenderDrawRect(renderer , &rectangle);
-
-    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-
-    SDL_Rect dstrect = {380 + paddingW , 100 + paddingH , w, h};
-
-    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
-
-    //-------------------------------------------------
-
-    char point = game.player1.points;
-
-    w = 0;
-    h = 0;
-
-    if ( TTF_SizeText(font, &point, &w, &h) != 0) {
-        return;
-    }
-
-
-    rectangle.w = w + 2*paddingW;
-    rectangle.h = h + 2*paddingH;
-    rectangle.x = 380;
-    rectangle.y = 170;
-
-    SDL_Surface * surface_p = TTF_RenderText_Solid(font,&point, text_color);
-
-    SDL_Texture * texture_p = SDL_CreateTextureFromSurface(renderer,surface_p);
-
-    SDL_RenderDrawRect(renderer , &rectangle);
-
-    SDL_QueryTexture(texture_p, NULL, NULL, &w, &h);
-
-    dstrect = {380 + paddingW , 150 + paddingH , w, h};
-
-    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
-}
 void draw_world (SDL_Renderer *renderer, const world &game) {
-
     int R_back = 63;
     int G_back = 141;
     int B_back = 219;
@@ -286,46 +219,42 @@ void draw_world (SDL_Renderer *renderer, const world &game) {
 
     SDL_RenderClear(renderer);
 
-    if (game.state == INIT_PLAYERS_SHIP) {
-        draw_map(renderer , game.player1);
+    if (game.game_state == PUT_SHIPS) {
+        draw_map(renderer , game.user);
 
-        draw_results(renderer , game);
-        if (game.player1.init == false) {
-            draw_ships(renderer, game.player1);
+        if (game.user.inited == false) {
+            draw_ships(renderer, game.user);
 
             draw_current_ship(renderer, *game.current_ship);
 
         } else {
-            draw_ships(renderer,game.computer);
+            draw_ships(renderer, game.ai);
 
-            draw_map(renderer , game.computer);
+            draw_map(renderer, game.ai);
         }
-    } else if (game.state == PLAY_GAME) {
-        destroyed(game.player1.head , game.computer.head , game.map_A , game.map_B);
+    } else if (game.game_state == PLAY_GAME) {
+        destroyed(game.user.ships_list_head , game.ai.ships_list_head , game.user_map , game.ai_map);
 
-        draw_map(renderer , game.player1);
-        draw_ships(renderer , game.player1);
+        draw_map(renderer, game.user);
+        draw_ships(renderer, game.user);
         // PLAYER
 
-        draw_map(renderer , game.computer);
+        draw_map(renderer, game.ai);
 
         // COMPUTER
         draw_cursor(renderer , game);
 
-        draw_hits(renderer , game);
-    } else if (game.state == ENDGAME) {
-        destroyed(game.player1.head , game.computer.head , game.map_A , game.map_B);
+        draw_hits(renderer, game);
+    } else if (game.game_state == ENDGAME) {
+        destroyed(game.user.ships_list_head , game.ai.ships_list_head , game.user_map , game.ai_map);
 
-        draw_map(renderer , game.player1);
-        draw_ships(renderer , game.player1);
+        draw_map(renderer , game.user);
+        draw_ships(renderer , game.user);
         // PLAYER
 
-        draw_map(renderer , game.computer);
-        draw_ships(renderer, game.computer);
+        draw_map(renderer , game.ai);
+        draw_ships(renderer, game.ai);
         // COMPUTER
-
-
-        draw_results(renderer , game);
     }
 
     SDL_RenderPresent(renderer);

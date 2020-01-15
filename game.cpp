@@ -1,36 +1,32 @@
-//#include "game.h"
 #include "draw.h"
 #include <iostream>
 
-void create_map (int **map) {
+void create_map (int** map) {
 
-    for (int i = 0; i < 10; i++) {
-        map[i] = new int[margin_heigth];
-    }
+    for (int i = 0; i < MARGIN_HEIGHT; i++) {
+        map[i] = new int[MARGIN_WIDTH];
 
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < margin_heigth; j++) {
+        for (int j = 0; j < MARGIN_WIDTH; j++) {
             map[i][j] = WATER_AREA;
         }
     }
-
 }
 
-void delete_map (int **map) {
-    for(int i = 0 ; i < 10 ; i++) {
+void delete_map (int** map) {
+    for(int i = 0 ; i < MARGIN_HEIGHT ; i++) {
         delete[](map[i]);
     }
 }
 
-void add_ship (ship *&head , ship *ship1) {
+void add_ship_to_list(ship* &dest_head , ship *ship1) {
     ship *p = new ship;
 
-    if (head == NULL) {
-        head = ship1;
+    if (dest_head == NULL) {
+        dest_head = ship1;
         return;
     }
 
-    p = head;
+    p = dest_head;
 
     while (p->next) {
         p = p->next;
@@ -39,10 +35,9 @@ void add_ship (ship *&head , ship *ship1) {
     p->next = ship1;
 
     ship1->next = NULL;
-
 }
 
-bool check_inverse(ship *head , ship *ship1) {
+bool check_inverse(ship* head , ship* ship1) {
     int count = 1;
     int count2 = 0;
     ship *s = new ship;
@@ -86,12 +81,14 @@ bool check_inverse(ship *head , ship *ship1) {
     return true;
 }
 
-bool check_neighbours_down(ship *head , ship ship1) {
+bool check_neighbours_down(ship* head , ship ship1) {
     ship *s = new ship;
     int count1 = 0;
     int count2 = 0;
+
     s = head;
-    if (ship1.inverse == false) {
+
+    if ( !ship1.inverse ) {
         while (s) {
             while (count1 < ship1.size) {
                 while (count2 < s->size) {
@@ -101,9 +98,6 @@ bool check_neighbours_down(ship *head , ship ship1) {
                     if ( (ship1.coord_y  + count1 + 1 == s->coord_y + count2) && (ship1.coord_x + 1 == s->coord_x || ship1.coord_x - 1 == s->coord_x )) {
                         return false;
                     }
-//                    if (ship1.coord_y + count1 + 1== s->coord_y + count2 && ship1.coord_x - 1) {
-//                        return false;
-//                    }
                     count2++;
                 }
                 count2 = 0;
@@ -112,7 +106,7 @@ bool check_neighbours_down(ship *head , ship ship1) {
             count1 = 0;
             s = s->next;
         }
-    } else if (ship1.inverse == true) {
+    } else if ( ship1.inverse ) {
         while (s) {
             while (count1 < ship1.size) {
                 while (count2 < s->size) {
@@ -140,7 +134,7 @@ bool check_inversion (ship ship1) { // already inversed ship
 
     if (ship1.inverse) {
         while (count < ship1.size) {
-            if (ship1.coord_x + (count ) >= margin_width ) {
+            if (ship1.coord_x + (count ) >= MARGIN_WIDTH ) {
                 return false;
             }
 
@@ -148,7 +142,7 @@ bool check_inversion (ship ship1) { // already inversed ship
         }
     } else {
         while (count < ship1.size) {
-            if (ship1.coord_y + count >= margin_heigth ) {
+            if (ship1.coord_y + count >= MARGIN_HEIGHT ) {
                 return false;
             }
 
@@ -159,21 +153,18 @@ bool check_inversion (ship ship1) { // already inversed ship
     return true;
 }
 
-void make_inverse (ship *head , ship *current_ship) {
-
+void make_inverse (ship* head , ship* current_ship) {
     current_ship->inverse = !current_ship->inverse;
-    // TODO what`s the difference : check_inversion & check_inverse
+
     if (check_inversion(*current_ship) && check_inverse(head, current_ship) && check_neighbours_down(head, *current_ship)) {
         return;
     } else {
         current_ship->inverse = !current_ship->inverse;
         return;
     }
-
-
 }
 
-bool check_collision (const ship &ship1 , const ship &ship2) {
+bool check_collision (const ship& ship1 , const ship& ship2) {
     const int left_top_x = ship2.coord_x - 1;
     const int left_top_y = ship2.coord_y - 1;
 
@@ -203,14 +194,14 @@ bool check_collision (const ship &ship1 , const ship &ship2) {
     return false;
 }
 
-bool can_put_ship (ship *head , ship ship1) {
+bool can_put_ship (ship* head , ship ship1) {
 
     if (ship1.inverse) {
-        if (ship1.coord_x + ship1.size > margin_width) {
+        if (ship1.coord_x + ship1.size > MARGIN_WIDTH) {
             return false;
         }
     } else {
-        if (ship1.coord_y + ship1.size > margin_heigth) {
+        if (ship1.coord_y + ship1.size > MARGIN_HEIGHT) {
             return false;
         }
     }
@@ -228,14 +219,14 @@ bool can_put_ship (ship *head , ship ship1) {
     return true;
 }
 
-bool can_move (const ship *moved_ship ,const  int &cursor_x , const int &cursor_y) {
+bool can_move (const ship* moved_ship ,const  int& cursor_x , const int& cursor_y) {
 
     if (moved_ship->inverse) {
-        if ((cursor_x < 0 || cursor_x + moved_ship->size > margin_heigth) || (cursor_y < 0 || cursor_y > margin_width) ) {
+        if ((cursor_x < 0 || cursor_x + moved_ship->size > MARGIN_HEIGHT) || (cursor_y < 0 || cursor_y > MARGIN_WIDTH) ) {
             return false;
         }
     } else {
-        if ((cursor_x < 0 || cursor_x > margin_heigth) || (cursor_y + moved_ship->size > margin_width || cursor_y < 0) ) {
+        if ((cursor_x < 0 || cursor_x > MARGIN_HEIGHT) || (cursor_y + moved_ship->size > MARGIN_WIDTH || cursor_y < 0) ) {
             return false;
         }
     }
@@ -243,7 +234,7 @@ bool can_move (const ship *moved_ship ,const  int &cursor_x , const int &cursor_
     return true;
 }
 
-void count_ships(const ship *head, int &cruiser, int &destroyer, int &submarine) {
+void count_ships(const ship* head, int& cruiser, int& destroyer, int& submarine) {
     const ship *s = new ship;
 
     s = head;
@@ -260,20 +251,63 @@ void count_ships(const ship *head, int &cruiser, int &destroyer, int &submarine)
         s = s->next;
     }
 }
+
+// get 4-cells ship
+ship *get_battleship() {
+    ship *battleship = new ship;
+
+    battleship->coord_x = 0;
+    battleship->coord_y = 0;
+    battleship->size = SHIP_SIZE;
+    battleship->inverse = HORIZONTAL;
+    battleship->damage = 0;
+    battleship->next = NULL;
+
+    return battleship;
+}
+// get 3-cells ship
+ship *get_cruiser() {
+    ship *cruiser = new ship;
+
+    cruiser->coord_x = 0;
+    cruiser->coord_y = 0;
+    cruiser->size = 3;
+    cruiser->inverse = HORIZONTAL;
+    cruiser->damage = 0;
+    cruiser->next = NULL;
+
+    return cruiser;
+}
+// get 2-cells ship
+ship *get_destroyer() {
+    ship *destroyer = new ship;
+
+    destroyer->coord_x = 0;
+    destroyer->coord_y = 0;
+    destroyer->size = 2;
+    destroyer->inverse = HORIZONTAL;
+    destroyer->damage = 0;
+    destroyer->next = NULL;
+
+    return destroyer;
+}
+// get 1-cell ship
+ship *get_submarine() {
+    ship *submarine = new ship;
+
+    submarine->coord_x = 0;
+    submarine->coord_y = 0;
+    submarine->size = 1;
+    submarine->inverse = HORIZONTAL;
+    submarine->damage = 0;
+    submarine->next = NULL;
+
+    return submarine;
+}
+
 ship *create_ship (const ship *head) {
-
     if (head == NULL) {
-        ship *battleship = new ship;
-
-        battleship->coord_x = 0;
-        battleship->coord_y = 0;
-        battleship->size = ship_size;
-        battleship->init = false;
-        battleship->inverse = horizontal;
-        battleship->damage = 0;
-        battleship->next = NULL;
-
-        return battleship;
+        return get_battleship();
     }
 
     int cruisers = 0;
@@ -282,42 +316,15 @@ ship *create_ship (const ship *head) {
 
     count_ships(head, cruisers, destroyers, submarines);
 
-    if (cruisers < 2) {
-        ship *cruiser = new ship;
+    if (cruisers < CRUISER_QUANTITY) {
 
-        cruiser->coord_x = 0;
-        cruiser->coord_y = 0;
-        cruiser->size = 3;
-        cruiser->init = false;
-        cruiser->inverse = horizontal;
-        cruiser->damage = 0;
-        cruiser->next = NULL;
+        return get_cruiser();
+    } else if (destroyers < DESTROYER_QUANTITY) {
 
-        return cruiser;
-    } else if (destroyers < 3) {
-        ship *destroyer = new ship;
+        return get_destroyer();
+    } else if (submarines < SUBMARINE_QUANTITY) {
 
-        destroyer->coord_x = 0;
-        destroyer->coord_y = 0;
-        destroyer->size = 2;
-        destroyer->init = false;
-        destroyer->inverse = horizontal;
-        destroyer->damage = 0;
-        destroyer->next = NULL;
-
-        return destroyer;
-    } else if (submarines < 4) {
-        ship *submarine = new ship;
-
-        submarine->coord_x = 0;
-        submarine->coord_y = 0;
-        submarine->size = 1;
-        submarine->init = false;
-        submarine->inverse = horizontal;
-        submarine->damage = 0;
-        submarine->next = NULL;
-
-        return submarine;
+        return get_submarine();
     } else {
         return NULL;
     }
@@ -348,13 +355,13 @@ bool if_damage (const ship &checked_ship , int cursor_x , int cursor_y) {
     return false;
 }
 
-bool if_ship (world *game , ship *head) {
+bool if_any_ship_damaged_on_position (int &position_x, int &position_y , ship *head) {
     ship *s;
 
     s = head;
 
     while (s) {
-        if (if_damage(*s , game->cursor_x , game->cursor_y)) {
+        if (if_damage(*s, position_x, position_y)) {
             s->damage++;
             return true;
         }
@@ -364,7 +371,7 @@ bool if_ship (world *game , ship *head) {
     return false;
 }
 
-void put_mishits_on_map (int **map , int i_coord , int j_coord , int size , int inverse) {
+void put_mishits_on_map (int **map, int i_coord, int j_coord, int size, int inverse) {
 
     if (inverse) {
         for (int j = j_coord - 1 ; j < j_coord + size + 1 ; j++) {
@@ -429,11 +436,12 @@ void destroyed (ship *head_A , ship *head_B, int **map_A , int ** map_B) {
     }
 }
 
-bool was_hit (int cursor_row , int cursor_column , int **map ) {
+bool was_hit_on_position (int position_x , int position_y , int **map ) {
 
-    if ( map[cursor_row][cursor_column] == 1 || map[cursor_row][cursor_column] == 2) {
+    if( map[position_y][position_x] == MISHIT || map[position_y][position_x] == HIT ){
+        return true;
+    } else {
         return false;
     }
 
-    return true;
 }

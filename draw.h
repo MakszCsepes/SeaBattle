@@ -1,13 +1,13 @@
 #include <SDL2/SDL_ttf.h>
 #include "game.h"
-#define window_height 1000
-#define window_width 1000
-#define horizontal true
-#define vertical false
+#define WINDOW_HEIGHT 1000
+#define WINDOW_WIDTH 1000
+#define HORIZONTAL true
+#define VERTICAL false
 
-const int ship_size = 4;
-const int map_offset_x = 100;
-const int  map_offset_y = 300;
+const int SHIP_SIZE = 4;
+const int MAP_OFFSET_X = 100;
+const int  MAP_OFFSET_Y = 300;
 const int FRAME_SIZE = 37;
 
 void draw_world (SDL_Renderer *renderer , const world &game) ;
