@@ -76,77 +76,6 @@ void init_computer (world *game) {
     }
 }
 
-/*void intel_hit (world &game , int j , int i) {
-    do {
-        // 5 - NO SIDES
-        if (game.hit_side == 5) {
-            game.hit_side = NO_SIDE;
-            do_ai_hit(game);
-            return;
-        }
-
-        game.map_position_x = j;
-        game.map_position_y = i;
-
-        switch (game.hit_side) {
-            case LEFT_SIDE: // 1 - LEFT_SIDE
-                if (j - 1 >= 0) {
-                    game.map_position_x--;
-                } else {
-                    game.hit_side++;
-                }
-                break;
-            case RIGHT_SIDE: // 2 - RIGHT_SIDE
-                if (j + 1 <= 9) {
-                    game.map_position_x++;
-                } else {
-                    game.hit_side++;
-                }
-                break;
-            case UP_SIDE: // 3 - UP_SIDE
-                if (i - 1 >= 0) {
-                    game.map_position_y--;
-                } else {
-                    game.hit_side++;
-                }
-                break;
-            case DOWN_SIDE: // 4 - DOWN_SIDE
-                if (i + 1 <= 9) {
-                    game.map_position_y++;
-                } else {
-                    game.hit_side++;
-                }
-                break;
-            default:
-                game.hit_side = NO_SIDE;
-                break;
-        }
-
-        game.hit_side++;
-    } while (!was_hit_on_position(game.map_position_y, game.map_position_x, game.user_map));
-
-    if (if_any_ship_damaged_on_position(game.map_position_x, game.map_position_y, game.user.ships_list_head)) {
-        game.hit_side--;
-
-        game.ai.points++;
-
-        game.user_map[game.map_position_y][game.map_position_x] = HIT;
-
-        intel_hit(game , game.map_position_x , game.map_position_y);
-
-    } else {
-        game.hit_side--;
-        if (game.hit_side == DOWN_SIDE) {
-             game.hit_side = NO_SIDE;
-        } else {
-            game.hit_side++;
-        }
-
-        game.user_map[game.map_position_y][game.map_position_x] = MISHIT;
-    }
-
-}*/
-
 LuaRef get_table_from_stateMap(int **state_map, lua_State *L) {
     LuaRef table = newTable(L);
 
@@ -199,16 +128,4 @@ void do_ai_hit (world &game) {
     } else {
 
     }
-
- /*    if (game.hit_side == NO_SIDE) {
-        if (random_hit(game)) {
-            game.hit_side = LEFT_SIDE;
-            intel_hit(game, game.intel_hit_j, game.intel_hit_i);
-        }
-    } else {
-        game.map_position_x = game.intel_hit_j;
-        game.map_position_y = game.intel_hit_i;
-
-        intel_hit(game, game.intel_hit_j, game.intel_hit_i);
-    }*/
 }

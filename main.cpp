@@ -30,7 +30,7 @@ lua_State* load_script() {
     luaL_openlibs(L);
     getGlobalNamespace(L).addFunction("printMessage", printMessage);
 
-    luaL_dofile(L, "script.lua");
+    luaL_dofile(L, "../script.lua");
     lua_pcall(L, 0, 0, 0);
 
     return L;
