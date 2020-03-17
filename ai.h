@@ -1,8 +1,9 @@
-#include "draw.h"
+#include "World.h"
+#include "game.h"
 
 #define NO_HIT_HERE 0
-#define WAS_HIT 1
-#define WAS_MISHIT 2
+#define WAS_MISHIT 1
+#define WAS_HIT 2
 #define WAS_KILL 3
 
 void init_computer (world *game);

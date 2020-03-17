@@ -2,11 +2,12 @@
 #include "ai.h"
 #include <iostream>
 #include <fstream>
-
+#include <unistd.h>
 
 using namespace std;
 
-coordinate get_rand_from_list(list<coordinate> &l) {
+// INITIALIZING AI
+coordinate get_rand_from_list(list<coordinate>& l) {
     auto iter = l.begin();
     int p = rand () % l.size();
     int i = 0;
@@ -19,7 +20,7 @@ coordinate get_rand_from_list(list<coordinate> &l) {
         iter++;
     }
 }
-void delete_by_value(list<coordinate> &l, coordinate val) {
+void delete_by_value(list<coordinate>& l, coordinate val) {
     auto iter = l.begin();
     for(coordinate v : l) {
         if(v.i == val.i && v.j == val.j) {
@@ -29,15 +30,14 @@ void delete_by_value(list<coordinate> &l, coordinate val) {
         iter++;
     }
 }
-void get_rand_coords(int &cursor_row, int &cursor_col, list<coordinate> &l) {
+void get_rand_coords(int& cursor_row, int& cursor_col, list<coordinate>& l) {
 
     coordinate rand_coord = get_rand_from_list(l);
     delete_by_value(l, rand_coord);
     cursor_row = rand_coord.i;
     cursor_col = rand_coord.j;
 }
-
-void init_computer (world *game) {
+void init_computer (world* game)    {
     int cursor_row;
     int cursor_column;
     int inverse;
@@ -76,7 +76,75 @@ void init_computer (world *game) {
     }
 }
 
-LuaRef get_table_from_stateMap(int **state_map, lua_State *L) {
+// AI ACTING
+bool ship_hit_on_position(int& position_y, int& position_x, ship* ship) {
+    int i;
+    if(ship->inverse) {
+        i = ship->coord_x;
+
+        if(i != position_x) {
+            return false;
+        }
+    } else {
+        i = ship->coord_y;
+
+        if(i != position_y) {
+            return false;
+        }
+    }
+
+    for(i ; i < ship->size ; i++) {
+        if(ship->inverse) {
+            if (i == position_x) {
+                return true;
+            }
+        } else {
+            if(i == position_y) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+ship* get_ship_by_position(int& position_y, int& position_x, ship* ships_list_head) {
+    ship* s = ships_list_head;
+
+    while(s) {
+        if(ship_hit_on_position(position_y, position_x, s)) {
+            return s;
+        }
+        s = s->next;
+    }
+
+
+    return nullptr;
+}
+bool ship_killed(ship* ship, int** user_map, int& position_y, int& position_x) {
+    if (ship->inverse) {
+        for(int j = ship->coord_x ; j < ship->size ; j++) {
+            if(j == position_x) {
+                continue;
+            }
+
+            if(user_map[position_y][j] != HIT) {
+                return false;
+            }
+        }
+    } else {
+        for(int i = ship->coord_x ; i < ship->size ; i++) {
+            if(i == position_y) {
+                continue;
+            }
+
+            if(user_map[i][position_x] != HIT) {
+                return false;
+            }
+        }
+    }
+    return false;
+}
+LuaRef get_table_from_stateMap(int** state_map, lua_State* L) {
     LuaRef table = newTable(L);
 
     for(int i = 0 ; i < MARGIN_HEIGHT; i++) {
@@ -88,44 +156,38 @@ LuaRef get_table_from_stateMap(int **state_map, lua_State *L) {
 
     return table;
 }
-int **get_stateMap_from_table(LuaRef &table) {
-    int **map = new int*[MARGIN_HEIGHT];
-    create_map(map);
-
-    for(int i = 0 ; i < MARGIN_HEIGHT ; i++) {
-        for(int j = 0 ; j < MARGIN_WIDTH ; j++) {
-            map[i][j] = table[i][j];
-        }
-    }
-
-    return map;
-}
-
-void do_ai_hit (world &game) {
+void do_ai_hit (world& game) {
     LuaRef players_map = newTable(game.lua_state);
     players_map = get_table_from_stateMap(game.user_map, game.lua_state);
 
     LuaRef state_map = newTable(game.lua_state);
-    state_map = get_table_from_stateMap(game.state_array, game.lua_state);
 
     LuaRef get_coords = getGlobal(game.lua_state, "get_coords");
     LuaRef coords = nullptr;
-    coords = get_coords(state_map);
 
-    game.map_position_y = coords["i"];
-    game.map_position_x = coords["j"];
+    do {
+        ship* hit_ship;
+        state_map = get_table_from_stateMap(game.state_array, game.lua_state);
+        coords = get_coords(state_map);
+        game.map_position_y = coords["i"];
+        game.map_position_x = coords["j"];
 
-    if (game.state_array[game.map_position_y][game.map_position_x] == NO_HIT_HERE) {
-        if (if_any_ship_damaged_on_position(game.map_position_x, game.map_position_y, game.user.ships_list_head)) {
-
-            game.user_map[game.map_position_y][game.map_position_x] = HIT;
-            game.state_array[game.map_position_y][game.map_position_x] = WAS_HIT;
-        } else {
-
-            game.user_map[game.map_position_y][game.map_position_x] = MISHIT;
-            game.state_array[game.map_position_y][game.map_position_x] = WAS_MISHIT;
+        // checking if on this position wasn`t ever hit
+        if (game.state_array[game.map_position_y][game.map_position_x] == NO_HIT_HERE) {
+            // checking if any ship is damaged on this position
+//            if (any_ship_damaged_on_position(game.position_x, game.position_y, game.user.ships_list_head)) {
+            if(hit_ship = get_ship_by_position(game.map_position_y, game.map_position_x, game.user.ships_list_head)){
+                game.user_map[game.map_position_y][game.map_position_x] = HIT;
+                if (ship_killed(hit_ship, game.user_map, game.map_position_y, game.map_position_x)) {
+                    game.state_array[game.map_position_y][game.map_position_x] = WAS_KILL;
+                } else {
+                    game.state_array[game.map_position_y][game.map_position_x] = WAS_HIT;
+                }
+            } else {
+                game.user_map[game.map_position_y][game.map_position_x] = MISHIT;
+                game.state_array[game.map_position_y][game.map_position_x] = WAS_MISHIT;
+            }
         }
-    } else {
-
-    }
+    } while(game.state_array[game.map_position_y][game.map_position_x] == WAS_HIT or
+            game.state_array[game.map_position_y][game.map_position_x] == WAS_KILL);
 }

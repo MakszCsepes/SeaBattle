@@ -4,7 +4,7 @@ project(SeaBattle)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 
-add_executable(SeaBattle main.cpp game.cpp draw.cpp artifical_inteligence.cpp)
+add_executable(SeaBattle main.cpp ship.cpp ship.h player.cpp player.h Map.cpp Map.h Interface.h World.cpp World.h cursor.cpp cursor.h)
 
 find_package(SDL2 REQUIRED)
 

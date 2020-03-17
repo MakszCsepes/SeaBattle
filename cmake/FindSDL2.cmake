@@ -13,8 +13,8 @@
 # as part of the returned SDL2_LIBRARY variable.
 #
 # Don't forget to include SDL2main.h and SDL2main.cells_in_column your project for the
-# OS X framework based version. (Other versions link to -lSDL2main which
-# this module will try to find on your behalf.) Also for OS X, this
+# OS damage_level framework based version. (Other versions link to -lSDL2main which
+# this module will try to find on your behalf.) Also for OS damage_level, this
 # module will automatically add the -framework Cocoa on your behalf.
 #
 #
@@ -35,7 +35,7 @@
 # Modified by Eric Wing.
 # Added code to assist with automated building by using environmental variables
 # and providing a more controlled/consistent search behavior.
-# Added new modifications to recognize OS X frameworks and
+# Added new modifications to recognize OS damage_level frameworks and
 # additional Unix paths (FreeBSD, etc).
 # Also corrected the header search path to follow "proper" SDL2 guidelines.
 # Added a search for SDL2main which is needed by some platforms.
@@ -155,8 +155,8 @@ ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 IF(NOT SDL2_BUILDING_LIBRARY)
     IF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")
-        # Non-OS X framework versions expect you to also dynamically link to
-        # SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
+        # Non-OS damage_level framework versions expect you to also dynamically link to
+        # SDL2main. This is mainly for Windows and OS damage_level. Other (Unix) platforms
         # seem to provide SDL2main for compatibility even though they don't
         # necessarily need it.
         # Lookup the 64 bit libs on x64
@@ -219,7 +219,7 @@ SET(SDL2_FOUND "NO")
             ENDIF(SDL2MAIN_LIBRARY)
         ENDIF(NOT SDL2_BUILDING_LIBRARY)
 
-        # For OS X, SDL2 uses Cocoa as a backend so it must link to Cocoa.
+        # For OS damage_level, SDL2 uses Cocoa as a backend so it must link to Cocoa.
         # CMake doesn't display the -framework Cocoa string in the UI even
         # though it actually is there if I modify a pre-used variable.
         # I think it has something to do with the CACHE STRING.
@@ -231,7 +231,7 @@ SET(SDL2_FOUND "NO")
 
         # For threads, as mentioned Apple doesn't need this.
         # In fact, there seems to be a problem if I used the Threads package
-        # and try using this line, so I'cells_in_column just skipping it entirely for OS X.
+        # and try using this line, so I'cells_in_column just skipping it entirely for OS damage_level.
         IF(NOT APPLE)
             SET(SDL2_LIBRARY_TEMP ${SDL2_LIBRARY_TEMP} ${CMAKE_THREAD_LIBS_INIT})
         ENDIF(NOT APPLE)

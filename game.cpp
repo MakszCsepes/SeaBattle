@@ -14,11 +14,17 @@ void create_map (int** map) {
 
 void delete_map (int** map) {
     for(int i = 0 ; i < MARGIN_HEIGHT ; i++) {
-        delete[](map[i]);
+        delete[] map[i] ;
     }
 }
 
-void add_ship_to_list(ship* &dest_head , ship *ship1) {
+void delete_game(world *game) {
+        delete_map(game->state_array);
+        delete_map(game->ai_map);
+        delete_map(game->user_map);
+}
+
+void add_ship_to_list(ship*& dest_head , ship* ship1) {
     ship *p = new ship;
 
     if (dest_head == NULL) {
@@ -253,7 +259,7 @@ void count_ships(const ship* head, int& cruiser, int& destroyer, int& submarine)
 }
 
 // get 4-cells ship
-ship *get_battleship() {
+ship* get_battleship() {
     ship *battleship = new ship;
 
     battleship->coord_x = 0;
@@ -266,7 +272,7 @@ ship *get_battleship() {
     return battleship;
 }
 // get 3-cells ship
-ship *get_cruiser() {
+ship* get_cruiser() {
     ship *cruiser = new ship;
 
     cruiser->coord_x = 0;
@@ -279,7 +285,7 @@ ship *get_cruiser() {
     return cruiser;
 }
 // get 2-cells ship
-ship *get_destroyer() {
+ship* get_destroyer() {
     ship *destroyer = new ship;
 
     destroyer->coord_x = 0;
@@ -292,7 +298,7 @@ ship *get_destroyer() {
     return destroyer;
 }
 // get 1-cell ship
-ship *get_submarine() {
+ship* get_submarine() {
     ship *submarine = new ship;
 
     submarine->coord_x = 0;
@@ -305,7 +311,7 @@ ship *get_submarine() {
     return submarine;
 }
 
-ship *create_ship (const ship *head) {
+ship* create_ship (const ship* head) {
     if (head == NULL) {
         return get_battleship();
     }
@@ -331,7 +337,7 @@ ship *create_ship (const ship *head) {
 
 }
 
-bool if_damage (const ship &checked_ship , int cursor_x , int cursor_y) {
+bool if_current_ship_damaged(const ship& checked_ship , int& cursor_x , int& cursor_y) {
 
     if (checked_ship.inverse) {
         if (checked_ship.coord_y == cursor_y) {
@@ -355,13 +361,13 @@ bool if_damage (const ship &checked_ship , int cursor_x , int cursor_y) {
     return false;
 }
 
-bool if_any_ship_damaged_on_position (int &position_x, int &position_y , ship *head) {
+bool any_ship_damaged_on_position (int& position_x, int& position_y , ship* ships_list_thead) {
     ship *s;
 
-    s = head;
+    s = ships_list_thead;
 
     while (s) {
-        if (if_damage(*s, position_x, position_y)) {
+        if (if_current_ship_damaged(*s, position_x, position_y)) {
             s->damage++;
             return true;
         }
@@ -414,7 +420,7 @@ void put_mishits_on_map (int **map, int i_coord, int j_coord, int size, int inve
     }
 }
 
-void destroyed (ship *head_A , ship *head_B, int **map_A , int ** map_B) {
+void destroyed (ship *head_A , ship *head_B, int **map_A , int** map_B) {
     ship *s;
 
     s = head_B;
@@ -436,7 +442,7 @@ void destroyed (ship *head_A , ship *head_B, int **map_A , int ** map_B) {
     }
 }
 
-bool was_hit_on_position (int position_x , int position_y , int **map ) {
+bool was_hit_on_position (int& position_x , int& position_y , int** map ) {
 
     if( map[position_y][position_x] == MISHIT || map[position_y][position_x] == HIT ){
         return true;

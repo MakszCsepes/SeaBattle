@@ -1,22 +1,14 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include "ai.h"
-#include <list>
-
-extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-
-#include <LuaBridge/LuaBridge.h>
+#include <SDL2/SDL_ttf.h>
 
 using namespace luabridge;
 
 void printMessage(const std::string& s) {
     std::cout << s << " ";
 }
-void init_list(list<coordinate> &l) {
+void init_list(list<coordinate>& l) {
     list<coordinate> :: iterator iter;
     for(int i = 0 ; i < SHIP_QUANTITY ; i++) {
         for(int j = 0 ; j < SHIP_QUANTITY ; j++) {
@@ -25,186 +17,170 @@ void init_list(list<coordinate> &l) {
         }
     }
 }
-lua_State* load_script() {
+lua_State* get_new_script() {
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
     getGlobalNamespace(L).addFunction("printMessage", printMessage);
 
     luaL_dofile(L, "../script.lua");
     lua_pcall(L, 0, 0, 0);
-
     return L;
 }
-world* get_game() {
+CWorld* get_game(){
+    CCursor u_cursor(AI_MAP_OFFSET_X, USER_MAP_OFFSET_Y);
+    CMap user_map(USER_MAP_OFFSET_X, USER_MAP_OFFSET_Y, 0, 0, u_cursor);
+    char name[15];
+    strcpy(name, "undefined");
+    CPlayer user(name, user_map);
+
+    CCursor ai_cursor(USER_MAP_OFFSET_X, USER_MAP_OFFSET_Y);
+    CMap ai_map(AI_MAP_OFFSET_X, AI_MAP_OFFSET_Y, 0, 0, ai_cursor);
+    strcpy(name, "AI");
+    CPlayer computer(name, ai_map);
+
+    int game_state(PUT_SHIPS);
+
+    lua_State* L(get_new_script());
+
     list<coordinate> l;
     init_list(l);
 
-    lua_State* L = load_script();
-
-    player user = {false, 0, USER_MAP_OFFSET, nullptr};
-    int **user_map = new int *[MARGIN_HEIGHT];
-    create_map(user_map);
-
-    player computer = {false, 0, AI_MAP_OFFSET, nullptr};
-    int **ai_map = new int *[MARGIN_HEIGHT];
-    create_map(ai_map);
-
-    int **state_map = new int *[MARGIN_HEIGHT];
-    create_map(state_map);
-
-    int cursor_position_x = 0;
-    int cursor_position_y = 0;
-
-    ship *current_ship;
-
-    return new world {user, computer, user_map, ai_map, cursor_position_x, cursor_position_y, PUT_SHIPS, current_ship, state_map, L, l};
-    }
+    return new CWorld(user, computer, game_state, L, l);
+}
 
 int main() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         cout << "SDL_Init Error: " << SDL_GetError() << endl;
         return 0;
     }
-    ship *new_ship;
-    world *game = get_game();
 
-    SDL_Window *screen = SDL_CreateWindow("NavalBattle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
+    srand(time(0));
+
+    SDL_Window *screen = SDL_CreateWindow("NavalBattle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                          WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
     SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_SOFTWARE);
     SDL_Event event;
 
-    game->current_ship = create_ship(game->user.ships_list_head);
+    CWorld* game = new CWorld(get_game());
     bool run_game = true;
 
     while (run_game) {
 
-        while (SDL_WaitEvent(&event)) {
-
-            draw_world(renderer, *game);
-
+        while (SDL_PollEvent(&event)) {
+            game->draw(renderer);
+            // KEYBOARD EVENTS
             switch (event.type) {
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym) {
                         case SDLK_RIGHT :
-                            game->map_position_x++;
 
                             if (game->game_state == PUT_SHIPS) {
-                                if (game->current_ship->inverse) {
-                                    if (game->map_position_x + game->current_ship->size > MARGIN_WIDTH) {
-                                        game->map_position_x = 0;
+                                game->user.current_ship->head_coordinate_x++;
+                                if (game->user.current_ship->get_inverse() == HORIZONTAL) {
+                                    if (game->user.current_ship->head_coordinate_x + game->user.current_ship->get_size() > MAP_CELL_WIDTH) {
+                                        game->user.current_ship->head_coordinate_x = 0;
                                     }
                                 } else {
-                                    if (game->map_position_x > MARGIN_WIDTH - 1) {
-                                        game->map_position_x = 0;
+                                    if (game->user.current_ship->head_coordinate_x > MAP_CELL_WIDTH - 1) {
+                                        game->user.current_ship->head_coordinate_x = 0;
                                     }
                                 }
                             } else if (game->game_state == PLAY_GAME) {
-                                if ( game->map_position_x > MARGIN_HEIGHT - 1) {
-                                    game->map_position_x = 0;
+                                game->user.map.cursor.position_x++;
+                                if ( game->user.map.cursor.position_x > MAP_CELL_HEIGHT - 1) {
+                                    game->user.map.cursor.position_x = 0;
                                 }
                             }
                             break;
                         case SDLK_LEFT :
-                            game->map_position_x--;
 
                             if (game->game_state == PUT_SHIPS) {
+                                game->user.current_ship->head_coordinate_x--;
 
-                                if ( game->current_ship->inverse) {
-                                    if ( game->map_position_x < 0) {
-                                        game->map_position_x = MARGIN_WIDTH -  game->current_ship->size;
-                                    }
-                                } else {
-                                    if ( game->map_position_x < 0) {
-                                        game->map_position_x = MARGIN_WIDTH - 1;
+                                if (game->user.current_ship->head_coordinate_x < 0) {
+                                    if (game->user.current_ship->get_inverse() == HORIZONTAL) {
+                                        game->user.current_ship->head_coordinate_x = MAP_CELL_WIDTH - game->user.current_ship->get_size();
+                                    } else {
+                                        game->user.current_ship->head_coordinate_x = MAP_CELL_WIDTH - 1;
                                     }
                                 }
-                            } else if (game->game_state == PLAY_GAME){
-                                if ( game->map_position_x < 0) {
-                                    game->map_position_x = MARGIN_HEIGHT - 1;
+                            } else if (game->game_state == PLAY_GAME) {
+                                game->user.map.cursor.position_x--;
+                                if (game->user.map.cursor.position_x < 0) {
+                                    game->user.map.cursor.position_x = MAP_CELL_HEIGHT - 1;
                                 }
                             }
                             break;
                         case SDLK_DOWN :
-                            game->map_position_y++;
 
                             if (game->game_state == PUT_SHIPS) {
+                                game->user.current_ship->head_coordinate_y++;
 
-                                if ( game->current_ship->inverse) {
-                                    if ( game->map_position_y > MARGIN_WIDTH - 1) {
-                                        game->map_position_y = 0;
+
+                                if (game->user.current_ship->get_inverse() == HORIZONTAL) {
+                                    if (game->user.current_ship->head_coordinate_y > MAP_CELL_WIDTH - 1) {
+                                        game->user.current_ship->head_coordinate_y = 0;
                                     }
                                 } else {
-                                    if ( game->map_position_y +  game->current_ship->size > MARGIN_WIDTH ) {
-                                        game->map_position_y = 0;
+                                    if (game->user.current_ship->head_coordinate_y + game->user.current_ship->get_size() > MAP_CELL_WIDTH ) {
+                                        game->user.current_ship->head_coordinate_y = 0;
                                     }
                                 }
                             } else if (game->game_state == PLAY_GAME){
-                                if ( game->map_position_y > MARGIN_WIDTH - 1) {
-                                    game->map_position_y = 0;
+                                game->user.map.cursor.position_y++;
+                                if (game->user.map.cursor.position_y > MAP_CELL_WIDTH - 1) {
+                                    game->user.map.cursor.position_y = 0;
                                 }
                             }
                             break;
                         case SDLK_UP :
-                            game->map_position_y--;
 
                             if (game->game_state == PUT_SHIPS) {
-                                if ( game->current_ship->inverse) {
-                                    if ( game->map_position_y < 0) {
-                                        game->map_position_y = MARGIN_WIDTH - 1;
+                                game->user.current_ship->head_coordinate_y--;
+                                if (game->user.current_ship->get_inverse() == HORIZONTAL) {
+                                    if ( game->user.current_ship->head_coordinate_y < 0) {
+                                        game->user.current_ship->head_coordinate_y = MAP_CELL_WIDTH - 1;
                                     }
                                 } else {
-                                    if ( game->map_position_y < 0) {
-                                        game->map_position_y = MARGIN_WIDTH -  game->current_ship->size;
-                                    }
-                                }
-                            } else if (game->game_state == PLAY_GAME){
-                                if ( game->map_position_y < 0) {
-                                    game->map_position_y = MARGIN_WIDTH - 1;
-                                }
-                            }
-                            break;
-                        case SDLK_i:
-                            if (game->game_state == PUT_SHIPS) {
-                                make_inverse(game->user.ships_list_head,  game->current_ship);
-                            }
-                            break;
-                        case SDLK_ESCAPE:
-
-                            delete_map(game->user_map);
-                            delete_map(game->ai_map);
-
-                            return 0;
-                        case SDLK_SPACE:
-                            if (game->game_state == PUT_SHIPS) {
-
-                                if (can_put_ship(game->user.ships_list_head,  *game->current_ship)) {
-
-                                    add_ship_to_list(game->user.ships_list_head,  game->current_ship);
-                                    new_ship = create_ship(game->user.ships_list_head);
-
-                                    if (new_ship) {
-                                        game->current_ship = new_ship;
-
-                                        game->map_position_x = 0;
-                                        game->map_position_y = 0;
-                                    } else {
-                                        game->user.inited = true;
-                                        init_computer(game);
-
-                                        game->game_state = PLAY_GAME;
-                                        game->map_position_x = 0;
-                                        game->map_position_y = 0;
+                                    if (game->user.current_ship->head_coordinate_y < 0) {
+                                        game->user.current_ship->head_coordinate_y = MAP_CELL_WIDTH - game->user.current_ship->get_size();
                                     }
                                 }
                             } else if (game->game_state == PLAY_GAME) {
-                                // whether user got the position or not
-                                if ( !was_hit_on_position( game->map_position_x,  game->map_position_y, game->ai_map) ) {
-                                    // if position was damaged - put onto HIT, else put MISGIT
-                                    if (if_any_ship_damaged_on_position( game->map_position_x,  game->map_position_y, game->ai.ships_list_head)) {
-                                        game->user.points++;
-                                        game->ai_map[ game->map_position_y][ game->map_position_x] = HIT;
-                                    } else {
-                                        game->ai_map[ game->map_position_y][ game->map_position_x] = MISHIT;
-                                        do_ai_hit(*game);
+                                game->user.map.cursor.position_y--;
+                                if (game->user.map.cursor.position_y < 0) {
+                                    game->user.map.cursor.position_y = MAP_CELL_WIDTH - 1;
+                                }
+                            }
+                            break;
+                        case SDLK_r:
+                            game->lua_state = get_new_script();
+                            break;
+                        case SDLK_i:
+                            if (game->game_state == PUT_SHIPS) {
+                                game->user.current_ship->change_inverse();
+                            }
+                            break;
+                        case SDLK_ESCAPE:
+                            return 0;
+                        case SDLK_SPACE:
+                            if (game->game_state == PUT_SHIPS) {
+                                if (game->user.can_put_ship()) {
+                                    game->user.add_ship_to_player_array();
+
+                                    if((game->user.current_ship = game->user.get_new_ship()) == nullptr) {
+                                        game->user.change_inited();
+                                        game->user.map.cursor.change_hidden();
+                                        game->init_ai();
+                                    }
+                                }
+                            } else if (game->game_state == PLAY_GAME) {
+                                if (game->ai.any_ship_damaged_on_position(game->user.map.cursor.position_x, game->user.map.cursor.position_y)) {
+                                    game->user.increase_points();
+                                } else {
+// todo                                    ai->do_hit
+                                    if(game->user.any_ship_damaged_on_position(game->ai.map.cursor.position_x, game->ai.map.cursor.position_y)) {
+                                        game->ai.increase_points();
                                     }
                                 }
                             }
@@ -217,32 +193,27 @@ int main() {
                     break;
             }
 
+            // SELECT STATE
             switch (game->game_state) {
                 case PUT_SHIPS:
-                    if (game->user.inited && game->ai.inited) {
+                    if (game->user.get_player_init_status() and game->ai.get_player_init_status()) {
                         game->game_state = PLAY_GAME;
-                    } else if(can_move( game->current_ship,  game->map_position_x,  game->map_position_y)) {
-                        game->current_ship->coord_x =  game->map_position_x;
-                        game->current_ship->coord_y =  game->map_position_y;
                     }
                     break;
                 case PLAY_GAME:
-                    if(game->user.points == 20 || game->ai.points == 20) {
+                    if(game->user.get_points() == 20 or game->ai.get_points() == 20) {
                         game->game_state = ENDGAME;
                         break;
                     }
-                    game->map_position_y =  game->map_position_y;
-                    game->map_position_x =  game->map_position_x;
                     break;
                 case ENDGAME:
-                    draw_world(renderer, *game);
+                    game->draw(renderer);
                     break;
                 default:
                     run_game = false;
             }
         }
-    }
 
+    }
     return 0;
 }
-
