@@ -1,8 +1,6 @@
-//
-// Created by max on 22/1/2020.
-//
+#include <SDL.h>
+#include <SDL_image.h>
 
-#include <SDL_system.h>
 
 #ifndef SEABATTLE_INTERFACE_H
 #define SEABATTLE_INTERFACE_H

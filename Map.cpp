@@ -33,14 +33,14 @@ void CMap::delete_map() {
     }
 }
 
-void draw_mishit (SDL_Renderer *renderer, int& x , int& y , int offset) {
-    SDL_Rect low = {x * CELL_SIZE + MAP_OFFSET_X + offset + 2, y * CELL_SIZE + MAP_OFFSET_Y + 18 , 3 , 3};
-    SDL_Rect low_1 = {x * CELL_SIZE + MAP_OFFSET_X + offset + 2, y * CELL_SIZE + MAP_OFFSET_Y + 10 , 3 , 3};;
-    SDL_Rect mid = {x * CELL_SIZE + MAP_OFFSET_X + offset + 2, y * CELL_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};
-    SDL_Rect up_1 = {x * CELL_SIZE + MAP_OFFSET_X + offset + 10, y * CELL_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};
-    SDL_Rect up = {x * CELL_SIZE + MAP_OFFSET_X + offset + 18, y * CELL_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};;
-
+void CMap::draw_mishit (SDL_Renderer *renderer, int& x, int& y) {
     SDL_SetRenderDrawColor(renderer ,  93 , 102 , 111 , 255);;
+
+    SDL_Rect low = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 2, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 18 , 3 , 3};
+    SDL_Rect low_1 = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 2, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 10 , 3 , 3};;
+    SDL_Rect mid = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 2, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 2 , 3 , 3};
+    SDL_Rect up_1 = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 10, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 2 , 3 , 3};
+    SDL_Rect up = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 18, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 2 , 3 , 3};;
 
     for (int i = 0 ; i < 10 ; i++ , mid.x += mid.h , mid.y += mid.w ) {
         SDL_RenderFillRect(renderer , &mid);
@@ -63,12 +63,15 @@ void draw_mishit (SDL_Renderer *renderer, int& x , int& y , int offset) {
     }
 }
 
-
 void CMap::draw(SDL_Renderer* renderer) {
+
     for (int y = MAP_OFFSET_Y + offset_y, i = 0 ; i < MAP_CELL_WIDTH ; i++, y += CELL_SIZE) {
         for (int x = MAP_OFFSET_X + offset_x, j = 0 ; j < MAP_CELL_HEIGHT ; j++, x += CELL_SIZE) {
 
             put_cell(renderer, x, y);
+            if (cells_array[i][j] == MISHIT_CELL) {
+                draw_mishit(renderer, j, i);
+            }
         }
     }
 

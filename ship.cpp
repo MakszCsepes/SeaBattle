@@ -118,43 +118,44 @@ void CShip::change_hidden() {
 void CShip::change_selected() {
     is_selected = !is_selected;
 }
-void CShip::put_ship_on_map(int** map){
-    int c = 1;
+void CShip::put_ship_on_map(int** map_array){
+    int damage_counter = 0;
+
     if (inverse == HORIZONTAL) {
         for (int i = 0; i < size; i++) {
             if (damage_level & section_array[i]) {
-                map[head_coordinate_y][head_coordinate_x + i] = HIT_PALUBA_CELL;
-                c++;
+                map_array[head_coordinate_y][head_coordinate_x + i] = HIT_PALUBA_CELL;
+                damage_counter++;
             } else {
-                map[head_coordinate_y][head_coordinate_x + i] = PALUBA_CELL;
+                map_array[head_coordinate_y][head_coordinate_x + i] = PALUBA_CELL;
             }
         }
 
-        if(c == size) {
+        if(damage_counter == size) {
             for (int i = 0; i < size; i++) {
-                map[head_coordinate_y][head_coordinate_x + i] = KILLED_PALUBA_CELL;
+                map_array[head_coordinate_y][head_coordinate_x + i] = KILLED_PALUBA_CELL;
             }
         }
     } else {
         for (int i = 0; i < size; i++) {
             if (damage_level & section_array[i]) {
-                map[head_coordinate_y + i][head_coordinate_x] = HIT_PALUBA_CELL;
-                c++;
+                map_array[head_coordinate_y + i][head_coordinate_x] = HIT_PALUBA_CELL;
+                damage_counter++;
             } else {
-                map[head_coordinate_y + i][head_coordinate_x] = PALUBA_CELL;
+                map_array[head_coordinate_y + i][head_coordinate_x] = PALUBA_CELL;
             }
         }
 
-        if(c == size) {
+        if(damage_counter == size) {
             for (int i = 0; i < size; i++) {
-                map[head_coordinate_y + i][head_coordinate_x] = KILLED_PALUBA_CELL;
+                map_array[head_coordinate_y + i][head_coordinate_x] = KILLED_PALUBA_CELL;
             }
         }
     }
 
 }
 
-bool CShip::coordinate_belong_to_ship(int x, int y) {
+bool CShip::has_the_coordinate(int& x, int& y) {
     if (inverse == HORIZONTAL) {
         if (y == head_coordinate_y) {
             for(int i = head_coordinate_x ; i < head_coordinate_x + size ; i++) {
@@ -201,7 +202,7 @@ int CShip::get_palub_number(int x, int y) {
 }
 
 void CShip::add_hit_palub(int x, int y) {
-    if (coordinate_belong_to_ship(x, y)) {
+    if (has_the_coordinate(x, y)) {
         switch(get_palub_number(x, y)) {
             case 1:
                 damage_level |= SEC_1;

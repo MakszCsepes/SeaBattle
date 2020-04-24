@@ -3,11 +3,19 @@ project(SeaBattle)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
-
-add_executable(SeaBattle main.cpp ship.cpp ship.h player.cpp player.h Map.cpp Map.h Interface.h World.cpp World.h cursor.cpp cursor.h)
-
-find_package(SDL2 REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 include_directories(${SDL2_INCLUDE_DIR})
+link_directories(${PROJECT_SOURCE_DIR}/lib)
+
+INCLUDE(FindPkgConfig)
+PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARY} "SDL2_ttf" lua dl)
+set(SOURCE_FILES main.cpp World.cpp ship.cpp player.cpp cursor.cpp Map.cpp)
+add_executable(SeaBattle ${SOURCE_FILES})
+
+TARGET_LINK_LIBRARIES(SeaBattle ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} "SDL2_ttf" lua dl)

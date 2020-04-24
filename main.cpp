@@ -1,7 +1,5 @@
 #include <iostream>
-#include <SDL2/SDL.h>
-#include "ai.h"
-#include <SDL2/SDL_ttf.h>
+#include "World.h"
 
 using namespace luabridge;
 
@@ -22,7 +20,7 @@ lua_State* get_new_script() {
     luaL_openlibs(L);
     getGlobalNamespace(L).addFunction("printMessage", printMessage);
 
-    luaL_dofile(L, "../script.lua");
+    luaL_dofile(L, "../script 101 .lua");
     lua_pcall(L, 0, 0, 0);
     return L;
 }
@@ -49,16 +47,19 @@ CWorld* get_game(){
 }
 
 int main() {
+
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         cout << "SDL_Init Error: " << SDL_GetError() << endl;
         return 0;
     }
 
     srand(time(0));
-
-    SDL_Window *screen = SDL_CreateWindow("NavalBattle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                          WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Renderer *renderer = SDL_CreateRenderer(screen, -1, SDL_RENDERER_SOFTWARE);
+/*
+    SDL_Window *window = SDL_CreateWindow("NavalBattle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                          WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);*/
+    SDL_Window *window = SDL_CreateWindow("NavalBattle",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,
+                              WINDOW_WIDTH,WINDOW_HEIGHT,SDL_WINDOW_RESIZABLE);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     SDL_Event event;
 
     CWorld* game = new CWorld(get_game());
@@ -171,16 +172,17 @@ int main() {
                                     if((game->user.current_ship = game->user.get_new_ship()) == nullptr) {
                                         game->user.change_inited();
                                         game->user.map.cursor.change_hidden();
+
                                         game->init_ai();
                                     }
                                 }
                             } else if (game->game_state == PLAY_GAME) {
-                                if (game->ai.any_ship_damaged_on_position(game->user.map.cursor.position_x, game->user.map.cursor.position_y)) {
-                                    game->user.increase_points();
-                                } else {
-// todo                                    ai->do_hit
-                                    if(game->user.any_ship_damaged_on_position(game->ai.map.cursor.position_x, game->ai.map.cursor.position_y)) {
-                                        game->ai.increase_points();
+                                if(game->turn == USER_TURN) {
+                                    if (game->user.was_ever_hit_on_the_position(game->ai.map,game->user.map.cursor.position_x,game->user.map.cursor.position_y) == false) {
+                                        game->user.do_hit(game->ai);
+                                        if (!game->user.get_aim_status()) {
+                                            game->change_turn();
+                                        }
                                     }
                                 }
                             }
@@ -193,10 +195,21 @@ int main() {
                     break;
             }
 
+            if (game->turn == AI_TURN) {
+                game->ai.assign_new_hit_coords_from(game->lua_state, game->user);
+                if (game->ai.was_ever_hit_on_the_position(game->user.map,game->ai.map.cursor.position_x,game->ai.map.cursor.position_y) == false) {
+                    game->ai.do_hit(game->user);
+
+                    if(!game->ai.get_aim_status()) {
+                        SDL_Delay(200);
+                        game->change_turn();
+                    }
+                }
+            }
             // SELECT STATE
             switch (game->game_state) {
                 case PUT_SHIPS:
-                    if (game->user.get_player_init_status() and game->ai.get_player_init_status()) {
+                    if (game->user.get_init_status() and game->ai.get_init_status()) {
                         game->game_state = PLAY_GAME;
                     }
                     break;

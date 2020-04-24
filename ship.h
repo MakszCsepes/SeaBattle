@@ -90,10 +90,10 @@ public:
     void change_selected();
     void change_inverse();
     void change_hidden();
-    bool coordinate_belong_to_ship(int x, int y);
+    bool has_the_coordinate(int& x, int& y);
 
     int get_palub_number(int x, int y);
-    void put_ship_on_map(int** map);
+    void put_ship_on_map(int** map_array);
     void add_hit_palub(int x, int y);
     void draw_hit(SDL_Renderer*, int&);
     void draw_ship_head(SDL_Renderer* );

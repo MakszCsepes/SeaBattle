@@ -1,22 +1,9 @@
-//
-// Created by max on 23/1/2020.
-//
-
 #ifndef SEABATTLE_WORLD_H
 #define SEABATTLE_WORLD_H
 
 #include "player.h"
 #include <list>
-#include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-
-extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-};
-
-#include <LuaBridge/LuaBridge.h>
 
 #define WINDOW_HEIGHT 1000
 #define WINDOW_WIDTH 1000
@@ -25,7 +12,6 @@ extern "C" {
 #define PLAY_GAME 1
 #define ENDGAME 2
 
-using namespace luabridge;
 using namespace std;
 
 struct coordinate{
@@ -37,11 +23,13 @@ class CWorld : public IDrawable {
 
     list<coordinate> l;
 public:
+
     CPlayer user;
     CPlayer ai;
 
     lua_State* lua_state; // state for Lua script
     int game_state; // PUT_SHIPS, PLAY_GAME, ENDGAME
+    bool turn;
 
     CWorld() {
 //        todo default constr;
@@ -55,17 +43,23 @@ public:
         lua_state = lua;
 
         l = list;
+
+        turn = USER_TURN;
     }
     CWorld(CWorld* world) {
         l = world->l;
         user = world->user;
         ai = world->ai;
         lua_state = world->lua_state;
-
+        turn = world->turn;
         game_state = world->game_state;
     }
+
     void draw(SDL_Renderer*) override;
+    void change_turn();
     void init_ai();
+
+
     CWorld& operator =(const CWorld* obj) {
         user = obj->user;
         ai = obj->ai;
@@ -75,6 +69,8 @@ public:
         lua_state = obj->lua_state;
 
         l = obj->l;
+
+        turn = obj->turn;
     }
 };
 

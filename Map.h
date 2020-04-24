@@ -1,7 +1,3 @@
- //
-// Created by max on 22/1/2020.
-//
-
 #ifndef SEABATTLE_MAP_H
 #define SEABATTLE_MAP_H
 
@@ -26,7 +22,6 @@ const int HIT_PALUBA_CELL = 3;
 const int KILLED_PALUBA_CELL = 4;
 
 class CMap : public IDrawable {
-
 public:
     int offset_x;
     int offset_y;
@@ -58,6 +53,7 @@ public:
     void create_map();
     void delete_map();
     void draw(SDL_Renderer*) override;
+    void draw_mishit(SDL_Renderer*, int&, int&);
 
     CMap& operator = (const CMap& obj) {
         cursor = obj.cursor;

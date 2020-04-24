@@ -52,7 +52,7 @@ bool can_move (CShip* moved_ship ,coordinate& ship_coords) {
 
     return true;
 }
-
+/*
 void draw_text(SDL_Renderer *renderer, char* text) {
     TTF_Init();
     TTF_Font *font = TTF_OpenFont("/usr/share/fonts/opentype/noto/NotoSansCJK.ttc", 25);
@@ -78,8 +78,8 @@ void draw_script_version(SDL_Renderer *renderer, lua_State* L) {
     char v[vers.length() + 1];
     strcpy(v, vers.c_str());
 
-    draw_text(renderer, v);
-}
+//    draw_text(renderer, v);
+}*/
 
 // HITS
 void draw_hit (SDL_Renderer *renderer, int& x , int& y , int offset) {
@@ -167,7 +167,6 @@ void CWorld::draw(SDL_Renderer* renderer){
         user.current_ship->draw(renderer);
 
     } else if (game_state == PLAY_GAME) {
-//        TODO destroyed(user.ships_list_head, ai.ships_list_head, game.user_map, game.ai_map);
 
         // PLAYER
         user.draw(renderer);
@@ -176,7 +175,6 @@ void CWorld::draw(SDL_Renderer* renderer){
         ai.draw(renderer);
 
     } else if (game_state == ENDGAME) {
-//       todo  destroyed(game.user.ships_list_head, game.ai.ships_list_head, game.user_map, game.ai_map);
 
         // PLAYER
         user.draw(renderer);
@@ -185,15 +183,15 @@ void CWorld::draw(SDL_Renderer* renderer){
         ai.draw(renderer);
     }
 
-    draw_script_version(renderer, lua_state);
+//    draw_script_version(renderer, lua_state);
     SDL_RenderPresent(renderer);
 }
 
 void CWorld::init_ai() {
     coordinate head_ship_coordinate = {0, 0};
-    int inverse(true);
+    int inverse(HORIZONTAL);
 
-    while (ai.get_player_init_status() == false) {
+    while (ai.get_init_status() == false) {
 
         if ((ai.current_ship = ai.get_new_ship())) {
             ai.current_ship->change_hidden();
@@ -212,13 +210,22 @@ void CWorld::init_ai() {
                 if (ai.can_put_ship()) {
                     ai.add_ship_to_player_array();
                 }
-
             }
 
         } else {
             ai.change_inited();
         }
     }
+
+    // todo find error
+    for(int i = 0 ; i < MAP_CELL_HEIGHT ; i++) {
+        for(int j = 0 ; j < MAP_CELL_WIDTH ; j++) {
+            ai.map[i][j] = EMPTY_CELL;
+        }
+    }
 }
 
+void CWorld::change_turn() {
+    turn = !turn;
+}
 // AI
