@@ -48,7 +48,7 @@ public:
         ships = new CShip[ship_quantity];
     }
     CPlayer(char name[], CMap& Map) {
-        strcpy(this->name, name);
+        set_name(this->name);
 
         points = 0;
         ship_quantity = 0;
@@ -92,7 +92,6 @@ public:
 
         return *this;
     }
-
 
     void draw(SDL_Renderer*) override;
     int** generate_state_map(const CPlayer&);

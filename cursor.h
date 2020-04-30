@@ -51,6 +51,8 @@ public:
         position_x = cursor_source.position_x;
 
         hidden = cursor_source.hidden;
+
+        return *this;
     }
 };
 

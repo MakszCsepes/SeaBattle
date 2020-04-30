@@ -1,6 +1,10 @@
 #include <iostream>
 #include "World.h"
 
+#include "InitClose.h"
+#include "Texture.h"
+#include "IsoEngine.h"
+
 using namespace luabridge;
 
 void printMessage(const std::string& s) {
@@ -46,20 +50,98 @@ CWorld* get_game(){
     return new CWorld(user, computer, game_state, L, l);
 }
 
-int main() {
+#define NUM_ISO_TILES 5
+typedef struct gameT {
+    SDL_Event event;
+    int loop_done;
+    SDL_Rect mouseRect;
+    point2DT mousePoint;
+    isoEngineT isoEngine;
+}gameT;
+gameT game;
+textureT tilesTex;
+SDL_Rect tiles_rect[NUM_ISO_TILES];
 
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        cout << "SDL_Init Error: " << SDL_GetError() << endl;
-        return 0;
+void setupRect(SDL_Rect* rect, int x, int y, int w, int h) {
+    rect->x = x;
+    rect->y = y;
+    rect->w = w;
+    rect->h = h;
+}
+void init_tile_clip() {
+    int x = 0;
+    int y = 0;
+
+    texture_init(&tilesTex, 0, 0, 0, NULL, NULL, SDL_FLIP_NONE);
+    for (int i = 0; i < NUM_ISO_TILES; i++) {
+        setupRect(&tiles_rect[i], x, y, 64, 80);
+        x += 64;
+    }
+}
+
+void init() {
+    game.loop_done = 0;
+    int tileSize = 32;
+    init_tile_clip();
+    init_IsoEngine(&game.isoEngine, tileSize);
+    IsoEngineSetMapSize(&game.isoEngine, 16, 16);
+
+    if(load_texture(&tilesTex, "data/isotiles.png") == 0) {
+        fprintf(stderr, "Error, could not load texture : data/isotiles.png");
+        exit(0);
     }
 
+}
+void drawIsoMouse() {
+    game.mousePoint.x = (game.mouseRect.x/TILESIZE)*TILESIZE;
+    game.mousePoint.y = (game.mouseRect.y/TILESIZE)*TILESIZE;
+
+    // For very other x`position on the map
+
+    if((game.mousePoint.x/TILESIZE)%2) {
+        // Move mouse down by half a tile
+        // so we can pick isometric tiles on that row as well
+        game.mousePoint.y += TILESIZE*0.5;
+    }
+    texture_renderer_XY_clip(&tilesTex, game.mousePoint.x, game.mousePoint.y, &tiles_rect[0]);
+}
+void draw() {
+    SDL_SetRenderDrawColor(get_renderer(), 0, 0, 0, 0);
+    SDL_RenderClear(get_renderer());
+
+    texture_renderer_XY_clip(&tilesTex, game.mouseRect.x, game.mouseRect.y, &tiles_rect[2]);
+    drawIsoMouse();
+    SDL_RenderPresent(get_renderer());
+
+    SDL_Delay(10);
+}
+void update() {
+    SDL_GetMouseState(&game.mouseRect.x, &game.mouseRect.y);
+}
+void update_input() {
+    while (SDL_PollEvent(&game.event) != 0) {
+        switch(game.event.type) {
+            case SDL_QUIT:
+                game.loop_done = 1;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+int main(int argc, char* argv[]) {
     srand(time(0));
-/*
-    SDL_Window *window = SDL_CreateWindow("NavalBattle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                          WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);*/
-    SDL_Window *window = SDL_CreateWindow("NavalBattle",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,
-                              WINDOW_WIDTH,WINDOW_HEIGHT,SDL_WINDOW_RESIZABLE);
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
+    init_SDL("Naval_Battle");
+    init();
+    while (!game.loop_done) {
+        update();
+        update_input();
+        draw();
+    }
+
+    return 0;
     SDL_Event event;
 
     CWorld* game = new CWorld(get_game());
@@ -68,9 +150,14 @@ int main() {
     while (run_game) {
 
         while (SDL_PollEvent(&event)) {
-            game->draw(renderer);
+
+            game->draw(get_renderer());
+
             // KEYBOARD EVENTS
             switch (event.type) {
+                case SDL_QUIT:
+                    run_game = !run_game;
+                    break;
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym) {
                         case SDLK_RIGHT :
@@ -163,7 +250,7 @@ int main() {
                             }
                             break;
                         case SDLK_ESCAPE:
-                            return 0;
+                            run_game = !run_game;
                         case SDLK_SPACE:
                             if (game->game_state == PUT_SHIPS) {
                                 if (game->user.can_put_ship()) {
@@ -220,7 +307,7 @@ int main() {
                     }
                     break;
                 case ENDGAME:
-                    game->draw(renderer);
+                    game->draw(get_renderer());
                     break;
                 default:
                     run_game = false;
@@ -228,5 +315,8 @@ int main() {
         }
 
     }
+
+    close_down_SDL();
+
     return 0;
 }

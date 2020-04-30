@@ -5,8 +5,6 @@
 #include <list>
 #include <SDL2/SDL_ttf.h>
 
-#define WINDOW_HEIGHT 1000
-#define WINDOW_WIDTH 1000
 
 #define PUT_SHIPS 0
 #define PLAY_GAME 1

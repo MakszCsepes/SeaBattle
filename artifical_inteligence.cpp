@@ -1,8 +1,6 @@
 #include <ctime>
-#include "ai.h"
+#include "World.h"
 #include <iostream>
-#include <fstream>
-#include <unistd.h>
 
 using namespace std;
 
