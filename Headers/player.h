@@ -47,8 +47,8 @@ public:
         ship_quantity = 0;
         ships = new CShip[ship_quantity];
     }
-    CPlayer(char name[], CMap& Map) {
-        set_name(this->name);
+    CPlayer(char* name, CMap& Map) {
+        set_name(name);
 
         points = 0;
         ship_quantity = 0;
@@ -93,7 +93,7 @@ public:
         return *this;
     }
 
-    void draw(SDL_Renderer*) override;
+    void draw(isoEngineT*);
     int** generate_state_map(const CPlayer&);
 
     LuaRef convert_array_to_table(int** array_map, lua_State* luaState) {

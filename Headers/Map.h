@@ -52,19 +52,20 @@ public:
 
     void create_map();
     void delete_map();
-    void draw(SDL_Renderer*) override;
+    void draw(isoEngineT*);
     void draw_mishit(SDL_Renderer*, int&, int&);
 
     CMap& operator = (const CMap& obj) {
-        cursor = obj.cursor;
         cursor = obj.cursor;
 
         offset_y = obj.offset_y;
         offset_x = obj.offset_x;
 
+        int val;
         for(int i = 0 ; i < MAP_CELL_HEIGHT ; i++) {
             for(int j = 0 ; j < MAP_CELL_WIDTH ; j++) {
-                cells_array[i][j] = obj.cells_array[i][j];
+                val = obj.cells_array[i][j];
+                cells_array[i][j] = val;
             }
         }
 

@@ -18,10 +18,8 @@ struct coordinate{
 };
 
 class CWorld : public IDrawable {
-
     list<coordinate> l;
 public:
-
     CPlayer user;
     CPlayer ai;
 
@@ -32,7 +30,7 @@ public:
     CWorld() {
 //        todo default constr;
     }
-    CWorld(CPlayer User, CPlayer AI, int game_state, lua_State* lua, list<coordinate> list) {
+    CWorld(const CPlayer& User, const CPlayer& AI, int game_state, lua_State* lua, const list<coordinate>& list) {
         this->user = User;
         this->ai = AI;
 
@@ -44,6 +42,14 @@ public:
 
         turn = USER_TURN;
     }
+    CWorld(const CWorld& world) {
+        l = world.l;
+        user = world.user;
+        ai = world.ai;
+        lua_state = world.lua_state;
+        turn = world.turn;
+        game_state = world.game_state;
+    }
     CWorld(CWorld* world) {
         l = world->l;
         user = world->user;
@@ -53,7 +59,7 @@ public:
         game_state = world->game_state;
     }
 
-    void draw(SDL_Renderer*) override;
+    void draw(isoEngineT*);
     void change_turn();
     void init_ai();
 

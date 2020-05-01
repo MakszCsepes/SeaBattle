@@ -1,10 +1,7 @@
-//
-// Created by max on 22/1/2020.
-//
-
 #include "Map.h"
 
-void put_cell (SDL_Renderer* renderer, int& x, int& y ) {
+// recent draw()
+/*void put_cell (SDL_Renderer* renderer, int& x, int& y ) {
     SDL_Rect r;
 
     r.x = x;
@@ -14,6 +11,15 @@ void put_cell (SDL_Renderer* renderer, int& x, int& y ) {
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(renderer, &r);
+}*/
+void put_cell (isoEngineT* isoEngine, int& x, int& y, int& i , int& j, int& tile_number) {
+    point2DT point;
+    point.x = (j*TILESIZE) + isoEngine->scrollX;
+    point.y = (i*TILESIZE) + isoEngine->scrollY;
+
+    Converter2DToIso(&point);
+
+    texture_renderer_XY_clip(&tilesTex, point.x, point.y, &tiles_rect[tile_number + 2]);
 }
 
 void CMap::create_map()  {
@@ -31,6 +37,7 @@ void CMap::delete_map() {
     for(int i = 0 ; i < MAP_CELL_HEIGHT ; i++) {
         delete[] cells_array[i] ;
     }
+    delete [] cells_array;
 }
 
 void CMap::draw_mishit (SDL_Renderer *renderer, int& x, int& y) {
@@ -63,19 +70,21 @@ void CMap::draw_mishit (SDL_Renderer *renderer, int& x, int& y) {
     }
 }
 
-void CMap::draw(SDL_Renderer* renderer) {
+void CMap::draw(isoEngineT* isoEngine) {
 
     for (int y = MAP_OFFSET_Y + offset_y, i = 0 ; i < MAP_CELL_WIDTH ; i++, y += CELL_SIZE) {
         for (int x = MAP_OFFSET_X + offset_x, j = 0 ; j < MAP_CELL_HEIGHT ; j++, x += CELL_SIZE) {
 
-            put_cell(renderer, x, y);
+            put_cell(isoEngine, x, y, i, j, cells_array[i][j]);
+//            put_cell(get_renderer(), x, y);
             if (cells_array[i][j] == MISHIT_CELL) {
-                draw_mishit(renderer, j, i);
+                draw_mishit(get_renderer(), j, i);
             }
         }
     }
 
     if ( !cursor.get_hidden()) {
-        cursor.draw(renderer);
+        cursor.draw(get_renderer());
     }
+
 }

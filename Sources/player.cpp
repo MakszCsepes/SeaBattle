@@ -1,7 +1,3 @@
-//
-// Created by max on 21/1/2020.
-//
-
 #include "player.h"
 
 void CPlayer::set_name(char *new_name) {
@@ -40,13 +36,14 @@ bool CPlayer::get_aim_status() {
     return got_the_aim;
 }
 
-void CPlayer::draw(SDL_Renderer *renderer) {
-    map.draw(renderer);
+void CPlayer::draw(isoEngineT* isoEngine) {
+    map.draw(isoEngine);
+
     for(int i = 0 ; i < ship_quantity ; i++) {
         if (ships[i].get_hidden() == false) {
-            ships[i].draw(renderer);
+            ships[i].draw(get_renderer());
         } else if ( (ships[i].get_hidden() == true) && (ships[i].get_X() != 0) ) {
-            ships[i].draw(renderer);
+            ships[i].draw(get_renderer());
         }
     }
 

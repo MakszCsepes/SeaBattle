@@ -1,7 +1,3 @@
-//
-// Created by max on 23/1/2020.
-//
-
 #include "World.h"
 
 const int R_back = 63;
@@ -155,36 +151,35 @@ void draw_hits (SDL_Renderer *renderer, CMap& map, int player_offset) {
     }
 }
 
-void CWorld::draw(SDL_Renderer* renderer){
-    SDL_SetRenderDrawColor(renderer, R_back, G_back, B_back, 255);
-    SDL_RenderClear(renderer);
-
+void CWorld::draw(isoEngineT* isoEngine){
+    SDL_SetRenderDrawColor(get_renderer(), R_back, G_back, B_back, 255);
+    SDL_RenderClear(get_renderer());
 
     if (game_state == PUT_SHIPS) {
 
-        user.draw(renderer);
+        user.draw(isoEngine);
 
-        user.current_ship->draw(renderer);
+//        user.current_ship->draw(get_renderer());
 
     } else if (game_state == PLAY_GAME) {
 
         // PLAYER
-        user.draw(renderer);
+        user.draw(isoEngine);
 
         // COMPUTER
-        ai.draw(renderer);
+        ai.draw(isoEngine);
 
     } else if (game_state == ENDGAME) {
 
         // PLAYER
-        user.draw(renderer);
+        user.draw(isoEngine);
 
         // COMPUTER
-        ai.draw(renderer);
+        ai.draw(isoEngine);
     }
 
-//    draw_script_version(renderer, lua_state);
-    SDL_RenderPresent(renderer);
+//    draw_script_version(isoEngine, lua_state);
+    SDL_RenderPresent(get_renderer());
 }
 
 void CWorld::init_ai() {

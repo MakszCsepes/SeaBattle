@@ -1,7 +1,3 @@
-//
-// Created by max on 6/2/2020.
-//
-
 #ifndef SEABATTLE_CURSOR_H
 #define SEABATTLE_CURSOR_H
 

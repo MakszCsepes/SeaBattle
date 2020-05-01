@@ -1,7 +1,3 @@
-//
-// Created by max on 21/1/2020.
-//
-
 #include "ship.h"
 
 void CShip::change_inverse() {

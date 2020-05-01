@@ -16,7 +16,13 @@ PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(SOURCE_FILES main.cpp World.cpp ship.cpp player.cpp cursor.cpp Map.cpp Renderer.h Renderer.cpp InitClose.h InitCLose.cpp Texture.h Texture.cpp IsoEngine.h IsoEngine.cpp)
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+file(GLOB CPPS "Sources/*.cpp")
+file(GLOB HS "Headers/*.h")
+
+include_directories("${PROJECT_SOURCE_DIR}/Headers")
+include_directories("${PROJECT_SOURCE_DIR}/Sources")
+include_directories("${PROJECT_SOURCE_DIR}/Lua Scripts")
+
+add_executable(${PROJECT_NAME} ${CPPS})
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} "SDL2_ttf" lua dl)

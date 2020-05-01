@@ -2,16 +2,21 @@
 #include <math.h>
 #include <stdio.h>
 
-void init_IsoEngine(isoEngineT* isoEngineT, int tileSizeInPixels) {
+#include <iostream>
+using namespace std;
+
+unsigned int TILESIZE;
+
+void init_IsoEngine(isoEngineT* isoEngineT, int tilesSizeInPixels) {
     if (isoEngineT == NULL) {
         fprintf(stderr, "Error in init_IsoEngine(...) : IsoEngine parameter is NULL \n");
         return;
     }
 
-    if(tileSizeInPixels <= 0) {
+    if(tilesSizeInPixels <= 0) {
         TILESIZE = 32;
     } else {
-        TILESIZE = tileSizeInPixels;
+        TILESIZE = tilesSizeInPixels;
     }
 
     isoEngineT->mapHeight = 0;
@@ -22,15 +27,22 @@ void init_IsoEngine(isoEngineT* isoEngineT, int tileSizeInPixels) {
 
 void IsoEngineSetMapSize(isoEngineT* isoEngineT, int width, int height) {
     if (isoEngineT == NULL) {
-        isoEngineT->mapWidth = width;
-        isoEngineT->mapHeight = height;
+        return;
     }
-
+    isoEngineT->mapWidth = width;
+    isoEngineT->mapHeight = height;
 }
 
 void Converter2DToIso(point2DT* point) {
     int tmpX = (point->x - point->y);
-    int tmpY = (point->x - point->y)*0.5;
+    int tmpY = (point->x + point->y)*0.5;
+
+    point->x = tmpX;
+    point->y = tmpY;
+}
+void ConverterIsoTo2D(point2DT* point) {
+    int tmpX = (2 * point->y + point->x) * 0.5;
+    int tmpY = (2 * point->y - point->x) * 0.5;
 
     point->x = tmpX;
     point->y = tmpY;
