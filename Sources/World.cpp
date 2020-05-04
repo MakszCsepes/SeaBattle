@@ -10,7 +10,7 @@ coordinate get_rand_from_list(list<coordinate>& l) {
     int i = 0;
     for(coordinate v : l) {
         if(i == p) {
-            cout << v.i << " " << v.j << endl;
+//            cout << v.i << " " << v.j << endl;
             return v;
         }
         i++;
@@ -159,7 +159,7 @@ void CWorld::draw(isoEngineT* isoEngine){
 
         user.draw(isoEngine);
 
-//        user.current_ship->draw(get_renderer());
+        user.current_ship->draw(isoEngine);
 
     } else if (game_state == PLAY_GAME) {
 

@@ -12,10 +12,11 @@
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(renderer, &r);
 }*/
-void put_cell (isoEngineT* isoEngine, int& x, int& y, int& i , int& j, int& tile_number) {
+void put_cell (isoEngineT* isoEngine, int& map_offset_x, int& map_offset_y, int& i , int& j, int& tile_number) {
     point2DT point;
-    point.x = (j*TILESIZE) + isoEngine->scrollX;
-    point.y = (i*TILESIZE) + isoEngine->scrollY;
+
+    point.x = (i*TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + map_offset_x;
+    point.y = (j*TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + map_offset_y;
 
     Converter2DToIso(&point);
 
@@ -72,19 +73,19 @@ void CMap::draw_mishit (SDL_Renderer *renderer, int& x, int& y) {
 
 void CMap::draw(isoEngineT* isoEngine) {
 
-    for (int y = MAP_OFFSET_Y + offset_y, i = 0 ; i < MAP_CELL_WIDTH ; i++, y += CELL_SIZE) {
-        for (int x = MAP_OFFSET_X + offset_x, j = 0 ; j < MAP_CELL_HEIGHT ; j++, x += CELL_SIZE) {
+    for (int i = 0 ; i < MAP_CELL_WIDTH ; i++) {
+        for (int j = 0 ; j < MAP_CELL_HEIGHT ; j++) {
 
-            put_cell(isoEngine, x, y, i, j, cells_array[i][j]);
-//            put_cell(get_renderer(), x, y);
+            put_cell(isoEngine, offset_x, offset_y, i, j, cells_array[i][j]);
+
             if (cells_array[i][j] == MISHIT_CELL) {
                 draw_mishit(get_renderer(), j, i);
             }
         }
     }
 
-    if ( !cursor.get_hidden()) {
-        cursor.draw(get_renderer());
+    if (!cursor.get_hidden()) {
+        cursor.draw(isoEngine);
     }
 
 }

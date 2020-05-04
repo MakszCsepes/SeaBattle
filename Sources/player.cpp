@@ -41,9 +41,9 @@ void CPlayer::draw(isoEngineT* isoEngine) {
 
     for(int i = 0 ; i < ship_quantity ; i++) {
         if (ships[i].get_hidden() == false) {
-            ships[i].draw(get_renderer());
+            ships[i].draw(isoEngine);
         } else if ( (ships[i].get_hidden() == true) && (ships[i].get_X() != 0) ) {
-            ships[i].draw(get_renderer());
+            ships[i].draw(isoEngine);
         }
     }
 

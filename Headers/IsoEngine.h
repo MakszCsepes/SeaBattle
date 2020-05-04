@@ -18,6 +18,6 @@ void GetTileCoordinates (point2DT* point, point2DT* point2DCoord);
 void Converter2DToIso(point2DT* point);
 void ConverterIsoTo2D(point2DT* point);
 void IsoEngineSetMapSize(isoEngineT* isoEngineT, int width, int height);
-void init_IsoEngine(isoEngineT* isoEngineT, int tileSizeInPixels);
+void init_IsoEngine(isoEngineT* isoEngineT);
 
 #endif //SEABATTLE_ISOENGINE_H

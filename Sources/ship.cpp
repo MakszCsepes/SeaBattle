@@ -92,20 +92,85 @@ void CShip::draw_hit (SDL_Renderer* renderer, int& sec_number) {
         hit_right.y += hit_right.w;
     }
 }
-void CShip::draw(SDL_Renderer* renderer) {
+
+// draw ships
+void draw_submarine(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y) {
+
+    //
+    point2DT point;
+    // todo fix +20 and + 11
+    point.x = (i * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x + 20;
+    point.y = (j * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y + 10;
+
+    Converter2DToIso(&point);
+
+    texture_renderer_XY_clip(&submarineTex, point.x, point.y, &submarine_rect[0]);
+    //
+}
+void draw_destroyer(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y) {
+    point2DT point;
+    point.x = (i * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x + 20;
+    point.y = (j * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y + 10;
+
+    Converter2DToIso(&point);
+
+    texture_renderer_XY_clip(&destroyerTex, point.x, point.y, &destroyer_rect[0]);
+}
+void draw_cruiser(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y) {
+
+    //
+    point2DT point;
+    // todo fix +20 and + 11
+    point.x = (i * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x;
+    point.y = (j * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y;
+
+    Converter2DToIso(&point);
+
+    texture_renderer_XY_clip(&cruiserTex, point.x, point.y, &cruiser_rect[0]);
+    //
+}
+void draw_battleship(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y) {
+    point2DT point;
+
+    // todo fix 10
+    point.x = (i * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x + 10;
+    point.y = (j * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y;
+
+    Converter2DToIso(&point);
+
+    texture_renderer_XY_clip(&battleshipTex, point.x, point.y, &battleship_rect[0]);
+}
+
+
+void CShip::draw(isoEngineT* isoEngine) {
     if (hidden && (damage_level == 0)) {
         return;
     }
 
-    for(int i = 0 ; i < size ; i++) {
+    switch (size) {
+        case SUBMARINE_SIZE:
+            draw_submarine(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y);
+            break;
+        case CRUISER_SIZE:
+            draw_cruiser(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y);
+            break;
+        case DESTROYER_SIZE:
+            draw_destroyer(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y);
+            break;
+        case BATTLESHIP_SIZE:
+            draw_battleship(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y);
+            break;
+    }
+
+    /*for(int i = 0 ; i < size ; i++) {
         if (!hidden || (damage_level & section_array[i])) {
-            draw_ship_part(renderer, i);
+            draw_ship_part(get_renderer(), i);
 
             if (damage_level & section_array[i]) {
-                draw_hit(renderer, i);
+                draw_hit(get_renderer(), i);
             }
         }
-    }
+    }*/
 }
 
 void CShip::change_hidden() {

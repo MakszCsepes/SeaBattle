@@ -9,7 +9,7 @@ void init_SDL(char* window_name) {
 
 //    SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 
-    if(SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0")) {
+    if(SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0)) {
         fprintf(stdout, "Warning: Linear texture filtering was not enabled");
     }
 

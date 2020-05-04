@@ -35,7 +35,7 @@ public:
         hidden = true;
     }
 
-    void draw(SDL_Renderer* ) override;
+    void draw(isoEngineT*);
     void change_hidden();
     bool get_hidden();
 

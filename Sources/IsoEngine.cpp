@@ -5,18 +5,12 @@
 #include <iostream>
 using namespace std;
 
-unsigned int TILESIZE;
+unsigned int TILESIZE = 32;
 
-void init_IsoEngine(isoEngineT* isoEngineT, int tilesSizeInPixels) {
+void init_IsoEngine(isoEngineT* isoEngineT) {
     if (isoEngineT == NULL) {
         fprintf(stderr, "Error in init_IsoEngine(...) : IsoEngine parameter is NULL \n");
         return;
-    }
-
-    if(tilesSizeInPixels <= 0) {
-        TILESIZE = 32;
-    } else {
-        TILESIZE = tilesSizeInPixels;
     }
 
     isoEngineT->mapHeight = 0;
@@ -49,11 +43,10 @@ void ConverterIsoTo2D(point2DT* point) {
 }
 
 void GetTileCoordinates (point2DT* point, point2DT* point2DCoord) {
-    float tempX = (float)point->x/(float)TILESIZE;
-    float tempY = (float)point->y/(float)TILESIZE;
+    float tempX = (float)point->x / (float)TILESIZE;
+    float tempY = (float)point->y / (float)TILESIZE;
 
     //convert back to integer
-
     point2DCoord->x = (int)tempX;
     point2DCoord->y = (int)tempY;
 }

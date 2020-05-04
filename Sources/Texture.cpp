@@ -22,7 +22,6 @@ int load_texture(textureT* texture, char* filename) {
         SDL_FreeSurface(tmpSurface);
         return 1;
     }
-    return 0;
 }
 
 void texture_init(textureT* texture, int x, int y, double angle, SDL_Point* center, SDL_Rect* cliprect, SDL_RendererFlip fliptype) {
@@ -43,7 +42,6 @@ void texture_renderer_XY_clip(textureT* texture, int x, int y, SDL_Rect* cliprec
         fprintf(stderr, "Warning: passed texture eas null \n");
         return;
     }
-
     texture->x = x;
     texture->y = y;
     texture->cliprect = cliprect;
@@ -55,8 +53,5 @@ void texture_renderer_XY_clip(textureT* texture, int x, int y, SDL_Rect* cliprec
         quad.h = texture->cliprect->h;
     }
 
-
     SDL_RenderCopyEx(get_renderer(), texture->texture, texture->cliprect, &quad, texture->angle, texture->center, texture->fliptype);
-
-
 }

@@ -2,7 +2,9 @@
 #define SEABATTLE_MAP_H
 
 #include "cursor.h"
+#include <iostream>
 
+using namespace std;
 #define MAP_CELL_WIDTH 10
 #define MAP_CELL_HEIGHT 10
 
@@ -11,8 +13,8 @@
 #define HIT 2
 
 #define USER_MAP_OFFSET_X 0
-#define USER_MAP_OFFSET_Y 100
-#define AI_MAP_OFFSET_X 435
+#define USER_MAP_OFFSET_Y 0
+#define AI_MAP_OFFSET_X 350
 #define AI_MAP_OFFSET_Y 100
 
 const int EMPTY_CELL = 0;

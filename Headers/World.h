@@ -27,6 +27,15 @@ public:
     int game_state; // PUT_SHIPS, PLAY_GAME, ENDGAME
     bool turn;
 
+    // SDL gameT
+    SDL_Event event;
+    int loop_done;
+    SDL_Rect mouseRect;
+    point2DT mousePoint;
+    point2DT mapScroll2Dpos;
+    int mapScrollSpeed;
+    isoEngineT isoEngine;
+    int lastTiledClick;
     CWorld() {
 //        todo default constr;
     }

@@ -24,6 +24,8 @@
 #define BATTLESHIP_QUANTITY 1
 #define BATTLESHIP_SIZE 4
 
+
+
 static const int SEC_0 = 0b0000;
 static const int SEC_1 = 0b0001;
 static const int SEC_2 = 0b0010;
@@ -114,7 +116,7 @@ public:
         return *this;
     }
 
-    void draw(SDL_Renderer*) override;
+    void draw(isoEngineT*);
 };
 
 #endif //SEABATTLE_SHIP_H
