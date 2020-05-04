@@ -20,7 +20,7 @@ lua_State* get_new_script() {
     luaL_openlibs(L);
     getGlobalNamespace(L).addFunction("printMessage", printMessage);
 
-    luaL_dofile(L, "../script 101 .lua");
+    luaL_dofile(L, "Lua Scripts/script 101 .lua");
     lua_pcall(L, 0, 0, 0);
     return L;
 }
@@ -72,16 +72,16 @@ gameT gameT1;
 
 SDL_Rect tiles_rect[NUM_ISO_TILES];
 textureT tilesTex;
-SDL_Rect submarine_rect[1];
+SDL_Rect submarine_rect[2];
 textureT submarineTex;
 
-SDL_Rect cruiser_rect[1];
-textureT cruiserTex;
-
-SDL_Rect destroyer_rect[1];
+SDL_Rect destroyer_rect[2];
 textureT destroyerTex;
 
-SDL_Rect battleship_rect[1];
+SDL_Rect cruiser_rect[2];
+textureT cruiserTex;
+
+SDL_Rect battleship_rect[2];
 textureT battleshipTex;
 
 void setupRect(SDL_Rect* rect, int x, int y, int w, int h) {
@@ -106,10 +106,12 @@ void init() {
 
     init_tile_clip(tiles_rect, &tilesTex, 64, 80, NUM_ISO_TILES);
 
-    init_tile_clip(submarine_rect, &submarineTex, 51, 35, 1);
-    init_tile_clip(destroyer_rect, &destroyerTex, 77, 54, 1);
-    init_tile_clip(cruiser_rect, &cruiserTex, 126, 92, 1);
-    init_tile_clip(battleship_rect, &battleshipTex, 145, 95, 1);
+    init_tile_clip(submarine_rect, &submarineTex, 51, 35, 2);
+
+    init_tile_clip(destroyer_rect, &destroyerTex, 77, 54, 2);
+
+    init_tile_clip(cruiser_rect, &cruiserTex, 126, 92, 2);
+    init_tile_clip(battleship_rect, &battleshipTex, 145, 95, 2);
 
     init_IsoEngine(&gameT1.isoEngine);
     IsoEngineSetMapSize(&gameT1.isoEngine, MAP_WIDTH, MAP_HEIGHT);
@@ -123,27 +125,27 @@ void init() {
 
     gameT1.lastTiledClick = -1;
 
-    if(load_texture(&tilesTex, "data/isotiles_sb.png") == 0) {
-        fprintf(stderr, "Error, could not load texture : data/isotiles.png");
+    if(load_texture(&tilesTex, "Images/isotiles_sb.png") == 0) {
+        fprintf(stderr, "Error, could not load texture : Images/isotiles_sb.png");
         exit(0);
     }
 
-    if(load_texture(&submarineTex, "data/submarine.png") == 0) {
+    if(load_texture(&submarineTex, "Images/submarine_inv.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/submarine.png");
         exit(0);
     }
 
-    if(load_texture(&destroyerTex, "data/destroyer.png") == 0) {
+    if(load_texture(&destroyerTex, "Images/destroyer_inv.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/destroyer.png");
         exit(0);
     }
 
-    if(load_texture(&cruiserTex, "data/cruiser.png") == 0) {
+    if(load_texture(&cruiserTex, "Images/cruiser_inv.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/cruiser.png");
         exit(0);
     }
 
-    if(load_texture(&battleshipTex, "data/battleship.png") == 0) {
+    if(load_texture(&battleshipTex, "Images/battleship_inv.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/battleship.png");
         exit(0);
     }
@@ -531,7 +533,7 @@ int main(int argc, char* argv[]) {
     // fires effect
     fire_pos.x = fire_pos.y = 0;
     fire_pos.w = fire_pos.h = 32;
-    if(load_texture(&cur_img, "data/fires2.png") == 0) {
+    if(load_texture(&cur_img, "Images/fires2.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/fires.png");
         exit(0);
     }

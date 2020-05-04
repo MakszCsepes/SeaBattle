@@ -16,13 +16,17 @@ PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+include_directories("Headers")
+include_directories("Sources")
+include_directories("Lua Scripts")
+include_directories("Images")
+
 file(GLOB CPPS "Sources/*.cpp")
 file(GLOB HS "Headers/*.h")
-
-include_directories("${PROJECT_SOURCE_DIR}/Headers")
-include_directories("${PROJECT_SOURCE_DIR}/Sources")
-include_directories("${PROJECT_SOURCE_DIR}/Lua Scripts")
+file(GLOB LS "Lua Scripts/*.lua")
+file(GLOB ISO_MODELS "Images/*.png")
 
 add_executable(${PROJECT_NAME} ${CPPS})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} "SDL2_ttf" lua dl)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${Boost_LIBRARIES} "SDL2_ttf" lua dl)

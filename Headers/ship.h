@@ -24,6 +24,17 @@
 #define BATTLESHIP_QUANTITY 1
 #define BATTLESHIP_SIZE 4
 
+extern SDL_Rect submarine_rect[2];
+extern textureT submarineTex;
+
+extern SDL_Rect destroyer_rect[2];
+extern textureT destroyerTex;
+
+extern SDL_Rect cruiser_rect[2];
+extern textureT cruiserTex;
+
+extern SDL_Rect battleship_rect[2];
+extern textureT battleshipTex;
 
 
 static const int SEC_0 = 0b0000;

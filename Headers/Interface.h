@@ -33,18 +33,6 @@ typedef struct gameT {
 }gameT;
 extern gameT gameT1;
 
-extern SDL_Rect submarine_rect[1];
-extern textureT submarineTex;
-
-extern SDL_Rect cruiser_rect[1];
-extern textureT cruiserTex;
-
-extern SDL_Rect destroyer_rect[1];
-extern textureT destroyerTex;
-
-extern SDL_Rect battleship_rect[1];
-extern textureT battleshipTex;
-
 extern unsigned int TILESIZE;
 
 class IDrawable {
