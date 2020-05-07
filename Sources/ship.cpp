@@ -131,9 +131,9 @@ void draw_battleship(isoEngineT* isoEngine, int i, int j, int offset_x, int offs
 
     Converter2DToIso(&point);
 
-    // todo why -MAP_OFFSET_X
+    // todo why -90
     // check inverse : if it`s HORIZONTAL, then we render horizontal version of the ship
-    texture_renderer_XY_clip(&battleshipTex, inv ? point.x : point.x - MAP_OFFSET_X, point.y, inv ? &battleship_rect[0] : &battleship_rect[1]);
+    texture_renderer_XY_clip(&battleshipTex, inv ? point.x : point.x - 90, point.y, inv ? &battleship_rect[0] : &battleship_rect[1]);
 }
 
 
@@ -157,6 +157,12 @@ void CShip::draw(isoEngineT* isoEngine) {
             break;
     }
 
+    for(int i = 0 ; i < size ; i++) {
+        if (damage_level & section_array[i]) {
+            CEffect* hit = new CEffect(head_coordinate_x, head_coordinate_y, MAP_OFFSET_X, MAP_OFFSET_Y, offset_x, offset_y);
+            hit->draw(isoEngine);
+        }
+    }
     /*for(int i = 0 ; i < size ; i++) {
         if (!hidden || (damage_level & section_array[i])) {
             draw_ship_part(get_renderer(), i);

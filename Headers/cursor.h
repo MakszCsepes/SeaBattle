@@ -1,10 +1,10 @@
 #ifndef SEABATTLE_CURSOR_H
 #define SEABATTLE_CURSOR_H
 
-#include "Interface.h"
+#include "CEffect.h"
 
-const int MAP_OFFSET_X = 90;
-const int MAP_OFFSET_Y = 200;
+const int MAP_OFFSET_X = 50;
+const int MAP_OFFSET_Y = 100;
 const int CELL_SIZE = 40;
 
 class CCursor : public IDrawable{

@@ -25,14 +25,16 @@ lua_State* get_new_script() {
     return L;
 }
 CWorld* get_game(){
-    CCursor u_cursor(USER_MAP_OFFSET_X, USER_MAP_OFFSET_Y);
-    CMap user_map(USER_MAP_OFFSET_X, USER_MAP_OFFSET_Y, 0, 0, u_cursor);
+    // init user
+    CCursor u_cursor(AI_MAP_OFFSET_X, AI_MAP_OFFSET_Y);
+    CMap user_map(USER_MAP_OFFSET_X, USER_MAP_OFFSET_Y, u_cursor);
     char u_name[15];
-    strcpy(u_name, "undefined");
+    strcpy(u_name, "max");
     CPlayer user(u_name, user_map);
 
+    // init ai
     CCursor ai_cursor(USER_MAP_OFFSET_X, USER_MAP_OFFSET_Y);
-    CMap ai_map(AI_MAP_OFFSET_X, AI_MAP_OFFSET_Y, 0, 0, ai_cursor);
+    CMap ai_map(AI_MAP_OFFSET_X, AI_MAP_OFFSET_Y, ai_cursor);
     char ai_name[15];
     strcpy(ai_name, "AI");
     CPlayer computer(ai_name, ai_map);
@@ -211,9 +213,7 @@ void get_mouseTile_click(isoEngineT* isoEngine) {
 }
 
 // effect
-const int FPS = 60;
 int FrameTime = 0;
-
 int framewidth;
 int frameheight;
 int texwidth;
@@ -224,8 +224,8 @@ SDL_Rect fire_pos;
 
 textureT cur_img;
 void draw_effect(int i, int j) {
-    fire_pos.y = i;
-    fire_pos.x = j;
+    fire_pos.y = i + MAP_OFFSET_Y + USER_MAP_OFFSET_Y;
+    fire_pos.x = j + MAP_OFFSET_X + USER_MAP_OFFSET_X;
 
     FrameTime++;
 
@@ -252,11 +252,8 @@ void draw(isoEngineT* isoEngine) {
     SDL_RenderClear(get_renderer());
 
     drawIsoMap(&gameT1.isoEngine);
-    /*draw_submarine(isoEngine, 0, 15);
-    draw_cruiser(isoEngine, 3, 15);
-    draw_destroyer(isoEngine, 7, 15);
-    draw_battleship(isoEngine, 12, 15);*/
-    draw_effect(320, 370);
+
+    draw_effect(0, 0);
     draw_effect(300, 330);
 
     drawIsoMouse();
@@ -355,6 +352,7 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
                                 game->user.map.cursor.position_x = 0;
                             }
                         }
+
                         break;
                     case SDLK_LEFT :
 
@@ -460,7 +458,6 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
             default:
                 break;
         }
-
         /*const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
         if(keystate[SDL_SCANCODE_W]) {
@@ -523,7 +520,6 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
     }
 }
 
-
 int main(int argc, char* argv[]) {
     srand(time(0));
 
@@ -540,25 +536,14 @@ int main(int argc, char* argv[]) {
     SDL_QueryTexture(cur_img.texture, NULL, NULL, &texwidth, &texheight);
 
     framewidth = texwidth / 8;
-    cout << framewidth << endl;
     frameheight = texheight / 4;
-    cout << frameheight;
 
     fire_rect.x = fire_rect.y = 0;
     fire_rect.w = framewidth;
     fire_rect.h = frameheight;
     // fires effect
 
-    /*while (!gameT1.loop_done) {
-        SDL_RenderClear(get_renderer());
-        update();
-        update_input_tut();
-        draw(&gameT1.isoEngine);
 
-        SDL_RenderCopy(get_renderer(), cur_img.texture, &fire_rect, &fire_pos);
-        SDL_RenderPresent(get_renderer());
-    }
-    return 0;*/
     SDL_Event event;
 
     CWorld* game = new CWorld(get_game());

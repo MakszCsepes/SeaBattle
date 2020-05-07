@@ -163,11 +163,16 @@ void CWorld::draw(isoEngineT* isoEngine){
 
     } else if (game_state == PLAY_GAME) {
 
+        // first of all we draw maps and ships
         // PLAYER
         user.draw(isoEngine);
-
         // COMPUTER
         ai.draw(isoEngine);
+
+        // then we put cursor on a map
+        if (!user.map.cursor.get_hidden()) {
+            user.map.cursor.draw(isoEngine);
+        }
 
     } else if (game_state == ENDGAME) {
 
@@ -206,17 +211,10 @@ void CWorld::init_ai() {
                     ai.add_ship_to_player_array();
                 }
             }
-
         } else {
             ai.change_inited();
         }
-    }
 
-    // todo find error
-    for(int i = 0 ; i < MAP_CELL_HEIGHT ; i++) {
-        for(int j = 0 ; j < MAP_CELL_WIDTH ; j++) {
-            ai.map[i][j] = EMPTY_CELL;
-        }
     }
 }
 

@@ -14,28 +14,23 @@
 
 #define SUBMARINE_QUANTITY 4
 #define SUBMARINE_SIZE 1
-
-#define DESTROYER_QUANTITY 3
-#define DESTROYER_SIZE 2
-
-#define CRUISER_QUANTITY 2
-#define CRUISER_SIZE 3
-
-#define BATTLESHIP_QUANTITY 1
-#define BATTLESHIP_SIZE 4
-
 extern SDL_Rect submarine_rect[2];
 extern textureT submarineTex;
 
+#define DESTROYER_QUANTITY 3
+#define DESTROYER_SIZE 2
 extern SDL_Rect destroyer_rect[2];
 extern textureT destroyerTex;
 
+#define CRUISER_QUANTITY 2
+#define CRUISER_SIZE 3
 extern SDL_Rect cruiser_rect[2];
 extern textureT cruiserTex;
 
+#define BATTLESHIP_QUANTITY 1
+#define BATTLESHIP_SIZE 4
 extern SDL_Rect battleship_rect[2];
 extern textureT battleshipTex;
-
 
 static const int SEC_0 = 0b0000;
 static const int SEC_1 = 0b0001;

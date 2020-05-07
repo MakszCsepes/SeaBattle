@@ -14,8 +14,8 @@ using namespace std;
 
 #define USER_MAP_OFFSET_X 0
 #define USER_MAP_OFFSET_Y 0
-#define AI_MAP_OFFSET_X 350
-#define AI_MAP_OFFSET_Y 100
+#define AI_MAP_OFFSET_X 375
+#define AI_MAP_OFFSET_Y 400
 
 const int EMPTY_CELL = 0;
 const int PALUBA_CELL = 1;
@@ -41,7 +41,7 @@ public:
         offset_x = 0;
         offset_y = 0;
     }
-    CMap(int offset_x, int offset_y, int map_x, int map_y, CCursor& cur) {
+    CMap(int offset_x, int offset_y, CCursor& cur) {
         this->offset_x = offset_x;
         this->offset_y = offset_y;
 

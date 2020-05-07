@@ -19,8 +19,6 @@
 extern SDL_Rect tiles_rect[NUM_ISO_TILES];
 extern textureT tilesTex;
 
-
-
 typedef struct gameT {
     SDL_Event event;
     int loop_done;

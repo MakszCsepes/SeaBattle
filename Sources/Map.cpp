@@ -15,8 +15,8 @@
 void put_cell (isoEngineT* isoEngine, int& map_offset_x, int& map_offset_y, int& i , int& j, int& tile_number) {
     point2DT point;
 
-    point.x = (i*TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + map_offset_x;
-    point.y = (j*TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + map_offset_y;
+    point.x = (j*TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + map_offset_x;
+    point.y = (i*TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + map_offset_y;
 
     Converter2DToIso(&point);
 
@@ -79,13 +79,8 @@ void CMap::draw(isoEngineT* isoEngine) {
             put_cell(isoEngine, offset_x, offset_y, i, j, cells_array[i][j]);
 
             if (cells_array[i][j] == MISHIT_CELL) {
-                draw_mishit(get_renderer(), j, i);
+//                draw_mishit(get_renderer(), j, i);
             }
         }
     }
-
-    if (!cursor.get_hidden()) {
-        cursor.draw(isoEngine);
-    }
-
 }

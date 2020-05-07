@@ -151,7 +151,10 @@ void CPlayer::do_hit(CPlayer& enemy) {
 
             enemy.ships[i].add_hit_palub(map.cursor.position_x, map.cursor.position_y);
 
-            if(enemy.ships[i].get_X())
+            if(enemy.ships[i].get_X() == 15) {
+                enemy.map[map.cursor.position_y][map.cursor.position_x] = KILLED_PALUBA_CELL;
+            }
+
             enemy.map[map.cursor.position_y][map.cursor.position_x] = HIT_PALUBA_CELL;
 
             got_the_aim = true;
