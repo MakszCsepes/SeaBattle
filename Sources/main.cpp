@@ -458,34 +458,6 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
             default:
                 break;
         }
-        /*const Uint8* keystate = SDL_GetKeyboardState(NULL);
-
-        if(keystate[SDL_SCANCODE_W]) {
-            gameT1.isoEngine.scrollX += gameT1.mapScrollSpeed;
-            gameT1.isoEngine.scrollY += gameT1.mapScrollSpeed;
-            gameT1.mapScroll2Dpos.y += gameT1.mapScrollSpeed;
-
-            if(gameT1.mapScroll2Dpos.y > 0) {
-                gameT1.mapScroll2Dpos.y = 0;
-                gameT1.isoEngine.scrollX -= gameT1.mapScrollSpeed;
-                gameT1.isoEngine.scrollY -= gameT1.mapScrollSpeed;
-            }
-        }
-        if(keystate[SDL_SCANCODE_A]) {
-            gameT1.isoEngine.scrollX += gameT1.mapScrollSpeed;
-            gameT1.isoEngine.scrollY -= gameT1.mapScrollSpeed;
-            gameT1.mapScroll2Dpos.x -= gameT1.mapScrollSpeed;
-        }
-        if(keystate[SDL_SCANCODE_S]) {
-            gameT1.isoEngine.scrollX -= gameT1.mapScrollSpeed;
-            gameT1.isoEngine.scrollY -= gameT1.mapScrollSpeed;
-            gameT1.mapScroll2Dpos.y -= gameT1.mapScrollSpeed;
-        }
-        if(keystate[SDL_SCANCODE_D]) {
-            gameT1.isoEngine.scrollX -= gameT1.mapScrollSpeed;
-            gameT1.isoEngine.scrollY += gameT1.mapScrollSpeed;
-            gameT1.mapScroll2Dpos.x += gameT1.mapScrollSpeed;
-        }*/
 
         if (game->turn == AI_TURN) {
             game->ai.assign_new_hit_coords_from(game->lua_state, game->user);
@@ -542,7 +514,6 @@ int main(int argc, char* argv[]) {
     fire_rect.w = framewidth;
     fire_rect.h = frameheight;
     // fires effect
-
 
     SDL_Event event;
 
