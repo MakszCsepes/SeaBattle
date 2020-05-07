@@ -163,15 +163,6 @@ void CShip::draw(isoEngineT* isoEngine) {
             hit->draw(isoEngine);
         }
     }
-    /*for(int i = 0 ; i < size ; i++) {
-        if (!hidden || (damage_level & section_array[i])) {
-            draw_ship_part(get_renderer(), i);
-
-            if (damage_level & section_array[i]) {
-                draw_hit(get_renderer(), i);
-            }
-        }
-    }*/
 }
 
 void CShip::change_hidden() {

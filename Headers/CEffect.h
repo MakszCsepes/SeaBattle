@@ -40,8 +40,8 @@ public:
     }
     CEffect(int x, int y , int map_off_x, int map_off_y, int off_x, int off_y) {
         FrameTime = 0;
-        fire.x = y * TILESIZE + map_off_x + off_x;
-        fire.y = x * TILESIZE + map_off_y + off_y;
+        fire_position.x = x * TILESIZE + map_off_x + off_x;
+        fire_position.y = y * TILESIZE + map_off_y + off_y;
 
         // todo why 32
         fire_position.w = fire_position.h = 32;

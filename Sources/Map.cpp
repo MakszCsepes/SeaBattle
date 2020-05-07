@@ -1,17 +1,5 @@
 #include "Map.h"
 
-// recent draw()
-/*void put_cell (SDL_Renderer* renderer, int& x, int& y ) {
-    SDL_Rect r;
-
-    r.x = x;
-    r.y = y;
-    r.w = CELL_SIZE - 2;
-    r.h = CELL_SIZE - 2;
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &r);
-}*/
 void put_cell (isoEngineT* isoEngine, int& map_offset_x, int& map_offset_y, int& i , int& j, int& tile_number) {
     point2DT point;
 

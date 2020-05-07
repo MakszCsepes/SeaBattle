@@ -4,7 +4,6 @@ void CEffect::draw(isoEngineT* isoEngine) {
     point2DT point;
     FrameTime++;
 
-
     if(FPS / FrameTime == 12) {
         FrameTime = 0;
 
