@@ -91,8 +91,6 @@ public:
         for(int i = 0 ; i < ship_quantity ; i++) {
             ships[i] = player_source.ships[i];
         }
-
-        effects = player_source.effects;
         return *this;
     }
 

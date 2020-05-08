@@ -150,6 +150,8 @@ void CPlayer::do_hit(CPlayer& enemy) {
         if(enemy.ships[i].has_the_coordinate(map.cursor.position_x, map.cursor.position_y)) {
 
             enemy.ships[i].add_hit_palub(map.cursor.position_x, map.cursor.position_y);
+            CEffect new_effect(map.cursor.position_x, map.cursor.position_y, enemy.map.offset_x, enemy.map.offset_y);
+            enemy.ships[i].add_effect(new_effect);
 
             if(enemy.ships[i].get_X() == 15) {
                 enemy.map[map.cursor.position_y][map.cursor.position_x] = KILLED_PALUBA_CELL;

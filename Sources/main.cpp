@@ -7,7 +7,6 @@ void printMessage(const std::string& s) {
     std::cout << s << " ";
 }
 void init_list(list<coordinate>& l) {
-    list<coordinate> :: iterator iter;
     for(int i = 0 ; i < SHIP_QUANTITY ; i++) {
         for(int j = 0 ; j < SHIP_QUANTITY ; j++) {
             coordinate p = {i, j};
@@ -74,6 +73,7 @@ gameT gameT1;
 
 SDL_Rect tiles_rect[NUM_ISO_TILES];
 textureT tilesTex;
+
 SDL_Rect submarine_rect[2];
 textureT submarineTex;
 
@@ -109,9 +109,7 @@ void init() {
     init_tile_clip(tiles_rect, &tilesTex, 64, 80, NUM_ISO_TILES);
 
     init_tile_clip(submarine_rect, &submarineTex, 51, 35, 2);
-
     init_tile_clip(destroyer_rect, &destroyerTex, 77, 54, 2);
-
     init_tile_clip(cruiser_rect, &cruiserTex, 126, 92, 2);
     init_tile_clip(battleship_rect, &battleshipTex, 145, 95, 2);
 
@@ -214,33 +212,32 @@ void get_mouseTile_click(isoEngineT* isoEngine) {
 
 // effect
 int FrameTime = 0;
-int framewidth;
-int frameheight;
-int texwidth;
-int texheight;
+int framewidth, frameheight;
+int texwidth, texheight;
 
 SDL_Rect fire_rect;
 SDL_Rect fire_pos;
 
 textureT cur_img;
 void draw_effect(int i, int j) {
-    fire_pos.y = i + MAP_OFFSET_Y + USER_MAP_OFFSET_Y;
-    fire_pos.x = j + MAP_OFFSET_X + USER_MAP_OFFSET_X;
+    fire_pos.y = i;
+    fire_pos.x = j;
 
     FrameTime++;
 
-    if(FPS / FrameTime == 12) {
+    if (FrameTime == 2) {
         FrameTime = 0;
-
         fire_rect.x += framewidth;
-        if(fire_rect.x >= texwidth) {
+
+        if(fire_rect.x >= cur_img.width) {
             fire_rect.y += frameheight;
             fire_rect.x = 0;
 
-            if (fire_rect.y >= texheight) {
+            if (fire_rect.y >= cur_img.height) {
                 fire_rect.y = 0;
             }
         }
+
     }
 
     SDL_RenderCopy(get_renderer(), cur_img.texture, &fire_rect, &fire_pos);
@@ -261,7 +258,9 @@ void draw(isoEngineT* isoEngine) {
         texture_renderer_XY_clip(&tilesTex, 0, 0, &tiles_rect[gameT1.lastTiledClick]);
     }
 
-    SDL_Delay(10);
+
+//    SDL_Delay(10);
+    SDL_RenderPresent(get_renderer());
 }
 
 // tutorial functions
@@ -509,7 +508,6 @@ int main(int argc, char* argv[]) {
 
     framewidth = texwidth / 8;
     frameheight = texheight / 4;
-
     fire_rect.x = fire_rect.y = 0;
     fire_rect.w = framewidth;
     fire_rect.h = frameheight;
@@ -521,9 +519,15 @@ int main(int argc, char* argv[]) {
     bool run_game = true;
 
     while (run_game) {
+        SDL_SetRenderDrawColor(get_renderer(), 0, 0 ,0, 0);
 
         update_input(game, run_game, event);
+//        SDL_RenderClear(get_renderer());
+//        draw_effect(100, 0);
+//        draw(&gameT1.isoEngine);
+//        SDL_RenderPresent(get_renderer());
         game->draw(&gameT1.isoEngine);
+
     }
 
     close_down_SDL();
