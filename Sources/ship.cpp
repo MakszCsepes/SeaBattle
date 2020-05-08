@@ -164,20 +164,7 @@ void CShip::draw(isoEngineT* isoEngine) {
             break;
     }
 
-    for(int i = 0 ; i < size ; i++) {
-        if (damage_level & section_array[i]) {
-
-            if (inverse) {
-                CEffect *hit = new CEffect(head_coordinate_x + i, head_coordinate_y, offset_x,
-                                           offset_y);
-                hit->draw(isoEngine);
-            } else {
-                CEffect *hit = new CEffect(head_coordinate_x, head_coordinate_y + i, offset_x,
-                                           offset_y);
-                hit->draw(isoEngine);
-            }
-        }
-    }
+    draw_effects(isoEngine);
 }
 
 void CShip::change_hidden() {

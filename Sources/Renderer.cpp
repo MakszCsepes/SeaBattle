@@ -11,7 +11,7 @@ void init_renderer(char* window_caption) {
         fprintf(stderr, "SDL CreateWindow failed: %s", SDL_GetError());
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     if (renderer == NULL) {
         fprintf(stderr, "SDL CreateRenderer failed %s", SDL_GetError());

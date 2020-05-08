@@ -1,4 +1,5 @@
 #include <iostream>
+#include <tgmath.h>
 #include "ai.h"
 
 using namespace luabridge;
@@ -220,8 +221,8 @@ SDL_Rect fire_pos;
 
 textureT cur_img;
 void draw_effect(int i, int j) {
-    fire_pos.y = i;
-    fire_pos.x = j;
+    fire_pos.y = i*TILESIZE + MAP_OFFSET_Y;
+    fire_pos.x = j*TILESIZE + MAP_OFFSET_X;
 
     FrameTime++;
 
@@ -523,8 +524,7 @@ int main(int argc, char* argv[]) {
 
         update_input(game, run_game, event);
 //        SDL_RenderClear(get_renderer());
-//        draw_effect(100, 0);
-//        draw(&gameT1.isoEngine);
+//        draw_effect(10, 10);
 //        SDL_RenderPresent(get_renderer());
         game->draw(&gameT1.isoEngine);
 

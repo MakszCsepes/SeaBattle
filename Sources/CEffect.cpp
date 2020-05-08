@@ -4,27 +4,30 @@ void CEffect::draw(isoEngineT* isoEngine) {
     point2DT point;
     FrameTime++;
 
-    if(FPS / FrameTime == 12) {
+    if(FrameTime == 2) {
         FrameTime = 0;
 
-        fire.x += frameWidth;
-        if(fire.x >= fire_texture.width) {
-            fire.y += frameHeight;
-            fire.x = 0;
+        effect.x += frameWidth;
+        if(effect.x >= effect_texture.width) {
+            effect.y += frameHeight;
+            effect.x = 0;
 
-            if (fire.y >= fire_texture.height) {
-                fire.y = 0;
+            if (effect.y >= effect_texture.height) {
+                effect.y = 0;
             }
         }
     }
 
-    point.x = fire_position.x + isoEngine->scrollX;
-    point.y = fire_position.y + isoEngine->scrollY;
+    point.x = effect_position.x + isoEngine->scrollX;
+    point.y = effect_position.y + isoEngine->scrollY;
+
 
     Converter2DToIso(&point);
+    SDL_Rect eff_pos;
+    eff_pos.h = effect_position.h;
+    eff_pos.w = effect_position.w;
+    eff_pos.x = point.x + 15;
+    eff_pos.y = point.y + 15;
 
-    fire_position.x = point.x;
-    fire_position.y = point.y;
-
-    SDL_RenderCopy(get_renderer(), fire_texture.texture, &fire, &fire_position);
+    SDL_RenderCopy(get_renderer(), effect_texture.texture, &effect, &eff_pos);
 }

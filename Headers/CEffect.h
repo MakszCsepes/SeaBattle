@@ -5,60 +5,49 @@
 #include "CAnimation.h"
 
 const int FPS = 60;
-
+const int EFFECT_SIZE = 32;
+const int FRAME_NUMBER_IN_WIDTH = 8;
+const int FRAME_NUMBER_IN_HEIGTH = 4;
 
 class CEffect : public IDrawable{
     int FrameTime;
-    SDL_Rect fire;
-    SDL_Rect fire_position;
+    SDL_Rect effect;
+    SDL_Rect effect_position;
 
-    textureT fire_texture;
+    textureT effect_texture;
 
     int frameWidth;
     int frameHeight;
 public:
     CEffect() {
-        FrameTime = 0;
-        fire.x = fire.y = 0;
+        effect.x = effect.y = 0;
 
-        // todo why 32
-        fire_position.w = fire_position.h = 32;
-
-        if(load_texture(&fire_texture, "Images/fires2.png") == 0) {
-            fprintf(stderr, "Error, could not load texture : data/fires.png");
-            exit(0);
-        }
-        SDL_QueryTexture(fire_texture.texture, NULL, NULL, &fire_texture.width, &fire_texture.height);
-
-        // todo why 8 and 4
-        frameWidth = fire_texture.width / 8;
-        frameHeight = fire_texture.height / 4;
-
-        fire.x = fire.y = 0;
-        fire.w = frameWidth;
-        fire.h = frameHeight;
+        *this = CEffect(effect.x, effect.y, 0, 0);
     }
-    CEffect(int x, int y , int map_off_x, int map_off_y, int off_x, int off_y) {
+    CEffect(int x, int y, int offset_x, int offset_y) {
         FrameTime = 0;
-        fire_position.x = x * TILESIZE + map_off_x + off_x;
-        fire_position.y = y * TILESIZE + map_off_y + off_y;
+        effect_position.x = x * TILESIZE + MAP_OFFSET_X + offset_x;
+        effect_position.y = y * TILESIZE + MAP_OFFSET_Y + offset_y;
 
-        // todo why 32
-        fire_position.w = fire_position.h = 32;
+        effect_position.w = effect_position.h = EFFECT_SIZE;
 
-        if(load_texture(&fire_texture, "Images/fires2.png") == 0) {
+        if(load_texture(&effect_texture, "Images/fires2.png") == 0) {
             fprintf(stderr, "Error, could not load texture : data/fires.png");
             exit(0);
         }
-        SDL_QueryTexture(fire_texture.texture, NULL, NULL, &fire_texture.width, &fire_texture.height);
+        SDL_QueryTexture(effect_texture.texture, NULL, NULL, &effect_texture.width, &effect_texture.height);
 
-        // todo why 8 and 4
-        frameWidth = fire_texture.width / 8;
-        frameHeight = fire_texture.height / 4;
+        frameWidth = effect_texture.width / FRAME_NUMBER_IN_WIDTH;
+        frameHeight = effect_texture.height / FRAME_NUMBER_IN_HEIGTH;
 
-        fire.x = fire.y = 0;
-        fire.w = frameWidth;
-        fire.h = frameHeight;
+        effect.x = effect.y = 0;
+
+        effect.w = frameWidth;
+        effect.h = frameHeight;
+    }
+
+    ~CEffect() {
+
     }
     void draw(isoEngineT* isoEngine);
 };
