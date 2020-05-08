@@ -1,7 +1,7 @@
 #ifndef SEABATTLE_CURSOR_H
 #define SEABATTLE_CURSOR_H
 
-#include "CEffect.h"
+#include "Interface.h"
 
 const int MAP_OFFSET_X = 50;
 const int MAP_OFFSET_Y = 100;

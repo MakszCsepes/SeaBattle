@@ -136,7 +136,14 @@ void draw_battleship(isoEngineT* isoEngine, int i, int j, int offset_x, int offs
     texture_renderer_XY_clip(&battleshipTex, inv ? point.x : point.x - 90, point.y, inv ? &battleship_rect[0] : &battleship_rect[1]);
 }
 
-
+void CShip::add_effect(const CEffect& new_effect) {
+    effects.push_back(new_effect);
+}
+void CShip::draw_effects(isoEngineT* isoEngine) {
+    for(list<CEffect> :: iterator current_effect = effects.begin() ; current_effect != effects.end() ; current_effect++) {
+        current_effect->draw(isoEngine);
+    }
+}
 void CShip::draw(isoEngineT* isoEngine) {
     if (hidden && (damage_level == 0)) {
         return;
@@ -161,11 +168,11 @@ void CShip::draw(isoEngineT* isoEngine) {
         if (damage_level & section_array[i]) {
 
             if (inverse) {
-                CEffect *hit = new CEffect(head_coordinate_x + i, head_coordinate_y, MAP_OFFSET_X, MAP_OFFSET_Y, offset_x,
+                CEffect *hit = new CEffect(head_coordinate_x + i, head_coordinate_y, offset_x,
                                            offset_y);
                 hit->draw(isoEngine);
             } else {
-                CEffect *hit = new CEffect(head_coordinate_x, head_coordinate_y + i, MAP_OFFSET_X, MAP_OFFSET_Y, offset_x,
+                CEffect *hit = new CEffect(head_coordinate_x, head_coordinate_y + i, offset_x,
                                            offset_y);
                 hit->draw(isoEngine);
             }

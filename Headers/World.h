@@ -2,7 +2,6 @@
 #define SEABATTLE_WORLD_H
 
 #include "player.h"
-#include <list>
 #include <SDL2/SDL_ttf.h>
 
 
@@ -36,6 +35,7 @@ public:
     int mapScrollSpeed;
     isoEngineT isoEngine;
     int lastTiledClick;
+
     CWorld() {
 //        todo default constr;
     }

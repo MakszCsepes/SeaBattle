@@ -59,9 +59,11 @@ public:
 
         current_ship = get_new_ship();
         ships = new CShip[ship_quantity];
+
     }
 
     void add_ship_to_player_array();
+
     void set_name(char*);
     void increase_points();
     void change_inited();
@@ -90,6 +92,7 @@ public:
             ships[i] = player_source.ships[i];
         }
 
+        effects = player_source.effects;
         return *this;
     }
 

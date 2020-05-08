@@ -6,6 +6,7 @@
 #define SEABATTLE_SHIP_H
 
 #include "Map.h"
+#include <list>
 
 #define HORIZONTAL true
 #define VERTICAL false
@@ -47,6 +48,8 @@ class CShip : public IDrawable {
     bool is_selected;
     bool inverse;
     bool hidden;
+
+    list<CEffect> effects;
 public:
     int head_coordinate_x;
     int head_coordinate_y;
@@ -122,7 +125,10 @@ public:
         return *this;
     }
 
+
+    void add_effect(const CEffect&);
     void draw(isoEngineT*);
+    void draw_effects(isoEngineT*);
 };
 
 #endif //SEABATTLE_SHIP_H

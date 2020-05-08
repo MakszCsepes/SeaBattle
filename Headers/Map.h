@@ -1,7 +1,7 @@
 #ifndef SEABATTLE_MAP_H
 #define SEABATTLE_MAP_H
 
-#include "cursor.h"
+#include "CEffect.h"
 #include <iostream>
 
 using namespace std;
