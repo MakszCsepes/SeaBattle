@@ -30,68 +30,6 @@ void CShip::draw_ship_head(SDL_Renderer* renderer) {
     SDL_RenderFillRect(renderer , &ship_head);
 
 }
-void CShip::draw_ship_part(SDL_Renderer* renderer, int i) {
-    SDL_Rect ship_part;
-    ship_part.w = CELL_SIZE;
-    ship_part.h = CELL_SIZE;
-    ship_part.x = -1 + MAP_OFFSET_X + head_coordinate_x * CELL_SIZE + offset_x;
-    ship_part.y = -1 + MAP_OFFSET_Y + head_coordinate_y * CELL_SIZE + offset_y;
-
-    if (is_selected) {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    } else {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    }
-
-    if (inverse) {
-        ship_part.x += 1 + i * CELL_SIZE;
-    } else {
-        ship_part.y += 1 + i * CELL_SIZE;
-    }
-
-    SDL_RenderFillRect(renderer, &ship_part);
-
-    if (i == 0) {
-        draw_ship_head(renderer);
-    }
-
-}
-void CShip::draw_hit (SDL_Renderer* renderer, int& sec_number) {
-    SDL_Rect hit_left ;
-
-    if (inverse == HORIZONTAL) {
-        hit_left.x = (head_coordinate_x + sec_number) * CELL_SIZE + MAP_OFFSET_X + offset_x + 2;
-        hit_left.y = head_coordinate_y * CELL_SIZE + MAP_OFFSET_Y + offset_y + 2;
-    } else {
-        hit_left.x = head_coordinate_x * CELL_SIZE + MAP_OFFSET_X + offset_x + 2;
-        hit_left.y = (head_coordinate_y + sec_number) * CELL_SIZE + MAP_OFFSET_Y + offset_y + 2;
-    }
-    hit_left.h = 3;
-    hit_left.w = 3;
-
-    SDL_Rect hit_right;
-
-    if(inverse == HORIZONTAL) {
-        hit_right.x = (head_coordinate_x + sec_number) * CELL_SIZE + MAP_OFFSET_X + offset_x + CELL_SIZE - 8;
-        hit_right.y = head_coordinate_y * CELL_SIZE + MAP_OFFSET_Y + offset_y + 2;
-    } else {
-        hit_right.x = head_coordinate_x * CELL_SIZE + MAP_OFFSET_X + offset_x + CELL_SIZE - 8;
-        hit_right.y = (head_coordinate_y + sec_number) * CELL_SIZE + MAP_OFFSET_Y + offset_y + 2;
-    }
-    hit_right.h = 3;
-    hit_right.w = 3;
-
-    SDL_SetRenderDrawColor(renderer , 255 , 0 , 0 , 255);
-
-    for (int i = 0 ; i < 10 ; i++ , hit_left.x += hit_left.h , hit_left.y += hit_left.w ) {
-
-        SDL_RenderFillRect(renderer , &hit_left);
-        SDL_RenderFillRect(renderer , &hit_right);
-
-        hit_right.x -= hit_right.h;
-        hit_right.y += hit_right.w;
-    }
-}
 
 // draw ships
 void draw_submarine(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y, bool& inv) {

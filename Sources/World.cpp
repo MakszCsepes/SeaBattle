@@ -104,35 +104,6 @@ void draw_hit (SDL_Renderer *renderer, int& x , int& y , int offset) {
         hit_right.y += hit_right.w;
     }
 }
-/*void draw_mishit (SDL_Renderer *renderer, int& x , int& y , int offset) {
-    SDL_Rect low = {x * CELL_SIZE + MAP_OFFSET_X + offset + 2, y * CELL_SIZE + MAP_OFFSET_Y + 18 , 3 , 3};
-    SDL_Rect low_1 = {x * CELL_SIZE + MAP_OFFSET_X + offset + 2, y * CELL_SIZE + MAP_OFFSET_Y + 10 , 3 , 3};;
-    SDL_Rect mid = {x * CELL_SIZE + MAP_OFFSET_X + offset + 2, y * CELL_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};
-    SDL_Rect up_1 = {x * CELL_SIZE + MAP_OFFSET_X + offset + 10, y * CELL_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};
-    SDL_Rect up = {x * CELL_SIZE + MAP_OFFSET_X + offset + 18, y * CELL_SIZE + MAP_OFFSET_Y + 2 , 3 , 3};;
-
-    SDL_SetRenderDrawColor(renderer ,  93 , 102 , 111 , 255);;
-
-    for (int i = 0 ; i < 10 ; i++ , mid.x += mid.h , mid.y += mid.w ) {
-        SDL_RenderFillRect(renderer , &mid);
-    }
-
-    for (int i = 0 ; i < 8 ; i++ , up_1.x += up_1.h , up_1.y += up_1.w) {
-        SDL_RenderFillRect(renderer , &up_1);
-    }
-
-    for (int i = 0 ; i < 5 ; i++ , up.x += up.h , up.y += up.w) {
-        SDL_RenderFillRect(renderer , &up);
-    }
-
-    for (int i = 0 ; i < 8 ; i++ , low_1.x += low_1.h , low_1.y += low_1.w) {
-        SDL_RenderFillRect(renderer , &low_1);
-    }
-
-    for (int i = 0 ; i < 5 ; i++ , low.x += low.h , low.y += low.w) {
-        SDL_RenderFillRect(renderer , &low);
-    }
-}*/
 void draw_hits (SDL_Renderer *renderer, CMap& map, int player_offset) {
 
     for (int i = 0 ; i < MAP_CELL_WIDTH ; i++) {
