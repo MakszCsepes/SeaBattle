@@ -17,20 +17,6 @@ bool CShip::get_hidden() {
     return hidden;
 }
 
-void CShip::draw_ship_head(SDL_Renderer* renderer) {
-    SDL_Rect ship_head;
-
-    ship_head.x = MAP_OFFSET_X + head_coordinate_x * CELL_SIZE - 1 + offset_x + 12;
-    ship_head.y = MAP_OFFSET_Y + head_coordinate_y * CELL_SIZE - 1 + offset_y + 12;
-    ship_head.w = 12;
-    ship_head.h = 12;
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    SDL_RenderFillRect(renderer , &ship_head);
-
-}
-
 // draw ships
 void draw_submarine(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y, bool& inv) {
     point2DT point;

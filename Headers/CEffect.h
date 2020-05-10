@@ -4,7 +4,6 @@
 
 #include "CAnimation.h"
 
-const int FPS = 60;
 const int EFFECT_SIZE = 32;
 const int FRAME_NUMBER_IN_WIDTH = 8;
 const int FRAME_NUMBER_IN_HEIGTH = 4;

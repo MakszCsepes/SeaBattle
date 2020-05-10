@@ -29,36 +29,6 @@ void CMap::delete_map() {
     delete [] cells_array;
 }
 
-void CMap::draw_mishit (SDL_Renderer *renderer, int& x, int& y) {
-    SDL_SetRenderDrawColor(renderer ,  93 , 102 , 111 , 255);;
-
-    SDL_Rect low = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 2, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 18 , 3 , 3};
-    SDL_Rect low_1 = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 2, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 10 , 3 , 3};;
-    SDL_Rect mid = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 2, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 2 , 3 , 3};
-    SDL_Rect up_1 = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 10, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 2 , 3 , 3};
-    SDL_Rect up = {MAP_OFFSET_X + x * CELL_SIZE + offset_x + 18, MAP_OFFSET_Y + y * CELL_SIZE + offset_y + 2 , 3 , 3};;
-
-    for (int i = 0 ; i < 10 ; i++ , mid.x += mid.h , mid.y += mid.w ) {
-        SDL_RenderFillRect(renderer , &mid);
-    }
-
-    for (int i = 0 ; i < 8 ; i++ , up_1.x += up_1.h , up_1.y += up_1.w) {
-        SDL_RenderFillRect(renderer , &up_1);
-    }
-
-    for (int i = 0 ; i < 5 ; i++ , up.x += up.h , up.y += up.w) {
-        SDL_RenderFillRect(renderer , &up);
-    }
-
-    for (int i = 0 ; i < 8 ; i++ , low_1.x += low_1.h , low_1.y += low_1.w) {
-        SDL_RenderFillRect(renderer , &low_1);
-    }
-
-    for (int i = 0 ; i < 5 ; i++ , low.x += low.h , low.y += low.w) {
-        SDL_RenderFillRect(renderer , &low);
-    }
-}
-
 void CMap::draw(isoEngineT* isoEngine) {
 
     for (int i = 0 ; i < MAP_CELL_WIDTH ; i++) {

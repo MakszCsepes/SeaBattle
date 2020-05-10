@@ -1,5 +1,4 @@
 #include <iostream>
-#include <tgmath.h>
 #include "CWorld.h"
 #include <time.h>
 
