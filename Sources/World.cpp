@@ -48,13 +48,13 @@ bool can_move (CShip* moved_ship ,coordinate& ship_coords) {
 
     return true;
 }
-/*
-void draw_text(SDL_Renderer *renderer, char* text) {
+
+void draw_text(char* text) {
     TTF_Init();
     TTF_Font *font = TTF_OpenFont("/usr/share/fonts/opentype/noto/NotoSansCJK.ttc", 25);
     SDL_Color text_color = {250, 250, 250};
     SDL_Surface * surface = TTF_RenderText_Solid(font, text, text_color);
-    SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_Texture * texture = SDL_CreateTextureFromSurface(get_renderer(),surface);
 
     int w = 10;
     int h = 10;
@@ -63,63 +63,17 @@ void draw_text(SDL_Renderer *renderer, char* text) {
 
     SDL_Rect dstrect = {10 + 50 , 10 + 50, w, h};
 
-    SDL_RenderCopy(renderer, texture, NULL, &dstrect);
-//
-    SDL_RenderPresent(renderer);
+    SDL_RenderCopy(get_renderer(), texture, NULL, &dstrect);
 }
-void draw_script_version(SDL_Renderer *renderer, lua_State* L) {
+
+void draw_script_version(lua_State* L) {
     LuaRef version = getGlobal(L, "script_version");
 
     string vers =  version.cast<std::string>();
     char v[vers.length() + 1];
     strcpy(v, vers.c_str());
 
-//    draw_text(renderer, v);
-}*/
-
-// HITS
-void draw_hit (SDL_Renderer *renderer, int& x , int& y , int offset) {
-    SDL_Rect hit_left ;
-
-    hit_left.x = x * CELL_SIZE + MAP_OFFSET_X + offset + 2;
-    hit_left.y = y * CELL_SIZE + MAP_OFFSET_Y + 2;
-    hit_left.h = 3;
-    hit_left.w = 3;
-
-    SDL_Rect hit_right;
-
-    hit_right.x = x * CELL_SIZE + MAP_OFFSET_X + offset + CELL_SIZE - 8;
-    hit_right.y = y * CELL_SIZE + MAP_OFFSET_Y + 2;
-    hit_right.h = 3;
-    hit_right.w = 3;
-
-    SDL_SetRenderDrawColor(renderer , 255 , 0 , 0 , 255);
-
-    for (int i = 0 ; i < 10 ; i++ , hit_left.x += hit_left.h , hit_left.y += hit_left.w ) {
-
-        SDL_RenderFillRect(renderer , &hit_left);
-        SDL_RenderFillRect(renderer , &hit_right);
-
-        hit_right.x -= hit_right.h;
-        hit_right.y += hit_right.w;
-    }
-}
-void draw_hits (SDL_Renderer *renderer, CMap& map, int player_offset) {
-
-    for (int i = 0 ; i < MAP_CELL_WIDTH ; i++) {
-        for (int j = 0 ; j < MAP_CELL_HEIGHT ; j++) {
-            if (map.cells_array[i][j] == HIT) {
-
-                draw_hit(renderer, j, i, player_offset);
-
-            } else if (map.cells_array[i][j] == MISHIT) {
-
-//                draw_mishit(renderer , j , i , player_offset);
-
-            }
-
-        }
-    }
+    draw_text(v);
 }
 
 void CWorld::draw(isoEngineT* isoEngine){
@@ -154,7 +108,12 @@ void CWorld::draw(isoEngineT* isoEngine){
         ai.draw(isoEngine);
     }
 
-//    draw_script_version(isoEngine, lua_state);
+//    draw_script_version(lua_state);
+
+    string st = to_string(FPS);
+    char* fps = new char[st.size() + 1];
+    strcpy(fps, st.c_str());
+    draw_text(fps);
     SDL_RenderPresent(get_renderer());
 }
 
@@ -191,5 +150,9 @@ void CWorld::init_ai() {
 
 void CWorld::change_turn() {
     turn = !turn;
+}
+
+Uint32 CWorld::get_timestamp_now() {
+    return SDL_GetTicks();
 }
 // AI

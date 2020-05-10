@@ -2,6 +2,7 @@
 #define SEABATTLE_WORLD_H
 
 #include "player.h"
+#include <cstring>
 #include <SDL2/SDL_ttf.h>
 
 
@@ -36,6 +37,13 @@ public:
     isoEngineT isoEngine;
     int lastTiledClick;
 
+
+    int frame_count;
+    int old_frame_count;
+    double FPS;
+
+    int time_stamp;
+
     CWorld() {
 //        todo default constr;
     }
@@ -43,35 +51,44 @@ public:
         this->user = User;
         this->ai = AI;
 
+        this->frame_count = 0;
+        this->old_frame_count = 0;
+        this->time_stamp = 0;
+        this->FPS = 0;
         this->game_state = game_state;
 
-        lua_state = lua;
+        this->lua_state = lua;
 
-        l = list;
+        this->l = list;
 
-        turn = USER_TURN;
+        this->turn = USER_TURN;
     }
     CWorld(const CWorld& world) {
-        l = world.l;
-        user = world.user;
-        ai = world.ai;
-        lua_state = world.lua_state;
-        turn = world.turn;
-        game_state = world.game_state;
+        this->l = world.l;
+        this->user = world.user;
+        this->ai = world.ai;
+        this->lua_state = world.lua_state;
+        this->turn = world.turn;
+        this->game_state = world.game_state;
+        this->time_stamp = 0;
+        this->FPS = world.FPS;
     }
     CWorld(CWorld* world) {
-        l = world->l;
-        user = world->user;
-        ai = world->ai;
-        lua_state = world->lua_state;
-        turn = world->turn;
-        game_state = world->game_state;
+        this->l = world->l;
+        this->user = world->user;
+        this->ai = world->ai;
+        this->lua_state = world->lua_state;
+        this->turn = world->turn;
+        this->game_state = world->game_state;
+        this->time_stamp = 0;
     }
 
     void draw(isoEngineT*);
     void change_turn();
     void init_ai();
 
+
+    Uint32 get_timestamp_now();
 
     CWorld& operator =(const CWorld* obj) {
         user = obj->user;
