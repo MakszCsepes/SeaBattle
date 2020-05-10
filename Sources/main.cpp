@@ -1,6 +1,7 @@
 #include <iostream>
 #include <tgmath.h>
 #include "ai.h"
+#include <time.h>
 
 using namespace luabridge;
 
@@ -212,7 +213,7 @@ void get_mouseTile_click(isoEngineT* isoEngine) {
 }
 
 // effect
-int FrameTime = 0;
+float FrameTime = 0;
 int framewidth, frameheight;
 int texwidth, texheight;
 
@@ -514,20 +515,71 @@ int main(int argc, char* argv[]) {
     fire_rect.h = frameheight;
     // fires effect
 
+    /*// loop
+    while (isRunning) {
+        prevtime = currentimer;
+        currentimer = SDL_GetTicks();
+        deltatime = (currentimer - prevtime) / 1000.0f;
+
+        while(SDL_PollEvent(&ev) != 0) {
+            if(ev.type == SDL_QUIT) {
+                isRunning = false;
+            } else if(ev.type == SDL_KEYDOWN) {
+                switch (ev.key.keysym.sym) {
+                    case SDLK_RIGHT:
+                        fire_pos.x += moveSpeed * deltatime;
+                        cout << currentimer << endl;
+                }
+            }
+        }
+
+        FrameTime += deltatime;
+        if (FrameTime >= 0.25f) {
+            FrameTime = 0;
+            fire_rect.x += framewidth;
+            if(fire_rect.x >=  texwidth) {
+                fire_rect.x = 0;
+            }
+
+        }
+
+        SDL_RenderClear(get_renderer());
+        SDL_RenderCopy(get_renderer(), cur_img.texture, &fire_rect, &fire_pos);
+        SDL_RenderPresent(get_renderer());
+    }
+    SDL_DestroyWindow(get_window());
+    SDL_DestroyTexture(cur_img.texture);
+    SDL_DestroyRenderer(get_renderer());
+
+    return 0;
+    // loop*/
     SDL_Event event;
 
     CWorld* game = new CWorld(get_game());
     bool run_game = true;
 
+    game->frame_count = 0;
     while (run_game) {
-        SDL_SetRenderDrawColor(get_renderer(), 0, 0 ,0, 0);
-
+//        SDL_SetRenderDrawColor(get_renderer(), 0, 0 ,0, 0);
         update_input(game, run_game, event);
+
+        game->frame_count++;
+
+        Uint32 frames = game->frame_count - game->old_frame_count;
+        if(frames >= 100) {
+            Uint32 timeStamps = game->get_timestamp_now() - game->time_stamp;
+            game->FPS = (frames*1000)/timeStamps;
+
+            game->old_frame_count = game->frame_count;
+
+            game->time_stamp = game->get_timestamp_now();
+
+        }
 //        SDL_RenderClear(get_renderer());
 //        draw_effect(10, 10);
 //        SDL_RenderPresent(get_renderer());
-        game->draw(&gameT1.isoEngine);
 
+        game->draw(&gameT1.isoEngine);
     }
 
     close_down_SDL();
