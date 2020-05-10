@@ -19,9 +19,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #set(DST_FOLDER, "${CMAKE_CURRENT_BIRARY_DIR}/cmake-build-debug")
 
 include_directories("Headers")
-include_directories("Sources")
-include_directories("Lua Scripts")
-include_directories("Images")
 
 file(GLOB CPPS "Sources/*.cpp")
 file(GLOB HS "Headers/*.h")
@@ -29,9 +26,5 @@ file(GLOB LS "Lua Scripts/*.lua")
 file(GLOB ISO_MODELS "Images/*.png")
 
 add_executable(${PROJECT_NAME} ${CPPS})
-
-message("kuku")
-message("${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
-
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} "SDL2_ttf" lua dl)
