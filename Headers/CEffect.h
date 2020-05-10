@@ -21,16 +21,16 @@ public:
     CEffect() {
         effect.x = effect.y = 0;
 
-        *this = CEffect(effect.x, effect.y, 0, 0);
+        *this = CEffect(effect.x, effect.y, 0, 0, "Images/fires2.png");
     }
-    CEffect(int x, int y, int offset_x, int offset_y) {
+    CEffect(int x, int y, int offset_x, int offset_y, char* sprites_filename) {
         FrameTime = 0;
         effect_position.x = x * TILESIZE + MAP_OFFSET_X + offset_x;
         effect_position.y = y * TILESIZE + MAP_OFFSET_Y + offset_y;
 
         effect_position.w = effect_position.h = EFFECT_SIZE;
 
-        if(load_texture(&effect_texture, "Images/fires2.png") == 0) {
+        if(load_texture(&effect_texture, sprites_filename) == 0) {
             fprintf(stderr, "Error, could not load texture : data/fires.png");
             exit(0);
         }
