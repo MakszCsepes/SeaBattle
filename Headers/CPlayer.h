@@ -1,7 +1,7 @@
-#ifndef SEABATTLE_PLAYER_H
-#define SEABATTLE_PLAYER_H
+#ifndef SEABATTLE_CPLAYER_H
+#define SEABATTLE_CPLAYER_H
 
-#include "ship.h"
+#include "CShip.h"
 #include <cstring>
 
 extern "C" {
@@ -120,4 +120,4 @@ public:
     }
 };
 
-#endif //SEABATTLE_PLAYER_H
+#endif //SEABATTLE_CPLAYER_H

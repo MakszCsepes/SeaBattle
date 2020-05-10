@@ -1,7 +1,7 @@
-#ifndef SEABATTLE_CURSOR_H
-#define SEABATTLE_CURSOR_H
+#ifndef SEABATTLE_CCURSOR_H
+#define SEABATTLE_CCURSOR_H
 
-#include "Interface.h"
+#include "IInterface.h"
 
 const int MAP_OFFSET_X = 50;
 const int MAP_OFFSET_Y = 100;
@@ -52,4 +52,4 @@ public:
     }
 };
 
-#endif //SEABATTLE_CURSOR_H
+#endif //SEABATTLE_CCURSOR_H

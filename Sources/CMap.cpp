@@ -1,4 +1,4 @@
-#include "Map.h"
+#include "CMap.h"
 
 void put_cell (isoEngineT* isoEngine, int& map_offset_x, int& map_offset_y, int& i , int& j, int& tile_number) {
     point2DT point;

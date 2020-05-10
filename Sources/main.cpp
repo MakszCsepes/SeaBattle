@@ -1,6 +1,6 @@
 #include <iostream>
 #include <tgmath.h>
-#include "ai.h"
+#include "CWorld.h"
 #include <time.h>
 
 using namespace luabridge;

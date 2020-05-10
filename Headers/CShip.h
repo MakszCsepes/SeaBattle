@@ -2,10 +2,10 @@
 // Created by max on 21/1/2020.
 //
 
-#ifndef SEABATTLE_SHIP_H
-#define SEABATTLE_SHIP_H
+#ifndef SEABATTLE_CSHIP_H
+#define SEABATTLE_CSHIP_H
 
-#include "Map.h"
+#include "CMap.h"
 #include <list>
 
 #define HORIZONTAL true
@@ -131,4 +131,4 @@ public:
     void draw_effects(isoEngineT*);
 };
 
-#endif //SEABATTLE_SHIP_H
+#endif //SEABATTLE_CSHIP_H

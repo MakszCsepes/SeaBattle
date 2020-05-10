@@ -1,7 +1,7 @@
-#ifndef SEABATTLE_WORLD_H
-#define SEABATTLE_WORLD_H
+#ifndef SEABATTLE_CWORLD_H
+#define SEABATTLE_CWORLD_H
 
-#include "player.h"
+#include "CPlayer.h"
 #include <cstring>
 #include <SDL2/SDL_ttf.h>
 
@@ -104,4 +104,4 @@ public:
     }
 };
 
-#endif //SEABATTLE_WORLD_H
+#endif //SEABATTLE_CWORLD_H

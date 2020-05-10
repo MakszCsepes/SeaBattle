@@ -1,4 +1,4 @@
-#include "ship.h"
+#include "CShip.h"
 
 void CShip::change_inverse() {
     inverse = !inverse;

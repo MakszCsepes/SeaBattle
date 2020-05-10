@@ -2,7 +2,7 @@
 #ifndef SEABATTLE_AI_H
 #define SEABATTLE_AI_H
 
-#include "World.h"
+#include "CWorld.h"
 
 #define NO_HIT_HERE 0
 #define WAS_MISHIT 1

@@ -1,5 +1,5 @@
-#ifndef SEABATTLE_MAP_H
-#define SEABATTLE_MAP_H
+#ifndef SEABATTLE_CMAP_H
+#define SEABATTLE_CMAP_H
 
 #include "CEffect.h"
 #include <iostream>
@@ -79,4 +79,4 @@ public:
 };
 
 
-#endif //SEABATTLE_MAP_H
+#endif //SEABATTLE_CMAP_H

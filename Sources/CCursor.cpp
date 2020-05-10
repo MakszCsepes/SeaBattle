@@ -1,4 +1,4 @@
-#include "cursor.h"
+#include "CCursor.h"
 
 bool CCursor::get_hidden() {
     return hidden;

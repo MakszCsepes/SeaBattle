@@ -2,7 +2,7 @@
 #ifndef SEABATTLE_CANIMATION_H
 #define SEABATTLE_CANIMATION_H
 
-#include "cursor.h"
+#include "CCursor.h"
 
 class CAnimation {
 

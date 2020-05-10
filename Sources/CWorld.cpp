@@ -1,4 +1,4 @@
-#include "World.h"
+#include "CWorld.h"
 
 const int R_back = 63;
 const int G_back = 141;

@@ -1,4 +1,4 @@
-#include "player.h"
+#include "CPlayer.h"
 
 void CPlayer::set_name(char *new_name) {
     strcpy(name, new_name);
