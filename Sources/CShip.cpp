@@ -73,18 +73,28 @@ void CShip::draw(isoEngineT* isoEngine) {
         return;
     }
 
+    if(damage_level == 15 || damage_level == 7 || damage_level == 3) {
+        size++;
+        size--;
+    }
     switch (size) {
         case SUBMARINE_SIZE:
             draw_submarine(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
             break;
         case CRUISER_SIZE:
-            draw_cruiser(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
+            if (!hidden || damage_level == 7) {
+                draw_cruiser(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
+            }
             break;
         case DESTROYER_SIZE:
-            draw_destroyer(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
+            if (!hidden || damage_level == 3)  {
+                draw_destroyer(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
+            }
             break;
         case BATTLESHIP_SIZE:
-            draw_battleship(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
+            if (!hidden || damage_level == 15) {
+                draw_battleship(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
+            }
             break;
     }
 
@@ -180,7 +190,7 @@ int CShip::get_palub_number(int x, int y) {
     return palub_number;
 }
 
-void CShip::add_hit_palub(int x, int y) {
+void CShip::add_hit_palub(int x, int y)     {
     if (has_the_coordinate(x, y)) {
         switch(get_palub_number(x, y)) {
             case 1:
