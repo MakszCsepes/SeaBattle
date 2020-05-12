@@ -73,10 +73,6 @@ void CShip::draw(isoEngineT* isoEngine) {
         return;
     }
 
-    if(damage_level == 15 || damage_level == 7 || damage_level == 3) {
-        size++;
-        size--;
-    }
     switch (size) {
         case SUBMARINE_SIZE:
             draw_submarine(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
