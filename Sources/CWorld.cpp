@@ -108,12 +108,12 @@ void CWorld::draw(isoEngineT* isoEngine){
         ai.draw(isoEngine);
     }
 
-//    draw_script_version(lua_state);
+    draw_script_version(lua_state);
 
     string st = to_string(FPS);
     char* fps = new char[st.size() + 1];
     strcpy(fps, st.c_str());
-    draw_text(fps);
+//    draw_text(fps);
     SDL_RenderPresent(get_renderer());
 }
 

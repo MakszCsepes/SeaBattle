@@ -16,14 +16,11 @@ PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#set(DST_FOLDER, "${CMAKE_CURRENT_BIRARY_DIR}/cmake-build-debug")
 
 include_directories("Headers")
 
 file(GLOB CPPS "Sources/*.cpp")
 file(GLOB HS "Headers/*.h")
-file(GLOB LS "Lua Scripts/*.lua")
-file(GLOB ISO_MODELS "Images/*.png")
 
 add_executable(${PROJECT_NAME} ${CPPS})
 
