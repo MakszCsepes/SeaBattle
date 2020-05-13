@@ -126,27 +126,27 @@ void init() {
 
     gameT1.lastTiledClick = -1;
 
-    if(load_texture(&tilesTex, "Images/isotiles_sb.png") == 0) {
+    if(load_texture(&tilesTex, "Resources/Images/isotiles_sb.png") == 0) {
         fprintf(stderr, "Error, could not load texture : Images/isotiles_sb.png");
         exit(0);
     }
 
-    if(load_texture(&submarineTex, "Images/submarine_inv.png") == 0) {
+    if(load_texture(&submarineTex, "Resources/Images/submarine_inv.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/submarine.png");
         exit(0);
     }
 
-    if(load_texture(&destroyerTex, "Images/destroyer_inv.png") == 0) {
+    if(load_texture(&destroyerTex, "Resources/Images/destroyer_inv.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/destroyer.png");
         exit(0);
     }
 
-    if(load_texture(&cruiserTex, "Images/cruiser_inv.png") == 0) {
+    if(load_texture(&cruiserTex, "Resources/Images/cruiser_inv.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/cruiser.png");
         exit(0);
     }
 
-    if(load_texture(&battleshipTex, "Images/battleship_inv.png") == 0) {
+    if(load_texture(&battleshipTex, "Resources/Images/battleship_inv.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/battleship.png");
         exit(0);
     }
@@ -324,6 +324,19 @@ void update_input_tut() {
 
 // my own game function
 void update_input(CWorld* game, bool& run_game, SDL_Event event) {
+    if (game->turn == AI_TURN) {
+        game->ai.assign_new_hit_coords_from(game->lua_state, game->user);
+        if (game->ai.was_ever_hit_on_the_position(game->user.map,game->ai.map.cursor.position_x,game->ai.map.cursor.position_y) == false) {
+
+            game->ai.do_hit(game->user);
+
+            if(!game->ai.get_aim_status()) {
+                game->change_turn();
+            }
+            SDL_Delay(2000);
+        }
+    }
+    
     while (SDL_PollEvent(&event)) {
 
         // KEYBOARD EVENTS
@@ -459,17 +472,7 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
                 break;
         }
 
-        if (game->turn == AI_TURN) {
-            game->ai.assign_new_hit_coords_from(game->lua_state, game->user);
-            if (game->ai.was_ever_hit_on_the_position(game->user.map,game->ai.map.cursor.position_x,game->ai.map.cursor.position_y) == false) {
-                game->ai.do_hit(game->user);
 
-                if(!game->ai.get_aim_status()) {
-                    SDL_Delay(200);
-                    game->change_turn();
-                }
-            }
-        }
         // SELECT STATE
         switch (game->game_state) {
             case PUT_SHIPS:
@@ -497,61 +500,6 @@ int main(int argc, char* argv[]) {
 
     init_SDL("Sea_Battle");
     init();
-
-    // fires effect
-    fire_pos.x = fire_pos.y = 0;
-    fire_pos.w = fire_pos.h = 32;
-    if(load_texture(&cur_img, "Images/fires2.png") == 0) {
-        fprintf(stderr, "Error, could not load texture : data/fires.png");
-        exit(0);
-    }
-    SDL_QueryTexture(cur_img.texture, NULL, NULL, &texwidth, &texheight);
-
-    framewidth = texwidth / 8;
-    frameheight = texheight / 4;
-    fire_rect.x = fire_rect.y = 0;
-    fire_rect.w = framewidth;
-    fire_rect.h = frameheight;
-    // fires effect
-
-    /*// loop
-    while (isRunning) {
-        prevtime = currentimer;
-        currentimer = SDL_GetTicks();
-        deltatime = (currentimer - prevtime) / 1000.0f;
-
-        while(SDL_PollEvent(&ev) != 0) {
-            if(ev.type == SDL_QUIT) {
-                isRunning = false;
-            } else if(ev.type == SDL_KEYDOWN) {
-                switch (ev.key.keysym.sym) {
-                    case SDLK_RIGHT:
-                        fire_pos.x += moveSpeed * deltatime;
-                        cout << currentimer << endl;
-                }
-            }
-        }
-
-        FrameTime += deltatime;
-        if (FrameTime >= 0.25f) {
-            FrameTime = 0;
-            fire_rect.x += framewidth;
-            if(fire_rect.x >=  texwidth) {
-                fire_rect.x = 0;
-            }
-
-        }
-
-        SDL_RenderClear(get_renderer());
-        SDL_RenderCopy(get_renderer(), cur_img.texture, &fire_rect, &fire_pos);
-        SDL_RenderPresent(get_renderer());
-    }
-    SDL_DestroyWindow(get_window());
-    SDL_DestroyTexture(cur_img.texture);
-    SDL_DestroyRenderer(get_renderer());
-
-    return 0;
-    // loop*/
     SDL_Event event;
 
     CWorld* game = new CWorld(get_game());
@@ -559,9 +507,6 @@ int main(int argc, char* argv[]) {
 
     game->frame_count = 0;
     while (run_game) {
-//        SDL_SetRenderDrawColor(get_renderer(), 0, 0 ,0, 0);
-        update_input(game, run_game, event);
-
         game->frame_count++;
 
         Uint32 frames = game->frame_count - game->old_frame_count;
@@ -574,14 +519,12 @@ int main(int argc, char* argv[]) {
             game->time_stamp = game->get_timestamp_now();
 
         }
-//        SDL_RenderClear(get_renderer());
-//        draw_effect(10, 10);
-//        SDL_RenderPresent(get_renderer());
 
         game->draw(&gameT1.isoEngine);
+
+        update_input(game, run_game, event);
     }
 
     close_down_SDL();
-
     return 0;
 }

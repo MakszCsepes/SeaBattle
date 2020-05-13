@@ -19,9 +19,26 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include_directories("Headers")
 
+message(${CMAKE_CURRENT_BINARY_DIR})
+
 file(GLOB CPPS "Sources/*.cpp")
 file(GLOB HS "Headers/*.h")
+file(GLOB PNGS "Images/*.png")
+file(GLOB LS "Lua\ Scripts/*.lua")
 
+file(MAKE_DIRECTORY ${directory} ${CMAKE_CURRENT_BINARY_DIR}/Resources)
+file(MAKE_DIRECTORY ${directory} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Images)
+file(MAKE_DIRECTORY ${directory} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Lua\ Scripts)
+
+foreach(i IN LISTS PNGS)
+    configure_file(${i} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Images COPYONLY)
+endforeach()
+
+foreach(i IN LISTS LS)
+    configure_file(${i} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Lua\ Scripts COPYONLY)
+endforeach()
+
+#file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/Resources)
 add_executable(${PROJECT_NAME} ${CPPS})
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} "SDL2_ttf" lua dl)
