@@ -20,7 +20,7 @@ lua_State* get_new_script() {
     luaL_openlibs(L);
     getGlobalNamespace(L).addFunction("printMessage", printMessage);
 
-    luaL_dofile(L, "Lua Scripts/script 101 .lua");
+    luaL_dofile(L, "Resources/Lua Scripts/script 101 .lua");
     lua_pcall(L, 0, 0, 0);
     return L;
 }
@@ -509,7 +509,7 @@ int main(int argc, char* argv[]) {
     while (run_game) {
         game->frame_count++;
 
-        Uint32 frames = game->frame_count - game->old_frame_count;
+        /*Uint32 frames = game->frame_count - game->old_frame_count;
         if(frames >= 100) {
             Uint32 timeStamps = game->get_timestamp_now() - game->time_stamp;
             game->FPS = (frames*1000)/timeStamps;
@@ -518,7 +518,7 @@ int main(int argc, char* argv[]) {
 
             game->time_stamp = game->get_timestamp_now();
 
-        }
+        }*/
 
         game->draw(&gameT1.isoEngine);
 
