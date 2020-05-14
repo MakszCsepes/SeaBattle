@@ -42,7 +42,7 @@ void CPlayer::draw(isoEngineT* isoEngine) {
     for(int i = 0 ; i < ship_quantity ; i++) {
         if (ships[i].get_hidden() == false) {
             ships[i].draw(isoEngine);
-        } else if ( (ships[i].get_hidden() == true) && (ships[i].get_X() != 0) ) {
+        } else if ( (ships[i].get_hidden() == true) && (ships[i].get_damage() != 0) ) {
             ships[i].draw(isoEngine);
         }
     }
@@ -151,7 +151,7 @@ void CPlayer::do_hit(CPlayer& enemy) {
 
             enemy.ships[i].add_hit_palub(map.cursor.position_x, map.cursor.position_y);
 
-            if(enemy.ships[i].get_X() == 15) {
+            if(enemy.ships[i].get_damage() == 15) {
                 enemy.map[map.cursor.position_y][map.cursor.position_x] = KILLED_PALUBA_CELL;
             }
 
