@@ -4,7 +4,7 @@ void CShip::change_inverse() {
     inverse = !inverse;
 }
 
-int CShip::get_X() {
+int CShip::get_damage() {
     return damage_level;
 }
 int CShip::get_size() {
@@ -185,7 +185,17 @@ int CShip::get_palub_number(int x, int y) {
 
     return palub_number;
 }
+int CShip::get_current_x() {
+    return this->head_coordinate_x;
+}
+int CShip::get_current_y() {
+    return this->head_coordinate_y;
+}
 
+void CShip::move(int x = 0, int y = 0) {
+    head_coordinate_x = x;
+    head_coordinate_y = y;
+}
 void CShip::add_hit_palub(int x, int y)     {
     if (has_the_coordinate(x, y)) {
         switch(get_palub_number(x, y)) {

@@ -49,27 +49,6 @@ CWorld* get_game(){
     return new CWorld(user, computer, game_state, L, l);
 }
 
-#define MAP_HEIGHT 16
-#define MAP_WIDTH 16
-
-int worldTest[MAP_HEIGHT][MAP_WIDTH] = {
-        {2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,1},
-        {2,2,2,2,2,2,2,2,2,2,1,1,1,1,2,1},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,2},
-        {2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-        {2,1,2,2,2,2,2,1,2,2,2,2,4,2,2,2},
-        {2,2,2,2,2,2,2,2,2,2,3,3,4,2,2,1},
-        {1,1,3,3,3,2,2,2,2,2,3,3,4,2,2,2},
-        {1,1,1,1,2,1,1,2,2,3,3,3,2,2,2,3},
-        {2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1},
-        {2,1,1,2,2,1,1,2,1,1,3,2,2,2,4,4},
-        {2,1,1,4,2,1,1,2,1,1,3,2,2,2,2,4},
-        {2,1,1,1,2,1,1,2,1,1,3,3,3,3,3,4},
-        {2,1,1,1,1,1,1,2,2,2,2,2,2,2,4,4},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2}
-};
 gameT gameT1;
 
 SDL_Rect tiles_rect[NUM_ISO_TILES];
@@ -115,7 +94,6 @@ void init() {
     init_tile_clip(battleship_rect, &battleshipTex, 145, 95, 2);
 
     init_IsoEngine(&gameT1.isoEngine);
-    IsoEngineSetMapSize(&gameT1.isoEngine, MAP_WIDTH, MAP_HEIGHT);
 
     gameT1.isoEngine.scrollX = 270;
     gameT1.isoEngine.scrollY = -270;
@@ -167,24 +145,6 @@ void drawIsoMouse() {
     }
     texture_renderer_XY_clip(&tilesTex, gameT1.mousePoint.x - correct_X, gameT1.mousePoint.y + correct_Y, &tiles_rect[0]);
 }
-void drawIsoMap(isoEngineT* isoEngine) {
-    int tile;
-    point2DT point;
-
-    // loop through the map
-    for (int i = 0 ; i < isoEngine->mapHeight; i++) {
-        for (int j = 0; j < isoEngine->mapWidth ; j++) {
-            point.x = (j*TILESIZE) + isoEngine->scrollX;
-            point.y = (i*TILESIZE) + isoEngine->scrollY;
-
-            tile = worldTest[i][j];
-
-            Converter2DToIso(&point);
-
-            texture_renderer_XY_clip(&tilesTex, point.x, point.y, &tiles_rect[tile]);
-        }
-    }
-}
 void get_mouseTile_click(isoEngineT* isoEngine) {
     point2DT point;
     point2DT tileshift;
@@ -206,62 +166,9 @@ void get_mouseTile_click(isoEngineT* isoEngine) {
     point.x -= ((float)isoEngine->scrollX + (float)tileshift.x) / (float)TILESIZE;
     point.y -= ((float)isoEngine->scrollY - (float)tileshift.y) / (float)TILESIZE;
 
-    if(point.x >= 0 && point.y >= 0 && point.x < MAP_WIDTH && point.y < MAP_HEIGHT) {
+    /*if(point.x >= 0 && point.y >= 0 && point.x < MAP_CELL_WIDTH && point.y < MAP_CELL_HEIGHT) {
         gameT1.lastTiledClick = worldTest[point.y][point.x];
-    }
-}
-
-// effect
-float FrameTime = 0;
-int framewidth, frameheight;
-int texwidth, texheight;
-
-SDL_Rect fire_rect;
-SDL_Rect fire_pos;
-
-textureT cur_img;
-void draw_effect(int i, int j) {
-    fire_pos.y = i*TILESIZE + MAP_OFFSET_Y;
-    fire_pos.x = j*TILESIZE + MAP_OFFSET_X;
-
-    FrameTime++;
-
-    if (FrameTime == 2) {
-        FrameTime = 0;
-        fire_rect.x += framewidth;
-
-        if(fire_rect.x >= cur_img.width) {
-            fire_rect.y += frameheight;
-            fire_rect.x = 0;
-
-            if (fire_rect.y >= cur_img.height) {
-                fire_rect.y = 0;
-            }
-        }
-
-    }
-
-    SDL_RenderCopy(get_renderer(), cur_img.texture, &fire_rect, &fire_pos);
-}
-
-// draw everything
-void draw(isoEngineT* isoEngine) {
-    SDL_SetRenderDrawColor(get_renderer(), 0, 0, 0, 0);
-    SDL_RenderClear(get_renderer());
-
-    drawIsoMap(&gameT1.isoEngine);
-
-    draw_effect(0, 0);
-    draw_effect(300, 330);
-
-    drawIsoMouse();
-    if(gameT1.lastTiledClick != -1) {
-        texture_renderer_XY_clip(&tilesTex, 0, 0, &tiles_rect[gameT1.lastTiledClick]);
-    }
-
-
-//    SDL_Delay(10);
-    SDL_RenderPresent(get_renderer());
+    }*/
 }
 
 // tutorial functions
@@ -347,9 +254,9 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym) {
                     case SDLK_RIGHT :
-
                         if (game->game_state == PUT_SHIPS) {
-                            game->user.current_ship->head_coordinate_x++;
+                            game->user.current_ship->move(game->user.current_ship->get_current_x() + 1,
+                                                          game->user.current_ship->get_current_y());
                             if (game->user.current_ship->get_inverse() == HORIZONTAL) {
                                 if (game->user.current_ship->head_coordinate_x + game->user.current_ship->get_size() > MAP_CELL_WIDTH) {
                                     game->user.current_ship->head_coordinate_x = 0;
@@ -368,9 +275,9 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
 
                         break;
                     case SDLK_LEFT :
-
                         if (game->game_state == PUT_SHIPS) {
-                            game->user.current_ship->head_coordinate_x--;
+                            game->user.current_ship->move(game->user.current_ship->get_current_x() - 1,
+                                                          game->user.current_ship->get_current_y());
 
                             if (game->user.current_ship->head_coordinate_x < 0) {
                                 if (game->user.current_ship->get_inverse() == HORIZONTAL) {
@@ -389,7 +296,8 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
                     case SDLK_DOWN :
 
                         if (game->game_state == PUT_SHIPS) {
-                            game->user.current_ship->head_coordinate_y++;
+                            game->user.current_ship->move(game->user.current_ship->get_current_x(),
+                                                          game->user.current_ship->get_current_y() + 1);
 
                             if (game->user.current_ship->get_inverse() == HORIZONTAL) {
                                 if (game->user.current_ship->head_coordinate_y > MAP_CELL_WIDTH - 1) {
@@ -410,7 +318,8 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
                     case SDLK_UP :
 
                         if (game->game_state == PUT_SHIPS) {
-                            game->user.current_ship->head_coordinate_y--;
+                            game->user.current_ship->move(game->user.current_ship->get_current_x(),
+                                                          game->user.current_ship->get_current_y() - 1);
                             if (game->user.current_ship->get_inverse() == HORIZONTAL) {
                                 if ( game->user.current_ship->head_coordinate_y < 0) {
                                     game->user.current_ship->head_coordinate_y = MAP_CELL_WIDTH - 1;
@@ -500,6 +409,7 @@ int main(int argc, char* argv[]) {
 
     init_SDL("Sea_Battle");
     init();
+
     SDL_Event event;
 
     CWorld* game = new CWorld(get_game());
@@ -509,7 +419,7 @@ int main(int argc, char* argv[]) {
     while (run_game) {
         game->frame_count++;
 
-        /*Uint32 frames = game->frame_count - game->old_frame_count;
+        Uint32 frames = game->frame_count - game->old_frame_count;
         if(frames >= 100) {
             Uint32 timeStamps = game->get_timestamp_now() - game->time_stamp;
             game->FPS = (frames*1000)/timeStamps;
@@ -518,7 +428,7 @@ int main(int argc, char* argv[]) {
 
             game->time_stamp = game->get_timestamp_now();
 
-        }*/
+        }
 
         game->draw(&gameT1.isoEngine);
 

@@ -96,7 +96,10 @@ public:
     bool get_hidden();
     bool get_inverse();
     int get_size();
-    int get_X();
+    int get_damage();
+
+    int get_current_x();
+    int get_current_y();
 
     void change_selected();
     void change_inverse();
@@ -123,6 +126,7 @@ public:
     }
 
 
+    void move(int, int);
     void add_effect(const CEffect&);
     void draw(isoEngineT*);
     void draw_effects(isoEngineT*);
