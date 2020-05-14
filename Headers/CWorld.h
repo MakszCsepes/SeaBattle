@@ -27,6 +27,11 @@ public:
     int game_state; // PUT_SHIPS, PLAY_GAME, ENDGAME
     bool turn;
 
+    // text
+    TTF_Font* font;
+    SDL_Surface* surface;
+    SDL_Texture* texture;
+
     // SDL gameT
     SDL_Event event;
     int loop_done;
@@ -62,6 +67,12 @@ public:
         this->l = list;
 
         this->turn = USER_TURN;
+
+        // text
+        SDL_Color text_color = {0, 0, 0};
+        this->font = TTF_OpenFont("/usr/share/fonts/opentype/noto/NotoSansCJK.ttc", 25);
+        this->texture = SDL_CreateTextureFromSurface(get_renderer(),surface);
+
     }
     CWorld(const CWorld& world) {
         this->l = world.l;
@@ -72,18 +83,27 @@ public:
         this->game_state = world.game_state;
         this->time_stamp = 0;
         this->FPS = world.FPS;
+
+        this->font = world.font;
     }
     CWorld(CWorld* world) {
         this->l = world->l;
+
+        this->lua_state = world->lua_state;
+
         this->user = world->user;
         this->ai = world->ai;
-        this->lua_state = world->lua_state;
+
         this->turn = world->turn;
         this->game_state = world->game_state;
-        this->time_stamp = 0;
+        this->time_stamp = world->time_stamp;
+
+        this->font = world->font;
     }
 
     void draw(isoEngineT*);
+    void draw_text(char*);
+    void draw_script_version(lua_State*);
     void change_turn();
     void init_ai();
 

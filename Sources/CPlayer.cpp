@@ -151,12 +151,17 @@ void CPlayer::do_hit(CPlayer& enemy) {
 
             enemy.ships[i].add_hit_palub(map.cursor.position_x, map.cursor.position_y);
 
-            if(enemy.ships[i].get_damage() == 15) {
+            CEffect new_effect(map.cursor.position_x, map.cursor.position_y,
+                               enemy.map.offset_x, enemy.map.offset_y,
+                               "Resources/Images/fires2.png",
+                               true);
+            if(enemy.ships[i].is_dead()) {
+                // todo set everywhere KILLED
                 enemy.map[map.cursor.position_y][map.cursor.position_x] = KILLED_PALUBA_CELL;
+                new_effect.init_effect("Resources/Images/smokes2.png");
+            } else {
+                enemy.map[map.cursor.position_y][map.cursor.position_x] = HIT_PALUBA_CELL;
             }
-
-            enemy.map[map.cursor.position_y][map.cursor.position_x] = HIT_PALUBA_CELL;
-            CEffect new_effect(map.cursor.position_x, map.cursor.position_y, enemy.map.offset_x, enemy.map.offset_y, "Resources/Images/fires2.png", true);
             enemy.ships[i].add_effect(new_effect);
 
             got_the_aim = true;
@@ -167,6 +172,7 @@ void CPlayer::do_hit(CPlayer& enemy) {
 
     got_the_aim = false;
     enemy.map[this->map.cursor.position_y][this->map.cursor.position_x] = MISHIT_CELL;
+    // todo add mishit effect to map
 }
 
 int** CPlayer::generate_state_map(const CPlayer& enemy) {

@@ -409,6 +409,7 @@ int main(int argc, char* argv[]) {
 
     init_SDL("Sea_Battle");
     init();
+    TTF_Init();
 
     SDL_Event event;
 

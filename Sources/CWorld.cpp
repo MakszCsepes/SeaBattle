@@ -49,12 +49,11 @@ bool can_move (CShip* moved_ship ,coordinate& ship_coords) {
     return true;
 }
 
-void draw_text(char* text) {
-    TTF_Init();
-    TTF_Font *font = TTF_OpenFont("/usr/share/fonts/opentype/noto/NotoSansCJK.ttc", 25);
-    SDL_Color text_color = {250, 250, 250};
-    SDL_Surface * surface = TTF_RenderText_Solid(font, text, text_color);
-    SDL_Texture * texture = SDL_CreateTextureFromSurface(get_renderer(),surface);
+void CWorld::draw_text(char* text) {
+    SDL_Color text_color = {0, 0, 0};
+
+    surface = TTF_RenderText_Solid(font, text, text_color);
+    texture = SDL_CreateTextureFromSurface(get_renderer(),surface);
 
     int w = 10;
     int h = 10;
@@ -66,7 +65,7 @@ void draw_text(char* text) {
     SDL_RenderCopy(get_renderer(), texture, NULL, &dstrect);
 }
 
-void draw_script_version(lua_State* L) {
+void CWorld::draw_script_version(lua_State* L) {
     LuaRef version = getGlobal(L, "script_version");
 
     string vers =  version.cast<std::string>();
@@ -108,12 +107,12 @@ void CWorld::draw(isoEngineT* isoEngine){
         ai.draw(isoEngine);
     }
 
-    draw_script_version(lua_state);
+//    draw_script_version(lua_state);
 
     string st = to_string(FPS);
     char* fps = new char[st.size() + 1];
     strcpy(fps, st.c_str());
-//    draw_text(fps);
+    draw_text(fps);
     SDL_RenderPresent(get_renderer());
 }
 
