@@ -106,9 +106,6 @@ public:
     int get_palub_number(int x, int y);
     void put_ship_on_map(int** map_array);
     void add_hit_palub(int x, int y);
-    void draw_hit(SDL_Renderer*, int&);
-    void draw_ship_head(SDL_Renderer* );
-    void draw_ship_part(SDL_Renderer*, int i);
     CShip& operator =(const CShip& ship_source) {
         this->size = ship_source.size;
 
