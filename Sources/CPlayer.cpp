@@ -156,7 +156,7 @@ void CPlayer::do_hit(CPlayer& enemy) {
             }
 
             enemy.map[map.cursor.position_y][map.cursor.position_x] = HIT_PALUBA_CELL;
-            CEffect new_effect(map.cursor.position_x, map.cursor.position_y, enemy.map.offset_x, enemy.map.offset_y, "Resources/Images/smokes2.png");
+            CEffect new_effect(map.cursor.position_x, map.cursor.position_y, enemy.map.offset_x, enemy.map.offset_y, "Resources/Images/fires2.png", true);
             enemy.ships[i].add_effect(new_effect);
 
             got_the_aim = true;

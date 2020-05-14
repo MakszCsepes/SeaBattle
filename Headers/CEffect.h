@@ -1,4 +1,3 @@
-
 #ifndef SEABATTLE_CEFFECT_H
 #define SEABATTLE_CEFFECT_H
 
@@ -8,7 +7,7 @@ const int EFFECT_SIZE = 32;
 const int FRAME_NUMBER_IN_WIDTH = 8;
 const int FRAME_NUMBER_IN_HEIGTH = 4;
 
-class CEffect : public IDrawable{
+class CEffect : public IDrawable, public CAnimation{
     int FrameTime;
     SDL_Rect effect;
     SDL_Rect effect_position;
@@ -18,12 +17,10 @@ class CEffect : public IDrawable{
     int frameWidth;
     int frameHeight;
 public:
-    CEffect() {
-        effect.x = effect.y = 0;
-
-        *this = CEffect(effect.x, effect.y, 0, 0, "Images/fires2.png");
+    CEffect(): CAnimation() {
+        *this = CEffect(0, 0, 0, 0, "Resources/Images/fires2.png", false);
     }
-    CEffect(int x, int y, int offset_x, int offset_y, char* sprites_filename) {
+    CEffect(int x, int y, int offset_x, int offset_y, char* sprites_filename, bool is_animating): CAnimation(is_animating) {
         FrameTime = 0;
         effect_position.x = x * TILESIZE + MAP_OFFSET_X + offset_x;
         effect_position.y = y * TILESIZE + MAP_OFFSET_Y + offset_y;
@@ -31,7 +28,7 @@ public:
         effect_position.w = effect_position.h = EFFECT_SIZE;
 
         if(load_texture(&effect_texture, sprites_filename) == 0) {
-            fprintf(stderr, "Error, could not load texture : data/fires.png");
+            fprintf(stderr, "Error, could not load texture : %s", sprites_filename);
             exit(0);
         }
         SDL_QueryTexture(effect_texture.texture, NULL, NULL, &effect_texture.width, &effect_texture.height);
@@ -44,10 +41,10 @@ public:
         effect.w = frameWidth;
         effect.h = frameHeight;
     }
-
     ~CEffect() {
 
     }
+
     void draw(isoEngineT* isoEngine);
 };
 

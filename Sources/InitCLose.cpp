@@ -3,7 +3,7 @@
 
 void init_SDL(char* window_name) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        fprintf(stderr, "SDL Init faile %s", SDL_GetError());
+        fprintf(stderr, "SDL Init failed %s", SDL_GetError());
         exit(1);
     }
 
