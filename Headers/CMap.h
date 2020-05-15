@@ -18,8 +18,8 @@ using namespace std;
 #define AI_MAP_OFFSET_Y 0
 
 const int EMPTY_CELL = 0;
-const int PALUBA_CELL = 1;
-const int MISHIT_CELL = 2;
+const int MISHIT_CELL = 1;
+const int PALUBA_CELL = 2;
 const int HIT_PALUBA_CELL = 3;
 const int KILLED_PALUBA_CELL = 4;
 
