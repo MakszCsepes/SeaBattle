@@ -95,6 +95,7 @@ public:
 
     bool get_hidden();
     bool get_inverse();
+    bool is_dead();
     int get_size();
     int get_damage();
 

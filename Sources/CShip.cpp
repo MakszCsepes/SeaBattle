@@ -16,6 +16,33 @@ bool CShip::get_inverse() {
 bool CShip::get_hidden() {
     return hidden;
 }
+bool CShip::is_dead() {
+    switch (size) {
+        case SUBMARINE_SIZE:
+            if(damage_level & SEC_1) {
+                return true;
+            }
+            break;
+        case DESTROYER_SIZE:
+            if(damage_level & SEC_1 && damage_level & SEC_2) {
+                return true;
+            }
+            break;
+        case CRUISER_SIZE:
+            if(damage_level & SEC_1 && damage_level & SEC_2 && damage_level & SEC_3) {
+                return true;
+            }
+            break;
+        case BATTLESHIP_SIZE:
+            if(damage_level & SEC_1 && damage_level & SEC_2 &&
+               damage_level & SEC_3 && damage_level & SEC_4) {
+                return true;
+            }
+            break;
+    }
+
+    return false;
+}
 
 // draw ships
 void draw_submarine(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y, bool& inv) {
