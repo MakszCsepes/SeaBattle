@@ -95,9 +95,9 @@ void init() {
 
     init_IsoEngine(&gameT1.isoEngine);
 
-    gameT1.isoEngine.scrollX = 270;
-    gameT1.isoEngine.scrollY = -270;
-    gameT1.mapScroll2Dpos.x = -270;
+    gameT1.isoEngine.scrollX = 200;
+    gameT1.isoEngine.scrollY = -200;
+    gameT1.mapScroll2Dpos.x = -200;
     gameT1.mapScroll2Dpos.y = 0;
 
     gameT1.mapScrollSpeed = 3;
@@ -229,6 +229,27 @@ void update_input_tut() {
     }
 }
 
+void select_state(CWorld* game) {
+    // SELECT STATE
+    switch (game->game_state) {
+        case PUT_SHIPS:
+            if (game->user.get_init_status() and game->ai.get_init_status()) {
+                game->game_state = PLAY_GAME;
+            }
+            break;
+        case PLAY_GAME:
+            if(game->user.get_points() == 20 or game->ai.get_points() == 20) {
+                game->game_state = ENDGAME;
+                break;
+            }
+            break;
+        case ENDGAME:
+            game->draw(&gameT1.isoEngine);
+            break;
+        default:
+            game->run_game = false;
+    }
+}
 // my own game function
 void update_input(CWorld* game, bool& run_game, SDL_Event event) {
     if (game->turn == AI_TURN) {

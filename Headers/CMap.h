@@ -14,8 +14,8 @@ using namespace std;
 
 #define USER_MAP_OFFSET_X 0
 #define USER_MAP_OFFSET_Y 0
-#define AI_MAP_OFFSET_X 375
-#define AI_MAP_OFFSET_Y 400
+#define AI_MAP_OFFSET_X 400
+#define AI_MAP_OFFSET_Y 0
 
 const int EMPTY_CELL = 0;
 const int PALUBA_CELL = 1;
