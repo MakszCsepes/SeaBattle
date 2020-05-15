@@ -110,6 +110,7 @@ public:
     int get_palub_number(int x, int y);
     void put_ship_on_map(int** map_array);
     void add_hit_palub(int x, int y);
+    void change_effects();
     CShip& operator =(const CShip& ship_source) {
         this->size = ship_source.size;
 

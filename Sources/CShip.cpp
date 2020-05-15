@@ -164,7 +164,6 @@ void CShip::put_ship_on_map(int** map_array){
             }
         }
     }
-
 }
 
 bool CShip::has_the_coordinate(int& x, int& y) {
@@ -223,7 +222,7 @@ void CShip::move(int x = 0, int y = 0) {
     head_coordinate_x = x;
     head_coordinate_y = y;
 }
-void CShip::add_hit_palub(int x, int y)     {
+void CShip::add_hit_palub(int x, int y) {
     if (has_the_coordinate(x, y)) {
         switch(get_palub_number(x, y)) {
             case 1:
@@ -239,6 +238,11 @@ void CShip::add_hit_palub(int x, int y)     {
                 damage_level |= SEC_4;
                 break;
         }
+    }
+}
+void CShip::change_effects() {
+    for(list<CEffect> :: iterator current_effect = effects.begin() ; current_effect != effects.end() ; current_effect++) {
+        current_effect->init_effect("Resources/Images/smokes2.png");
     }
 }
 
