@@ -18,9 +18,7 @@ class CEffect : public IDrawable, public CAnimation{
     int frameWidth;
     int frameHeight;
 public:
-    CEffect(): CAnimation() {
-        *this = CEffect(0, 0, 0, 0, "Resources/Images/fires2.png", false);
-    }
+    CEffect() = delete;
     CEffect(int x, int y, int offset_x, int offset_y, char* sprites_filename, bool is_animating): CAnimation(is_animating) {
         FrameTime = 0;
         effect.x = effect.y = 0;
