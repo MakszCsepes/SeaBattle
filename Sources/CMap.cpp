@@ -8,7 +8,7 @@ void put_cell (isoEngineT* isoEngine, int& map_offset_x, int& map_offset_y, int&
 
     Converter2DToIso(&point);
 
-    texture_renderer_XY_clip(&tilesTex, point.x, point.y, &tiles_rect[tile_number + 2]);
+    texture_renderer_XY_clip(&tilesTex, point.x, point.y, &tiles_rect[tile_number]);
 }
 
 void CMap::create_map()  {
@@ -35,10 +35,6 @@ void CMap::draw(isoEngineT* isoEngine) {
         for (int j = 0 ; j < MAP_CELL_HEIGHT ; j++) {
 
             put_cell(isoEngine, offset_x, offset_y, i, j, cells_array[i][j]);
-
-            if (cells_array[i][j] == MISHIT_CELL) {
-//                draw_mishit(get_renderer(), j, i);
-            }
         }
     }
 }

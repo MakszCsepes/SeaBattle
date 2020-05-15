@@ -17,10 +17,7 @@ void init_renderer(char* window_caption) {
         fprintf(stderr, "SDL CreateRenderer failed %s", SDL_GetError());
         exit(1);
     }
-
-
 }
-
 
 SDL_Window* get_window() {
     return window;

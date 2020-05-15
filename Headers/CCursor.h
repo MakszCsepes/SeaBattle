@@ -3,8 +3,8 @@
 
 #include "IInterface.h"
 
-const int MAP_OFFSET_X = 50;
-const int MAP_OFFSET_Y = 100;
+const int MAP_OFFSET_X = 10;
+const int MAP_OFFSET_Y = 10;
 const int CELL_SIZE = 40;
 
 class CCursor : public IDrawable{
