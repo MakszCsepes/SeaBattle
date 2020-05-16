@@ -263,6 +263,8 @@ void update_input(CWorld* game, SDL_Event event) {
             }
             SDL_Delay(2000);
         }
+
+        return;
     }
     
     while (SDL_PollEvent(&event)) {
@@ -439,15 +441,16 @@ int main(int argc, char* argv[]) {
     SDL_Event event;
 
     CWorld* game = new CWorld(get_game());
-    bool run_game = true;
+    Uint32 frames;
+    Uint32 timeStamps;
 
     game->frame_count = 0;
     while (run_game) {
         game->frame_count++;
 
-        Uint32 frames = game->frame_count - game->old_frame_count;
+        frames = game->frame_count - game->old_frame_count;
         if(frames >= 100) {
-            Uint32 timeStamps = game->get_timestamp_now() - game->time_stamp;
+            timeStamps = game->get_timestamp_now() - game->time_stamp;
             game->FPS = (frames*1000)/timeStamps;
 
             game->old_frame_count = game->frame_count;

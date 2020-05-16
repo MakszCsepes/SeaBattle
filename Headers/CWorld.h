@@ -46,11 +46,9 @@ public:
     isoEngineT isoEngine;
     int lastTiledClick;
 
-
     int frame_count;
     int old_frame_count;
     double FPS;
-
     int time_stamp;
 
     CWorld() = delete;
@@ -102,7 +100,9 @@ public:
 
         this->turn = world->turn;
         this->game_state = world->game_state;
-        this->time_stamp = world->time_stamp;
+        this->time_stamp = 0;
+        this->run_game = true;
+        this->FPS = world->FPS;
 
         this->font = world->font;
         this->text_surface = world->text_surface;
@@ -123,7 +123,6 @@ public:
     void change_turn();
     void change_run_game();
     void init_ai();
-
 
     Uint32 get_timestamp_now();
 
