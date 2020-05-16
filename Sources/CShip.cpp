@@ -44,49 +44,6 @@ bool CShip::is_dead() {
     return false;
 }
 
-// draw ships
-void draw_submarine(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y, bool& inv) {
-    point2DT point;
-    // todo fix +20 and + 11
-    point.x = (i * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x + 20;
-    point.y = (j * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y + 10;
-
-    Converter2DToIso(&point);
-
-    texture_renderer_XY_clip(&submarineTex, point.x, point.y, inv ? &submarine_rect[0] : &submarine_rect[1]);
-}
-void draw_destroyer(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y, bool& inv) {
-    point2DT point;
-    point.x = (i * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x + 20;
-    point.y = (j * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y + 10;
-
-    Converter2DToIso(&point);
-
-    texture_renderer_XY_clip(&destroyerTex, inv ? point.x : point.x - 30, point.y, inv ? &destroyer_rect[0] : &destroyer_rect[1]);
-}
-void draw_cruiser(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y, bool& inv) {
-    point2DT point;
-
-    point.x = (i * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x;
-    point.y = (j * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y;
-
-    Converter2DToIso(&point);
-    // todo why -65
-    texture_renderer_XY_clip(&cruiserTex, inv ? point.x : point.x - 65, point.y, inv ? &cruiser_rect[0] : &cruiser_rect[1]);
-}
-void draw_battleship(isoEngineT* isoEngine, int i, int j, int offset_x, int offset_y, bool& inv) {
-    point2DT point;
-
-    point.x = (i * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x;
-    point.y = (j * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y;
-
-    Converter2DToIso(&point);
-
-    // todo why -90
-    // check inverse : if it`s HORIZONTAL, then we render horizontal version of the ship
-    texture_renderer_XY_clip(&battleshipTex, inv ? point.x : point.x - 90, point.y, inv ? &battleship_rect[0] : &battleship_rect[1]);
-}
-
 void CShip::add_effect(const CEffect& new_effect) {
     effects.push_back(new_effect);
 }
@@ -95,28 +52,38 @@ void CShip::draw_effects(isoEngineT* isoEngine) {
         current_effect->draw(isoEngine);
     }
 }
+
 void CShip::draw(isoEngineT* isoEngine) {
     if (hidden && (damage_level == 0)) {
         return;
     }
 
+    point2DT point;
+    point.x = (head_coordinate_x * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x;
+    point.y = (head_coordinate_y * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y;
+
+    Converter2DToIso(&point);
+
     switch (size) {
         case SUBMARINE_SIZE:
-            draw_submarine(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
-            break;
-        case CRUISER_SIZE:
-            if (!hidden || damage_level == 7) {
-                draw_cruiser(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
-            }
+            texture_renderer_XY_clip(&submarineTex, point.x, point.y, inverse ? &submarine_rect[0] : &submarine_rect[1]);
             break;
         case DESTROYER_SIZE:
             if (!hidden || damage_level == 3)  {
-                draw_destroyer(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
+                // todo why -30
+                texture_renderer_XY_clip(&destroyerTex, inverse ? point.x : point.x - 30, point.y, inverse ? &destroyer_rect[0] : &destroyer_rect[1]);
+            }
+            break;
+        case CRUISER_SIZE:
+            if (!hidden || damage_level == 7) {
+                // todo why -65
+                texture_renderer_XY_clip(&cruiserTex, inverse ? point.x : point.x - 65, point.y, inverse ? &cruiser_rect[0] : &cruiser_rect[1]);
             }
             break;
         case BATTLESHIP_SIZE:
             if (!hidden || damage_level == 15) {
-                draw_battleship(isoEngine, head_coordinate_x, head_coordinate_y, offset_x, offset_y, inverse);
+                // todo why -90
+                texture_renderer_XY_clip(&battleshipTex, inverse ? point.x : point.x - 90, point.y, inverse ? &battleship_rect[0] : &battleship_rect[1]);
             }
             break;
     }
