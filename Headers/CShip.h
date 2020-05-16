@@ -128,11 +128,6 @@ public:
     void add_effect(const CEffect&);
     void draw(isoEngineT*);
     void draw_effects(isoEngineT*);
-
-    void draw_submarine(isoEngineT* isoEngine) ;
-    void draw_destroyer(isoEngineT* isoEngine) ;
-    void draw_cruiser(isoEngineT* isoEngine) ;
-    void draw_battleship(isoEngineT* isoEngine);
 };
 
 #endif //SEABATTLE_CSHIP_H
