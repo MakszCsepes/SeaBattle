@@ -8,7 +8,11 @@ void put_cell (isoEngineT* isoEngine, int& map_offset_x, int& map_offset_y, int&
 
     Converter2DToIso(&point);
 
-    texture_renderer_XY_clip(&tilesTex, point.x, point.y, &tiles_rect[tile_number]);
+    if (tile_number == 1) {
+        texture_renderer_XY_clip(&tilesTex, point.x, point.y, &tiles_rect[2]);
+    } else {
+        texture_renderer_XY_clip(&tilesTex, point.x, point.y, &tiles_rect[1]);
+    }
 }
 
 void CMap::create_map()  {

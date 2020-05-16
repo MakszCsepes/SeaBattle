@@ -246,7 +246,7 @@ void CShip::add_hit_palub(int x, int y) {
 }
 void CShip::change_effects() {
     for(list<CEffect> :: iterator current_effect = effects.begin() ; current_effect != effects.end() ; current_effect++) {
-        current_effect->init_effect("Resources/Images/smokes2.png");
+        current_effect->init_effect("Resources/Images/smokes3.png");
     }
 }
 
