@@ -251,7 +251,7 @@ void select_state(CWorld* game) {
     }
 }
 // my own game function
-void update_input(CWorld* game, bool& run_game, SDL_Event event) {
+void update_input(CWorld* game, SDL_Event event) {
     if (game->turn == AI_TURN) {
         game->ai.assign_new_hit_coords_from(game->lua_state, game->user);
         if (game->ai.was_ever_hit_on_the_position(game->user.map,game->ai.map.cursor.position_x,game->ai.map.cursor.position_y) == false) {
@@ -279,7 +279,8 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
                             game->user.current_ship->move(game->user.current_ship->get_current_x() + 1,
                                                           game->user.current_ship->get_current_y());
                             if (game->user.current_ship->get_inverse() == HORIZONTAL) {
-                                if (game->user.current_ship->head_coordinate_x + game->user.current_ship->get_size() > MAP_CELL_WIDTH) {
+                                if (game->user.current_ship->head_coordinate_x + game->user.current_ship->get_size() >
+                                    MAP_CELL_WIDTH) {
                                     game->user.current_ship->head_coordinate_x = 0;
                                 }
                             } else {
@@ -289,7 +290,7 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
                             }
                         } else if (game->game_state == PLAY_GAME) {
                             game->user.map.cursor.position_x++;
-                            if ( game->user.map.cursor.position_x > MAP_CELL_HEIGHT - 1) {
+                            if (game->user.map.cursor.position_x > MAP_CELL_HEIGHT - 1) {
                                 game->user.map.cursor.position_x = 0;
                             }
                         }
@@ -302,7 +303,8 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
 
                             if (game->user.current_ship->head_coordinate_x < 0) {
                                 if (game->user.current_ship->get_inverse() == HORIZONTAL) {
-                                    game->user.current_ship->head_coordinate_x = MAP_CELL_WIDTH - game->user.current_ship->get_size();
+                                    game->user.current_ship->head_coordinate_x =
+                                            MAP_CELL_WIDTH - game->user.current_ship->get_size();
                                 } else {
                                     game->user.current_ship->head_coordinate_x = MAP_CELL_WIDTH - 1;
                                 }
@@ -325,7 +327,8 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
                                     game->user.current_ship->head_coordinate_y = 0;
                                 }
                             } else {
-                                if (game->user.current_ship->head_coordinate_y + game->user.current_ship->get_size() > MAP_CELL_WIDTH ) {
+                                if (game->user.current_ship->head_coordinate_y + game->user.current_ship->get_size() >
+                                    MAP_CELL_WIDTH) {
                                     game->user.current_ship->head_coordinate_y = 0;
                                 }
                             }
@@ -342,12 +345,13 @@ void update_input(CWorld* game, bool& run_game, SDL_Event event) {
                             game->user.current_ship->move(game->user.current_ship->get_current_x(),
                                                           game->user.current_ship->get_current_y() - 1);
                             if (game->user.current_ship->get_inverse() == HORIZONTAL) {
-                                if ( game->user.current_ship->head_coordinate_y < 0) {
+                                if (game->user.current_ship->head_coordinate_y < 0) {
                                     game->user.current_ship->head_coordinate_y = MAP_CELL_WIDTH - 1;
                                 }
                             } else {
                                 if (game->user.current_ship->head_coordinate_y < 0) {
-                                    game->user.current_ship->head_coordinate_y = MAP_CELL_WIDTH - game->user.current_ship->get_size();
+                                    game->user.current_ship->head_coordinate_y =
+                                            MAP_CELL_WIDTH - game->user.current_ship->get_size();
                                 }
                             }
                         } else if (game->game_state == PLAY_GAME) {
@@ -449,7 +453,6 @@ int main(int argc, char* argv[]) {
             game->old_frame_count = game->frame_count;
 
             game->time_stamp = game->get_timestamp_now();
-
         }
 
         game->draw(&gameT1.isoEngine);
