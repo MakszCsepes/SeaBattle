@@ -16,7 +16,9 @@ public:
 
     void set_is_animating(bool);
     bool get_is_animating();
-    void update_state(int frame_number);
+    virtual void update_state(int frame_number) {
+
+    };
 };
 
 

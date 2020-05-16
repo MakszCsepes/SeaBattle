@@ -39,7 +39,7 @@ static const int SEC_2 = 0b0010;
 static const int SEC_3 = 0b0100;
 static const int SEC_4 = 0b1000;
 
-class CShip : public IDrawable {
+class CShip : public IDrawable, public CAnimation {
     int size;
     int damage_level;
     int offset_x;
@@ -105,6 +105,7 @@ public:
     void put_ship_on_map(int** map_array);
     void add_hit_palub(int x, int y);
     void change_effects();
+    void update_state(int) override ;
     CShip& operator =(const CShip& ship_source) {
         this->size = ship_source.size;
 
