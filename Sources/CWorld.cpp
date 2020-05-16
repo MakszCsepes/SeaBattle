@@ -10,7 +10,6 @@ coordinate get_rand_from_list(list<coordinate>& l) {
     int i = 0;
     for(coordinate v : l) {
         if(i == p) {
-//            cout << v.i << " " << v.j << endl;
             return v;
         }
         i++;
