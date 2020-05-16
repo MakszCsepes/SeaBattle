@@ -54,6 +54,7 @@ public:
     int head_coordinate_x;
     int head_coordinate_y;
     static int section_array[];
+
     CShip() {
         head_coordinate_x = 0;
         head_coordinate_y = 0;
@@ -62,24 +63,17 @@ public:
         is_selected = true;
         hidden = false;
 
-        size = 0;
-
         damage_level = SEC_0;
-    }
-    CShip(int size, int offset_x, int offset_y) {
-        head_coordinate_x = 0;
-        head_coordinate_y = 0;
 
+        size = 0;
+        offset_x = 0;
+        offset_y = 0;
+    }
+    CShip(int size, int offset_x, int offset_y): CShip() {
         this->offset_x = offset_x;
         this->offset_y = offset_y;
 
         this->size = size;
-
-        hidden = false;
-        is_selected = true;
-        inverse = HORIZONTAL;
-
-        damage_level = SEC_0;
     }
     CShip(const CShip& obj) {
         size = obj.size;
@@ -126,7 +120,6 @@ public:
 
         return *this;
     }
-
 
     void move(int, int);
     void add_effect(const CEffect&);

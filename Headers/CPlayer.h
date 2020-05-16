@@ -40,26 +40,27 @@ public:
         strcpy(name, "undefined");
 
         points = 0;
-
+        ship_quantity = 0;
         got_the_aim = false;
         inited = false;
 
-        ship_quantity = 0;
-        ships = new CShip[ship_quantity];
     }
-    CPlayer(char* name, CMap& Map) {
+    CPlayer(char* name, CMap& Map): CPlayer() {
+        this->map = Map;
         set_name(name);
 
-        points = 0;
-        ship_quantity = 0;
-
-        got_the_aim = false;
-        inited = false;
-        this->map = Map;
-
         current_ship = get_new_ship();
-        ships = new CShip[ship_quantity];
+    }
+    CPlayer(const CPlayer& player) {
+        this->ships = player.ships;
 
+        this->map = player.map;
+        this->current_ship = player.current_ship;
+
+        this->inited = player.inited;
+
+        this->points= player.points;
+        this->got_the_aim= player.got_the_aim;
     }
 
     void add_ship_to_player_array();
@@ -88,9 +89,6 @@ public:
         current_ship = player_source.current_ship;
         ship_quantity = player_source.ship_quantity;
 
-        for(int i = 0 ; i < ship_quantity ; i++) {
-            ships[i] = player_source.ships[i];
-        }
         return *this;
     }
 

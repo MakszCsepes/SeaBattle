@@ -21,7 +21,6 @@ CShip* CPlayer::get_new_extended_ship_array(CShip* added_ship) {
 void CPlayer::add_ship_to_player_array() {
     current_ship->change_selected();
     ships = get_new_extended_ship_array(current_ship);
-
 }
 
 void CPlayer::change_inited() {
@@ -46,10 +45,10 @@ void CPlayer::draw(isoEngineT* isoEngine) {
             ships[i].draw(isoEngine);
         }
     }
-
 }
 
 CShip* CPlayer::get_new_ship() {
+
     if(ship_quantity < BATTLESHIP_QUANTITY) {
         return get_battleship();
     } else if (ship_quantity < BATTLESHIP_QUANTITY + CRUISER_QUANTITY) {
@@ -59,7 +58,6 @@ CShip* CPlayer::get_new_ship() {
     } else if (ship_quantity < BATTLESHIP_QUANTITY + CRUISER_QUANTITY + DESTROYER_QUANTITY + SUBMARINE_QUANTITY){
         return get_submarine();
     }
-
     return nullptr;
 }
 
@@ -93,7 +91,7 @@ bool CPlayer::was_ever_hit_on_the_position(CMap& enemy_map, int &pos_x, int &pos
             return false;
     }
 }
-bool CPlayer::check_collision (CShip& ship1 , CShip& ship2) {
+bool CPlayer::check_collision (CShip& ship1, CShip& ship2) {
     const int left_top_x = ship2.head_coordinate_x - 1;
     const int left_top_y = ship2.head_coordinate_y - 1;
 
