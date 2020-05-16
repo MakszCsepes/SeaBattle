@@ -272,7 +272,7 @@ void update_input(CWorld* game, SDL_Event event) {
         // KEYBOARD EVENTS
         switch (event.type) {
             case SDL_QUIT:
-                run_game = !run_game;
+                game->change_run_game();
                 break;
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym) {
@@ -375,7 +375,7 @@ void update_input(CWorld* game, SDL_Event event) {
                         break;
                     case SDLK_ESCAPE:
 
-                        run_game = !run_game;
+                        game->change_run_game();
                     case SDLK_SPACE:
 
                         if (game->game_state == PUT_SHIPS) {
@@ -445,8 +445,7 @@ int main(int argc, char* argv[]) {
     Uint32 frames;
     Uint32 timeStamps;
 
-    game->frame_count = 0;
-    while (run_game) {
+    while (game->run_game) {
         game->frame_count++;
 
         frames = game->frame_count - game->old_frame_count;
