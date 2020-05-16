@@ -5,8 +5,8 @@
 
 #endif //SEABATTLE_RENDERER_H
 
-#define WINDOW_HEIGHT 1000
-#define WINDOW_WIDTH 1000
+#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1280
 
 void init_renderer(char* window_caption);
 
