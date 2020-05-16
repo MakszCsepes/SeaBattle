@@ -12,7 +12,8 @@
 
 #endif //SEABATTLE_INTERFACE_H
 
-#define NUM_ISO_TILES 7
+#define NUM_ISO_TILES 3
+
 extern SDL_Rect tiles_rect[NUM_ISO_TILES];
 extern textureT tilesTex;
 

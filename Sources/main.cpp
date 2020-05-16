@@ -54,16 +54,16 @@ gameT gameT1;
 SDL_Rect tiles_rect[NUM_ISO_TILES];
 textureT tilesTex;
 
-SDL_Rect submarine_rect[2];
+SDL_Rect submarine_rect[TEXTURE_NUMBER_OF_SHIP];
 textureT submarineTex;
 
-SDL_Rect destroyer_rect[2];
+SDL_Rect destroyer_rect[TEXTURE_NUMBER_OF_SHIP];
 textureT destroyerTex;
 
-SDL_Rect cruiser_rect[2];
+SDL_Rect cruiser_rect[TEXTURE_NUMBER_OF_SHIP];
 textureT cruiserTex;
 
-SDL_Rect battleship_rect[2];
+SDL_Rect battleship_rect[TEXTURE_NUMBER_OF_SHIP];
 textureT battleshipTex;
 
 void setupRect(SDL_Rect* rect, int x, int y, int w, int h) {
@@ -88,10 +88,10 @@ void init() {
 
     init_tile_clip(tiles_rect, &tilesTex, 64, 80, NUM_ISO_TILES);
 
-    init_tile_clip(submarine_rect, &submarineTex, 51, 35, 2);
-    init_tile_clip(destroyer_rect, &destroyerTex, 77, 54, 2);
-    init_tile_clip(cruiser_rect, &cruiserTex, 126, 92, 2);
-    init_tile_clip(battleship_rect, &battleshipTex, 145, 95, 2);
+    init_tile_clip(submarine_rect, &submarineTex, 60, 50, TEXTURE_NUMBER_OF_SHIP);
+    init_tile_clip(destroyer_rect, &destroyerTex, 107, 74, TEXTURE_NUMBER_OF_SHIP);
+    init_tile_clip(cruiser_rect, &cruiserTex, 126, 92, TEXTURE_NUMBER_OF_SHIP);
+    init_tile_clip(battleship_rect, &battleshipTex, 145, 95, TEXTURE_NUMBER_OF_SHIP);
 
     init_IsoEngine(&gameT1.isoEngine);
 
@@ -104,7 +104,7 @@ void init() {
 
     gameT1.lastTiledClick = -1;
 
-    if(load_texture(&tilesTex, "Resources/Images/isotiles_sb.png") == 0) {
+    if(load_texture(&tilesTex, "Resources/Images/isotiles_sb_2.png") == 0) {
         fprintf(stderr, "Error, could not load texture : Images/isotiles_sb.png");
         exit(0);
     }
@@ -114,7 +114,7 @@ void init() {
         exit(0);
     }
 
-    if(load_texture(&destroyerTex, "Resources/Images/destroyer_inv.png") == 0) {
+    if(load_texture(&destroyerTex, "Resources/Images/destroyer_inv2.png") == 0) {
         fprintf(stderr, "Error, could not load texture : data/destroyer.png");
         exit(0);
     }

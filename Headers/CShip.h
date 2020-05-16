@@ -12,25 +12,27 @@
 #define VERTICAL false
 
 #define SHIP_QUANTITY 10
+#define TEXTURE_NUMBER_OF_SHIP 2
 
 #define SUBMARINE_QUANTITY 4
 #define SUBMARINE_SIZE 1
-extern SDL_Rect submarine_rect[2];
+
+extern SDL_Rect submarine_rect[TEXTURE_NUMBER_OF_SHIP];
 extern textureT submarineTex;
 
 #define DESTROYER_QUANTITY 3
 #define DESTROYER_SIZE 2
-extern SDL_Rect destroyer_rect[2];
+extern SDL_Rect destroyer_rect[TEXTURE_NUMBER_OF_SHIP];
 extern textureT destroyerTex;
 
 #define CRUISER_QUANTITY 2
 #define CRUISER_SIZE 3
-extern SDL_Rect cruiser_rect[2];
+extern SDL_Rect cruiser_rect[TEXTURE_NUMBER_OF_SHIP];
 extern textureT cruiserTex;
 
 #define BATTLESHIP_QUANTITY 1
 #define BATTLESHIP_SIZE 4
-extern SDL_Rect battleship_rect[2];
+extern SDL_Rect battleship_rect[TEXTURE_NUMBER_OF_SHIP];
 extern textureT battleshipTex;
 
 static const int SEC_0 = 0b0000;
