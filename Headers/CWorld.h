@@ -10,6 +10,9 @@
 #define PLAY_GAME 1
 #define ENDGAME 2
 
+const int SCRIPT_VERSION_POSITION_X = 0;
+const int SCRIPT_VERSION_POSITION_Y = WINDOW_HEIGHT - 50;
+
 using namespace std;
 
 struct coordinate{
@@ -30,8 +33,8 @@ public:
 
     // text
     TTF_Font* font;
-    SDL_Surface* surface;
-    SDL_Texture* texture;
+    SDL_Surface* text_surface;
+    SDL_Texture* text_texture;
 
     // SDL gameT
     SDL_Event event;
@@ -71,8 +74,8 @@ public:
         // text
         SDL_Color text_color = {0, 0, 0};
         this->font = TTF_OpenFont("/usr/share/fonts/opentype/noto/NotoSansCJK.ttc", 25);
-        this->texture = SDL_CreateTextureFromSurface(get_renderer(),surface);
-
+        this->text_surface = TTF_RenderText_Solid(font, NULL, text_color);
+        this->text_texture = SDL_CreateTextureFromSurface(get_renderer(), text_surface);
     }
     CWorld(const CWorld& world) {
         this->l = world.l;
@@ -86,6 +89,8 @@ public:
         this->FPS = world.FPS;
 
         this->font = world.font;
+        this->text_surface = world.text_surface;
+        this->text_texture = world.text_texture;
     }
     CWorld(CWorld* world) {
         this->l = world->l;
@@ -100,10 +105,20 @@ public:
         this->time_stamp = world->time_stamp;
 
         this->font = world->font;
+        this->text_surface = world->text_surface;
+        this->text_texture = world->text_texture;
+    }
+    ~CWorld() {
+        TTF_CloseFont(font);
+        SDL_FreeSurface(text_surface);
+        SDL_DestroyTexture(text_texture);
+
+        TTF_Quit();
     }
 
     void draw(isoEngineT*);
-    void draw_text(char*);
+    void draw_text(char*, int, int,  SDL_Color );
+    void draw_FPS();
     void draw_script_version(lua_State*);
     void change_turn();
     void change_run_game();

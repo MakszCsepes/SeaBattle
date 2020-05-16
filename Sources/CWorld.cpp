@@ -48,22 +48,28 @@ bool can_move (CShip* moved_ship ,coordinate& ship_coords) {
     return true;
 }
 
-void CWorld::draw_text(char* text) {
-    SDL_Color text_color = {0, 0, 0};
+void CWorld::draw_text(char* text, int x, int y, SDL_Color text_color) {
+    text_surface = TTF_RenderText_Solid(font, text, text_color);
+    text_texture = SDL_CreateTextureFromSurface(get_renderer(), text_surface);
 
-    surface = TTF_RenderText_Solid(font, text, text_color);
-    texture = SDL_CreateTextureFromSurface(get_renderer(),surface);
+    int w = 1;
+    int h = 1;
 
-    int w = 10;
-    int h = 10;
+    SDL_QueryTexture(text_texture, NULL, NULL, &w, &h);
 
-    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    SDL_Rect text_rect = {x, y, w, h};
 
-    SDL_Rect dstrect = {10 + 50 , 10 + 50, w, h};
-
-    SDL_RenderCopy(get_renderer(), texture, NULL, &dstrect);
+    SDL_RenderCopy(get_renderer(), text_texture, NULL, &text_rect);
 }
+void CWorld::draw_FPS() {
+    SDL_Color text_color = {50, 50, 10};
 
+    string st = to_string(float(FPS));
+    char* fps = new char[st.size() + 1];
+    strcpy(fps, st.c_str());
+
+    draw_text(fps, 50, 50, text_color);
+}
 void CWorld::draw_script_version(lua_State* L) {
     LuaRef version = getGlobal(L, "script_version");
 
@@ -71,7 +77,8 @@ void CWorld::draw_script_version(lua_State* L) {
     char v[vers.length() + 1];
     strcpy(v, vers.c_str());
 
-    draw_text(v);
+    SDL_Color text_color = {250, 250, 250};
+    draw_text(v, SCRIPT_VERSION_POSITION_X, SCRIPT_VERSION_POSITION_Y, text_color);
 }
 
 void CWorld::draw(isoEngineT* isoEngine){
@@ -106,12 +113,9 @@ void CWorld::draw(isoEngineT* isoEngine){
         ai.draw(isoEngine);
     }
 
-//    draw_script_version(lua_state);
+    draw_script_version(lua_state);
+    draw_FPS();
 
-    string st = to_string(FPS);
-    char* fps = new char[st.size() + 1];
-    strcpy(fps, st.c_str());
-    draw_text(fps);
     SDL_RenderPresent(get_renderer());
 }
 
@@ -142,7 +146,6 @@ void CWorld::init_ai() {
         } else {
             ai.change_inited();
         }
-
     }
 }
 
