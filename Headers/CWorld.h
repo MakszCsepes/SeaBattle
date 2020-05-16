@@ -92,12 +92,9 @@ public:
     }
     CWorld(CWorld* world) {
         this->l = world->l;
-
-        this->lua_state = world->lua_state;
-
         this->user = world->user;
         this->ai = world->ai;
-
+        this->lua_state = world->lua_state;
         this->turn = world->turn;
         this->game_state = world->game_state;
         this->time_stamp = 0;

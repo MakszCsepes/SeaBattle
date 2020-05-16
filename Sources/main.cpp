@@ -391,7 +391,9 @@ void update_input(CWorld* game, SDL_Event event) {
                             }
                         } else if (game->game_state == PLAY_GAME) {
                             if(game->turn == USER_TURN) {
-                                if (game->user.was_ever_hit_on_the_position(game->ai.map,game->user.map.cursor.position_x,game->user.map.cursor.position_y) == false) {
+                                if (!game->user.was_ever_hit_on_the_position(game->ai.map,
+                                                                            game->user.map.cursor.position_x,
+                                                                            game->user.map.cursor.position_y)) {
                                     game->user.do_hit(game->ai);
                                     if (!game->user.get_aim_status()) {
                                         game->change_turn();
@@ -433,10 +435,9 @@ void update_input(CWorld* game, SDL_Event event) {
 
 int main(int argc, char* argv[]) {
     srand(time(0));
-
     init_SDL("Sea_Battle");
-    init();
     TTF_Init();
+    init();
 
     SDL_Event event;
 
@@ -458,11 +459,11 @@ int main(int argc, char* argv[]) {
             game->time_stamp = game->get_timestamp_now();
         }
 
+        update_input(game, event);
         game->draw(&gameT1.isoEngine);
-
-        update_input(game, run_game, event);
     }
 
+    delete game;
     close_down_SDL();
     return 0;
 }
