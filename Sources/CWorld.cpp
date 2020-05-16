@@ -149,6 +149,9 @@ void CWorld::init_ai() {
 void CWorld::change_turn() {
     turn = !turn;
 }
+void CWorld::change_run_game() {
+    run_game = !run_game;
+}
 
 Uint32 CWorld::get_timestamp_now() {
     return SDL_GetTicks();

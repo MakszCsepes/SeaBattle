@@ -26,6 +26,7 @@ public:
     lua_State* lua_state; // state for Lua script
     int game_state; // PUT_SHIPS, PLAY_GAME, ENDGAME
     bool turn;
+    bool run_game;
 
     // text
     TTF_Font* font;
@@ -66,6 +67,7 @@ public:
 
         this->turn = USER_TURN;
 
+        this->run_game = true;
         // text
         SDL_Color text_color = {0, 0, 0};
         this->font = TTF_OpenFont("/usr/share/fonts/opentype/noto/NotoSansCJK.ttc", 25);
@@ -80,6 +82,7 @@ public:
         this->turn = world.turn;
         this->game_state = world.game_state;
         this->time_stamp = 0;
+        this->run_game = true;
         this->FPS = world.FPS;
 
         this->font = world.font;
@@ -103,6 +106,7 @@ public:
     void draw_text(char*);
     void draw_script_version(lua_State*);
     void change_turn();
+    void change_run_game();
     void init_ai();
 
 
