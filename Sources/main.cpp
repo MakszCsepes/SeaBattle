@@ -409,28 +409,9 @@ void update_input(CWorld* game, SDL_Event event) {
             default:
                 break;
         }
-
-
-        // SELECT STATE
-        switch (game->game_state) {
-            case PUT_SHIPS:
-                if (game->user.get_init_status() and game->ai.get_init_status()) {
-                    game->game_state = PLAY_GAME;
-                }
-                break;
-            case PLAY_GAME:
-                if(game->user.get_points() == 20 or game->ai.get_points() == 20) {
-                    game->game_state = ENDGAME;
-                    break;
-                }
-                break;
-            case ENDGAME:
-                game->draw(&gameT1.isoEngine);
-                break;
-            default:
-                run_game = false;
-        }
     }
+
+    select_state(game);
 }
 
 int main(int argc, char* argv[]) {
