@@ -4,7 +4,7 @@ void CEffect::draw(isoEngineT* isoEngine) {
     point2DT point;
     FrameTime++;
 
-    if(FrameTime == 6) {
+    if(FrameTime == 12) {
         FrameTime = 0;
 
         effect.x += frameWidth;
