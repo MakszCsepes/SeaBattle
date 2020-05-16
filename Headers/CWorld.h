@@ -49,9 +49,7 @@ public:
 
     int time_stamp;
 
-    CWorld() {
-//        todo default constr;
-    }
+    CWorld() = delete;
     CWorld(const CPlayer& User, const CPlayer& AI, int game_state, lua_State* lua, const list<coordinate>& list) {
         this->user = User;
         this->ai = AI;
