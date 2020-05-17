@@ -81,112 +81,12 @@ void init() {
 
     gameT1.mapScrollSpeed = 3;
 
-    gameT1.lastTiledClick = -1;
-
     if(load_texture(&tilesTex, "Resources/Images/isotiles_sb_2.png") == 0) {
         fprintf(stderr, "Error, could not load texture : Images/isotiles_sb.png");
         exit(0);
     }
 }
 
-void drawIsoMouse() {
-    int correct_X = (gameT1.mapScroll2Dpos.x%32) * 2;
-    int correct_Y = (gameT1.mapScroll2Dpos.y%32);
-
-    gameT1.mousePoint.x = (gameT1.mouseRect.x/TILESIZE)*TILESIZE;
-    gameT1.mousePoint.y = (gameT1.mouseRect.y/TILESIZE)*TILESIZE;
-
-    // For very other x`position on the map
-    if((gameT1.mousePoint.x/TILESIZE)%2) {
-        // Move mouse down by half a tile
-        // so we can pick isometric tiles on that row as well
-        gameT1.mousePoint.y += TILESIZE*0.5;
-    }
-    texture_renderer_XY_clip(&tilesTex, gameT1.mousePoint.x - correct_X, gameT1.mousePoint.y + correct_Y, &tiles_rect[0]);
-}
-void get_mouseTile_click(isoEngineT* isoEngine) {
-    point2DT point;
-    point2DT tileshift;
-    point2DT mouse2IsoPoint;
-
-    int correct_X = (gameT1.mapScroll2Dpos.x % 32) * 2;
-    int correct_Y = (gameT1.mapScroll2Dpos.y % 32) ;
-
-    //copy mouse point;
-    mouse2IsoPoint = gameT1.mousePoint;
-    ConverterIsoTo2D(&mouse2IsoPoint);
-    //get tile coord
-    GetTileCoordinates(&mouse2IsoPoint, &point);
-
-    tileshift.x = correct_X;
-    tileshift.y = correct_Y;
-    Converter2DToIso(&tileshift);
-
-    point.x -= ((float)isoEngine->scrollX + (float)tileshift.x) / (float)TILESIZE;
-    point.y -= ((float)isoEngine->scrollY - (float)tileshift.y) / (float)TILESIZE;
-
-    /*if(point.x >= 0 && point.y >= 0 && point.x < MAP_CELL_WIDTH && point.y < MAP_CELL_HEIGHT) {
-        gameT1.lastTiledClick = worldTest[point.y][point.x];
-    }*/
-}
-
-// tutorial functions
-void update()
-{
-    SDL_GetMouseState(&gameT1.mouseRect.x, &gameT1.mouseRect.y);
-}
-void update_input_tut() {
-    const Uint8* keystate = SDL_GetKeyboardState(NULL);
-    while (SDL_PollEvent(&gameT1.event) != 0) {
-        switch(gameT1.event.type) {
-            case SDL_QUIT:
-                gameT1.loop_done = 1;
-                break;
-            case SDL_KEYDOWN:
-                switch (gameT1.event.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        gameT1.loop_done = 1;
-                        break;
-                }
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                if(gameT1.event.button.button == SDL_BUTTON_LEFT) {
-
-                    get_mouseTile_click(&gameT1.isoEngine);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    if(keystate[SDL_SCANCODE_W]) {
-        gameT1.isoEngine.scrollX += gameT1.mapScrollSpeed;
-        gameT1.isoEngine.scrollY += gameT1.mapScrollSpeed;
-        gameT1.mapScroll2Dpos.y += gameT1.mapScrollSpeed;
-
-        if(gameT1.mapScroll2Dpos.y > 0) {
-            gameT1.mapScroll2Dpos.y = 0;
-            gameT1.isoEngine.scrollX -= gameT1.mapScrollSpeed;
-            gameT1.isoEngine.scrollY -= gameT1.mapScrollSpeed;
-        }
-    }
-    if(keystate[SDL_SCANCODE_A]) {
-        gameT1.isoEngine.scrollX += gameT1.mapScrollSpeed;
-        gameT1.isoEngine.scrollY -= gameT1.mapScrollSpeed;
-        gameT1.mapScroll2Dpos.x -= gameT1.mapScrollSpeed;
-    }
-    if(keystate[SDL_SCANCODE_S]) {
-        gameT1.isoEngine.scrollX -= gameT1.mapScrollSpeed;
-        gameT1.isoEngine.scrollY -= gameT1.mapScrollSpeed;
-        gameT1.mapScroll2Dpos.y -= gameT1.mapScrollSpeed;
-    }
-    if(keystate[SDL_SCANCODE_D]) {
-        gameT1.isoEngine.scrollX -= gameT1.mapScrollSpeed;
-        gameT1.isoEngine.scrollY += gameT1.mapScrollSpeed;
-        gameT1.mapScroll2Dpos.x += gameT1.mapScrollSpeed;
-    }
-}
 
 void select_state(CWorld* game) {
     // SELECT STATE
