@@ -98,7 +98,7 @@ void select_state(CWorld* game) {
 void update_input(CWorld* game, SDL_Event event) {
     if (game->turn == AI_TURN) {
         game->ai.assign_new_hit_coords_from(game->lua_state, game->user);
-        if (game->ai.was_ever_hit_on_the_position(game->user.map,game->ai.map.cursor.position_x,game->ai.map.cursor.position_y) == false) {
+        if (!game->ai.was_ever_hit_on_the_position(game->user.map,game->ai.map.cursor.position_x,game->ai.map.cursor.position_y)) {
 
             game->ai.do_hit(game->user);
 
@@ -107,7 +107,6 @@ void update_input(CWorld* game, SDL_Event event) {
             }
             SDL_Delay(2000);
         }
-
         return;
     }
     
@@ -276,7 +275,7 @@ int main(int argc, char* argv[]) {
         frames = game->frame_count - game->old_frame_count;
         if(frames >= 100) {
             timeStamps = game->get_timestamp_now() - game->time_stamp;
-            game->FPS = (frames*1000)/timeStamps;
+            game->FPS = (frames*1000.0)/timeStamps;
 
             game->old_frame_count = game->frame_count;
 
