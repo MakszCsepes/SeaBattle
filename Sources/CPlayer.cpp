@@ -6,7 +6,7 @@ void CPlayer::set_name(char *new_name) {
 int CPlayer::get_points() {
     return points;
 }
-CShip* CPlayer::get_new_extended_ship_array(CShip* added_ship) {
+CShip* CPlayer::get_new_extended_ship_array() {
     CShip* new_ship_array = new CShip[ship_quantity + 1];
 
     for(int i = 0 ; i < ship_quantity ; i++) {
@@ -20,7 +20,7 @@ CShip* CPlayer::get_new_extended_ship_array(CShip* added_ship) {
 }
 void CPlayer::add_ship_to_player_array() {
     current_ship->change_selected();
-    ships = get_new_extended_ship_array(current_ship);
+    ships = get_new_extended_ship_array();
 }
 
 void CPlayer::change_inited() {

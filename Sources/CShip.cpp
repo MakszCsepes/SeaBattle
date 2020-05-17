@@ -91,7 +91,6 @@ void CShip::draw(isoEngineT* isoEngine) {
     draw_effects(isoEngine);
 }
 
-
 void CShip::update_state(int frame_number) {
 
 }

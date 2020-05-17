@@ -43,7 +43,6 @@ public:
         ship_quantity = 0;
         got_the_aim = false;
         inited = false;
-
     }
     CPlayer(char* name, CMap& Map): CPlayer() {
         this->map = Map;
@@ -73,7 +72,7 @@ public:
     bool get_aim_status(); // todo RENAME (get true, if player hit last time, false, if did not);
     int get_points();
     CShip* get_new_ship();
-    CShip* get_new_extended_ship_array(CShip* added_ship);
+    CShip* get_new_extended_ship_array();
 
     bool check_collision (CShip&, CShip&);
     bool can_put_ship();
