@@ -23,6 +23,11 @@ void CPlayer::add_ship_to_player_array() {
     ships = get_new_extended_ship_array();
 }
 
+void CPlayer::add_ship_to_player_list() {
+    current_ship->change_selected();
+    ships_list.push_back(*current_ship);
+}
+
 void CPlayer::change_inited() {
     inited = !inited;
 }
@@ -38,11 +43,12 @@ bool CPlayer::get_aim_status() {
 void CPlayer::draw(isoEngineT* isoEngine) {
     map.draw(isoEngine);
 
-    for(int i = 0 ; i < ship_quantity ; i++) {
-        if (ships[i].get_hidden() == false) {
-            ships[i].draw(isoEngine);
-        } else if ( (ships[i].get_hidden() == true) && (ships[i].get_damage() != 0) ) {
-            ships[i].draw(isoEngine);
+    for(list<CShip> :: iterator ship = ships_list.begin() ; ship != ships_list.end() ; ship++) {
+        ship->draw(isoEngine);
+        if (ship->get_hidden() == false) {
+            ship->draw(isoEngine);
+        } else if ( (ship->get_hidden() == true) && (ship->get_damage() != 0) ) {
+            ship->draw(isoEngine);
         }
     }
 }
@@ -56,6 +62,19 @@ CShip* CPlayer::get_new_ship() {
     } else if (ship_quantity < BATTLESHIP_QUANTITY + CRUISER_QUANTITY + DESTROYER_QUANTITY) {
         return get_destroyer();
     } else if (ship_quantity < BATTLESHIP_QUANTITY + CRUISER_QUANTITY + DESTROYER_QUANTITY + SUBMARINE_QUANTITY){
+        return get_submarine();
+    }
+    return nullptr;
+}
+CShip* CPlayer::get_new_ship_for_list() {
+
+    if(ships_list.size() < BATTLESHIP_QUANTITY) {
+        return get_battleship();
+    } else if (ships_list.size() < BATTLESHIP_QUANTITY + CRUISER_QUANTITY) {
+        return get_cruiser();
+    } else if (ships_list.size() < BATTLESHIP_QUANTITY + CRUISER_QUANTITY + DESTROYER_QUANTITY) {
+        return get_destroyer();
+    } else if (ships_list.size() < BATTLESHIP_QUANTITY + CRUISER_QUANTITY + DESTROYER_QUANTITY + SUBMARINE_QUANTITY){
         return get_submarine();
     }
     return nullptr;
@@ -118,6 +137,7 @@ bool CPlayer::check_collision (CShip& ship1, CShip& ship2) {
         }
     }
 
+
     return false;
 }
 bool CPlayer::can_put_ship() {
@@ -132,8 +152,9 @@ bool CPlayer::can_put_ship() {
         }
     }
 
-    for(int i = 0 ; i < ship_quantity ; i++) {
-        if (check_collision(*current_ship, ships[i])) {
+
+    for(list<CShip> :: iterator ship = ships_list.begin() ; ship != ships_list.end() ; ship++) {
+        if (check_collision(*current_ship, *ship)) {
             return false;
         }
     }
@@ -144,21 +165,22 @@ void CPlayer::increase_points() {
 }
 
 void CPlayer::do_hit(CPlayer& enemy) {
-    for(int i = 0; i < ship_quantity ; i++) {
-        if(enemy.ships[i].has_the_coordinate(map.cursor.position_x, map.cursor.position_y)) {
+    for(list<CShip> :: iterator ship = enemy.ships_list.begin() ; ship != enemy.ships_list.end() ; ship++) {
+        if(ship->has_the_coordinate(map.cursor.position_x, map.cursor.position_y)) {
 
-            enemy.ships[i].add_hit_palub(map.cursor.position_x, map.cursor.position_y);
+            ship->add_hit_palub(map.cursor.position_x, map.cursor.position_y);
 
             CEffect new_effect(map.cursor.position_x, map.cursor.position_y,
                                enemy.map.offset_x, enemy.map.offset_y,
                                "Resources/Images/fires2.png",
                                true);
-            enemy.ships[i].add_effect(new_effect);
+            ship->add_effect(new_effect);
 
-            if(enemy.ships[i].is_dead()) {
+
+            if(ship->is_dead()) {
                 enemy.map[map.cursor.position_y][map.cursor.position_x] = KILLED_PALUBA_CELL;
 
-                enemy.ships[i].change_effects();
+                ship->change_effects();
             } else {
                 enemy.map[map.cursor.position_y][map.cursor.position_x] = HIT_PALUBA_CELL;
             }
@@ -183,10 +205,10 @@ int** CPlayer::generate_state_map(const CPlayer& enemy) {
         }
     }
 
-    for(int i = 0 ; i < SHIP_QUANTITY ; i++) {
-        enemy.ships[i].put_ship_on_map(state_array);
+    CPlayer enem(enemy);
+    for(list<CShip> :: iterator ship = enem.ships_list.begin() ; ship != enem.ships_list.end() ; ship++) {
+        ship->put_ship_on_map(state_array);
     }
-
     return state_array;
 }
 

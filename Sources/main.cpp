@@ -106,6 +106,7 @@ void update_input(CWorld* game, SDL_Event event) {
                 game->change_turn();
             }
             SDL_Delay(2000);
+            return;
         }
         return;
     }
@@ -223,9 +224,9 @@ void update_input(CWorld* game, SDL_Event event) {
 
                         if (game->game_state == PUT_SHIPS) {
                             if (game->user.can_put_ship()) {
-                                game->user.add_ship_to_player_array();
+                                game->user.add_ship_to_player_list();
 
-                                if((game->user.current_ship = game->user.get_new_ship()) == nullptr) {
+                                if((game->user.current_ship = game->user.get_new_ship_for_list()) == nullptr) {
                                     game->user.change_inited();
                                     game->user.map.cursor.change_hidden();
 
@@ -265,7 +266,7 @@ int main(int argc, char* argv[]) {
 
     SDL_Event event;
 
-    CWorld* game = new CWorld(get_game());
+    auto* game = new CWorld(get_game());
     Uint32 frames;
     Uint32 timeStamps;
 

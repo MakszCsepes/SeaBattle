@@ -80,6 +80,9 @@ public:
         inverse = obj.inverse;
         hidden = obj.hidden;
 
+        offset_x = obj.offset_x;
+        offset_y = obj.offset_y;
+
         damage_level = obj.damage_level;
 
         head_coordinate_x = obj.head_coordinate_x;

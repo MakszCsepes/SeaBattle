@@ -123,9 +123,9 @@ void CWorld::init_ai() {
     coordinate head_ship_coordinate = {0, 0};
     int inverse(HORIZONTAL);
 
-    while (ai.get_init_status() == false) {
+    while (!ai.get_init_status()) {
 
-        if ((ai.current_ship = ai.get_new_ship())) {
+        if ((ai.current_ship = ai.get_new_ship_for_list())) {
             ai.current_ship->change_hidden();
 
             head_ship_coordinate = get_rand_coords(l);
@@ -140,7 +140,7 @@ void CWorld::init_ai() {
                 ai.current_ship->head_coordinate_y = head_ship_coordinate.i;
 
                 if (ai.can_put_ship()) {
-                    ai.add_ship_to_player_array();
+                    ai.add_ship_to_player_list();
                 }
             }
         } else {
