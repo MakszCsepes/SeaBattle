@@ -55,3 +55,22 @@ void texture_renderer_XY_clip(textureT* texture, int x, int y, SDL_Rect* cliprec
 
     SDL_RenderCopyEx(get_renderer(), texture->texture, texture->cliprect, &quad, texture->angle, texture->center, texture->fliptype);
 }
+
+void setupRect(SDL_Rect* rect, int x, int y, int w, int h) {
+    rect->x = x;
+    rect->y = y;
+    rect->w = w;
+    rect->h = h;
+}
+
+void init_tile_clip(SDL_Rect* tiles_rect, textureT* tilesTex, int w, int h, int iso_size) {
+    int x = 0;
+    int y = 0;
+
+    texture_init(tilesTex, 0, 0, 0, NULL, NULL, SDL_FLIP_NONE);
+
+    for (int i = 0; i < iso_size; i++) {
+        setupRect(&tiles_rect[i], x, y, w, h);
+        x += w;
+    }
+}

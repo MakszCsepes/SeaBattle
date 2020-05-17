@@ -66,33 +66,12 @@ textureT cruiserTex;
 SDL_Rect battleship_rect[TEXTURE_NUMBER_OF_SHIP];
 textureT battleshipTex;
 
-void setupRect(SDL_Rect* rect, int x, int y, int w, int h) {
-    rect->x = x;
-    rect->y = y;
-    rect->w = w;
-    rect->h = h;
-}
-void init_tile_clip(SDL_Rect* tiles_rect, textureT* tilesTex, int w, int h, int iso_size) {
-    int x = 0;
-    int y = 0;
 
-    texture_init(tilesTex, 0, 0, 0, NULL, NULL, SDL_FLIP_NONE);
-
-    for (int i = 0; i < iso_size; i++) {
-        setupRect(&tiles_rect[i], x, y, w, h);
-        x += w;
-    }
-}
 void init() {
     gameT1.loop_done = 0;
 
     init_tile_clip(tiles_rect, &tilesTex, 64, 80, NUM_ISO_TILES);
-
-    init_tile_clip(submarine_rect, &submarineTex, 60, 50, TEXTURE_NUMBER_OF_SHIP);
-    init_tile_clip(destroyer_rect, &destroyerTex, 107, 74, TEXTURE_NUMBER_OF_SHIP);
-    init_tile_clip(cruiser_rect, &cruiserTex, 126, 92, TEXTURE_NUMBER_OF_SHIP);
-    init_tile_clip(battleship_rect, &battleshipTex, 145, 95, TEXTURE_NUMBER_OF_SHIP);
-
+    CShip::load_textures();
     init_IsoEngine(&gameT1.isoEngine);
 
     gameT1.isoEngine.scrollX = 200;
@@ -106,26 +85,6 @@ void init() {
 
     if(load_texture(&tilesTex, "Resources/Images/isotiles_sb_2.png") == 0) {
         fprintf(stderr, "Error, could not load texture : Images/isotiles_sb.png");
-        exit(0);
-    }
-
-    if(load_texture(&submarineTex, "Resources/Images/submarine_inv.png") == 0) {
-        fprintf(stderr, "Error, could not load texture : data/submarine.png");
-        exit(0);
-    }
-
-    if(load_texture(&destroyerTex, "Resources/Images/destroyer_inv2.png") == 0) {
-        fprintf(stderr, "Error, could not load texture : data/destroyer.png");
-        exit(0);
-    }
-
-    if(load_texture(&cruiserTex, "Resources/Images/cruiser_inv.png") == 0) {
-        fprintf(stderr, "Error, could not load texture : data/cruiser.png");
-        exit(0);
-    }
-
-    if(load_texture(&battleshipTex, "Resources/Images/battleship_inv.png") == 0) {
-        fprintf(stderr, "Error, could not load texture : data/battleship.png");
         exit(0);
     }
 }

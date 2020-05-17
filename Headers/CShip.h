@@ -1,7 +1,3 @@
-//
-// Created by max on 21/1/2020.
-//
-
 #ifndef SEABATTLE_CSHIP_H
 #define SEABATTLE_CSHIP_H
 
@@ -56,6 +52,7 @@ public:
     int head_coordinate_x;
     int head_coordinate_y;
     static int section_array[];
+    static textureT texture_array[];
 
     CShip() {
         head_coordinate_x = 0;
@@ -89,6 +86,7 @@ public:
         head_coordinate_y = obj.head_coordinate_y;
     }
 
+    static void load_textures();
     bool get_hidden();
     bool get_inverse();
     bool is_dead();
@@ -108,6 +106,7 @@ public:
     void add_hit_palub(int x, int y);
     void change_effects();
     void update_state(int) override ;
+
     CShip& operator =(const CShip& ship_source) {
         this->size = ship_source.size;
 

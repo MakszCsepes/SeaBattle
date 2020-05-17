@@ -66,24 +66,24 @@ void CShip::draw(isoEngineT* isoEngine) {
 
     switch (size) {
         case SUBMARINE_SIZE:
-            texture_renderer_XY_clip(&submarineTex, point.x, point.y, inverse ? &submarine_rect[0] : &submarine_rect[1]);
+            texture_renderer_XY_clip(&texture_array[size - 1], point.x, point.y, inverse ? &submarine_rect[0] : &submarine_rect[1]);
             break;
         case DESTROYER_SIZE:
             if (!hidden || damage_level == 3)  {
                 // todo why -30
-                texture_renderer_XY_clip(&destroyerTex, inverse ? point.x : point.x - 30, point.y, inverse ? &destroyer_rect[0] : &destroyer_rect[1]);
+                texture_renderer_XY_clip(&texture_array[size - 1], inverse ? point.x : point.x - 30, point.y, inverse ? &destroyer_rect[0] : &destroyer_rect[1]);
             }
             break;
         case CRUISER_SIZE:
             if (!hidden || damage_level == 7) {
                 // todo why -65
-                texture_renderer_XY_clip(&cruiserTex, inverse ? point.x : point.x - 65, point.y, inverse ? &cruiser_rect[0] : &cruiser_rect[1]);
+                texture_renderer_XY_clip(&texture_array[size - 1], inverse ? point.x : point.x - 65, point.y, inverse ? &cruiser_rect[0] : &cruiser_rect[1]);
             }
             break;
         case BATTLESHIP_SIZE:
             if (!hidden || damage_level == 15) {
                 // todo why -90
-                texture_renderer_XY_clip(&battleshipTex, inverse ? point.x : point.x - 90, point.y, inverse ? &battleship_rect[0] : &battleship_rect[1]);
+                texture_renderer_XY_clip(&texture_array[size - 1], inverse ? point.x : point.x - 90, point.y, inverse ? &battleship_rect[0] : &battleship_rect[1]);
             }
             break;
     }
@@ -216,5 +216,33 @@ void CShip::change_effects() {
         current_effect->init_effect("Resources/Images/smokes3.png");
     }
 }
+void CShip::load_textures() {
+    init_tile_clip(submarine_rect, &submarineTex, 60, 50, TEXTURE_NUMBER_OF_SHIP);
+    init_tile_clip(destroyer_rect, &destroyerTex, 107, 74, TEXTURE_NUMBER_OF_SHIP);
+    init_tile_clip(cruiser_rect, &cruiserTex, 126, 92, TEXTURE_NUMBER_OF_SHIP);
+    init_tile_clip(battleship_rect, &battleshipTex, 145, 95, TEXTURE_NUMBER_OF_SHIP);
+
+    if(load_texture(&submarineTex, "Resources/Images/submarine_inv.png") == 0) {
+        fprintf(stderr, "Error, could not load texture : data/submarine.png");
+        exit(0);
+    }
+    texture_array[0] = submarineTex;
+    if(load_texture(&destroyerTex, "Resources/Images/destroyer_inv2.png") == 0) {
+        fprintf(stderr, "Error, could not load texture : data/destroyer.png");
+        exit(0);
+    }
+    texture_array[1] = destroyerTex;
+    if(load_texture(&cruiserTex, "Resources/Images/cruiser_inv.png") == 0) {
+        fprintf(stderr, "Error, could not load texture : data/cruiser.png");
+        exit(0);
+    }
+    texture_array[2] = cruiserTex;
+    if(load_texture(&battleshipTex, "Resources/Images/battleship_inv.png") == 0) {
+        fprintf(stderr, "Error, could not load texture : data/battleship.png");
+        exit(0);
+    }
+    texture_array[3] = battleshipTex;
+}
 
 int CShip::section_array[] = {SEC_1, SEC_2, SEC_3, SEC_4};
+textureT CShip::texture_array[] = {submarineTex, destroyerTex, cruiserTex, battleshipTex};
