@@ -50,22 +50,8 @@ CWorld* get_game(){
 }
 
 gameT gameT1;
-
 SDL_Rect tiles_rect[NUM_ISO_TILES];
 textureT tilesTex;
-
-SDL_Rect submarine_rect[TEXTURE_NUMBER_OF_SHIP];
-textureT submarineTex;
-
-SDL_Rect destroyer_rect[TEXTURE_NUMBER_OF_SHIP];
-textureT destroyerTex;
-
-SDL_Rect cruiser_rect[TEXTURE_NUMBER_OF_SHIP];
-textureT cruiserTex;
-
-SDL_Rect battleship_rect[TEXTURE_NUMBER_OF_SHIP];
-textureT battleshipTex;
-
 
 void init() {
     gameT1.loop_done = 0;
@@ -86,7 +72,6 @@ void init() {
         exit(0);
     }
 }
-
 
 void select_state(CWorld* game) {
     // SELECT STATE
@@ -109,7 +94,7 @@ void select_state(CWorld* game) {
             game->run_game = false;
     }
 }
-// my own game function
+
 void update_input(CWorld* game, SDL_Event event) {
     if (game->turn == AI_TURN) {
         game->ai.assign_new_hit_coords_from(game->lua_state, game->user);
