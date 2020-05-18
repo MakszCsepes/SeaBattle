@@ -22,7 +22,6 @@ void CPlayer::add_ship_to_player_array() {
     current_ship->change_selected();
     ships = get_new_extended_ship_array();
 }
-
 void CPlayer::add_ship_to_player_list() {
     current_ship->change_selected();
     ships_list.push_back(*current_ship);
@@ -66,18 +65,19 @@ CShip* CPlayer::get_new_ship() {
     }
     return nullptr;
 }
-CShip* CPlayer::get_new_ship_for_list() {
+void CPlayer::get_new_ship_for_list() {
 
     if(ships_list.size() < BATTLESHIP_QUANTITY) {
-        return get_battleship();
+        current_ship = get_battleship();
     } else if (ships_list.size() < BATTLESHIP_QUANTITY + CRUISER_QUANTITY) {
-        return get_cruiser();
+        current_ship = get_cruiser();
     } else if (ships_list.size() < BATTLESHIP_QUANTITY + CRUISER_QUANTITY + DESTROYER_QUANTITY) {
-        return get_destroyer();
+        current_ship = get_destroyer();
     } else if (ships_list.size() < BATTLESHIP_QUANTITY + CRUISER_QUANTITY + DESTROYER_QUANTITY + SUBMARINE_QUANTITY){
-        return get_submarine();
+        current_ship = get_submarine();
+    } else {
+        current_ship = nullptr;
     }
-    return nullptr;
 }
 
 // get 4-cells ship

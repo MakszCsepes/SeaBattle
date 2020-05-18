@@ -125,7 +125,8 @@ void CWorld::init_ai() {
 
     while (!ai.get_init_status()) {
 
-        if ((ai.current_ship = ai.get_new_ship_for_list())) {
+        ai.get_new_ship_for_list();
+        if ((ai.current_ship)) {
             ai.current_ship->change_hidden();
 
             head_ship_coordinate = get_rand_coords(l);

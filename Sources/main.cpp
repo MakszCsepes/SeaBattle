@@ -188,7 +188,8 @@ void update_input(CWorld* game, SDL_Event event) {
                             if (game->user.can_put_ship()) {
                                 game->user.add_ship_to_player_list();
 
-                                if((game->user.current_ship = game->user.get_new_ship_for_list()) == nullptr) {
+                                game->user.get_new_ship_for_list();
+                                if(game->user.current_ship == nullptr) {
                                     game->user.change_inited();
                                     game->user.map.cursor.change_hidden();
 

@@ -74,7 +74,7 @@ public:
     bool get_aim_status(); // todo RENAME (get true, if player hit last time, false, if did not);
     int get_points();
     CShip* get_new_ship();
-    CShip* get_new_ship_for_list();
+    void get_new_ship_for_list();
     CShip* get_new_extended_ship_array();
 
     bool check_collision (CShip&, CShip&);
