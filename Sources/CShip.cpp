@@ -59,8 +59,8 @@ void CShip::draw(isoEngineT* isoEngine) {
     }
 
     point2DT point;
-    point.x = (head_coordinate_x * TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x;
-    point.y = (head_coordinate_y * TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y;
+    point.x = (head_coordinate_x*TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x;
+    point.y = (head_coordinate_y*TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y;
 
     Converter2DToIso(&point);
 
@@ -191,6 +191,34 @@ int CShip::get_current_y() {
 void CShip::move(int x = 0, int y = 0) {
     head_coordinate_x = x;
     head_coordinate_y = y;
+
+    if (this->get_inverse() == HORIZONTAL) {
+        if (this->head_coordinate_x + this->get_size() > MAP_CELL_WIDTH) {
+            this->head_coordinate_x = 0;
+        }
+        if (this->head_coordinate_x < 0) {
+            this->head_coordinate_x = MAP_CELL_WIDTH - this->get_size();
+        }
+        if (this->head_coordinate_y > MAP_CELL_WIDTH - 1) {
+            this->head_coordinate_y = 0;
+        }
+        if (this->head_coordinate_y < 0) {
+            this->head_coordinate_y = MAP_CELL_WIDTH - 1;
+        }
+    } else if(this->get_inverse() == VERTICAL){
+        if (this->head_coordinate_x > MAP_CELL_WIDTH - 1) {
+            this->head_coordinate_x = 0;
+        }
+        if (this->head_coordinate_x < 0) {
+            this->head_coordinate_x = MAP_CELL_WIDTH - 1;
+        }
+        if (this->head_coordinate_y + this->get_size() > MAP_CELL_WIDTH) {
+            this->head_coordinate_y = 0;
+        }
+        if (this->head_coordinate_y < 0) {
+            this->head_coordinate_y = MAP_CELL_WIDTH - this->get_size();
+        }
+    }
 }
 void CShip::add_hit_palub(int x, int y) {
     if (has_the_coordinate(x, y)) {
