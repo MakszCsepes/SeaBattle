@@ -4,35 +4,6 @@ const int R_back = 63;
 const int G_back = 141;
 const int B_back = 219;
 
-coordinate get_rand_from_list(list<coordinate>& l) {
-    auto iter = l.begin();
-    int p = rand () % l.size();
-    int i = 0;
-    for(coordinate v : l) {
-        if(i == p) {
-            return v;
-        }
-        i++;
-        iter++;
-    }
-}
-void delete_by_value(list<coordinate>& l, coordinate val) {
-    auto iter = l.begin();
-    for(coordinate v : l) {
-        if(v.i == val.i && v.j == val.j) {
-            l.erase(iter);
-            return;
-        }
-        iter++;
-    }
-}
-coordinate get_rand_coords(list<coordinate>& l) {
-
-    coordinate rand_coord = get_rand_from_list(l);
-    delete_by_value(l, rand_coord);
-
-    return rand_coord;
-}
 bool can_move (CShip* moved_ship ,coordinate& ship_coords) {
 
     if (moved_ship->get_inverse()) {
@@ -119,6 +90,48 @@ void CWorld::draw(isoEngineT* isoEngine){
     SDL_RenderPresent(get_renderer());
 }
 
+void CWorld::change_turn() {
+    turn = !turn;
+}
+void CWorld::change_run_game() {
+    run_game = !run_game;
+}
+
+Uint32 CWorld::get_timestamp_now() {
+    return SDL_GetTicks();
+}
+
+// AI
+void delete_by_value(list<coordinate>& l, coordinate val) {
+    auto iter = l.begin();
+    for(coordinate v : l) {
+        if(v.i == val.i && v.j == val.j) {
+            l.erase(iter);
+            return;
+        }
+        iter++;
+    }
+}
+coordinate get_rand_from_list(list<coordinate>& l) {
+    auto iter = l.begin();
+    int p = rand () % l.size();
+    int i = 0;
+    for(coordinate v : l) {
+        if(i == p) {
+            return v;
+        }
+        i++;
+        iter++;
+    }
+}
+coordinate get_rand_coords(list<coordinate>& l) {
+
+    coordinate rand_coord = get_rand_from_list(l);
+    delete_by_value(l, rand_coord);
+
+    return rand_coord;
+}
+
 void CWorld::init_ai() {
     coordinate head_ship_coordinate = {0, 0};
     int inverse(HORIZONTAL);
@@ -149,15 +162,3 @@ void CWorld::init_ai() {
         }
     }
 }
-
-void CWorld::change_turn() {
-    turn = !turn;
-}
-void CWorld::change_run_game() {
-    run_game = !run_game;
-}
-
-Uint32 CWorld::get_timestamp_now() {
-    return SDL_GetTicks();
-}
-// AI
