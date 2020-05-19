@@ -101,6 +101,10 @@ Uint32 CWorld::get_timestamp_now() {
     return SDL_GetTicks();
 }
 
+int CWorld::get_current_frame() {
+    return frame_count;
+}
+
 // AI
 void delete_by_value(list<coordinate>& l, coordinate val) {
     auto iter = l.begin();
