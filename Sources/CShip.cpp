@@ -66,7 +66,6 @@ void CShip::draw(isoEngineT* isoEngine) {
     point.x = current_x + isoEngine->scrollX;
     point.y = current_y + isoEngine->scrollY;
 
-    cout << current_x << " | " << current_y << endl;
     Converter2DToIso(&point);
 
     switch (size) {
