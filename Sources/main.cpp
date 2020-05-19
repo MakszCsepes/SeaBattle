@@ -52,7 +52,7 @@ CWorld* get_game(){
 gameT gameT1;
 SDL_Rect tiles_rect[NUM_ISO_TILES];
 textureT tilesTex;
-
+CWorld* world_game;
 void init() {
     gameT1.loop_done = 0;
 
@@ -187,8 +187,8 @@ void update_input(CWorld* game, SDL_Event event) {
                         if (game->game_state == PUT_SHIPS) {
                             if (game->user.can_put_ship()) {
                                 game->user.add_ship_to_player_list();
-
                                 game->user.get_new_ship_for_list();
+                                cout << "new ship\n";
                                 if(game->user.current_ship == nullptr) {
                                     game->user.change_inited();
                                     game->user.map.cursor.change_hidden();
@@ -229,28 +229,28 @@ int main(int argc, char* argv[]) {
 
     SDL_Event event;
 
-    auto* game = new CWorld(get_game());
+    world_game = new CWorld(get_game());
     Uint32 frames;
     Uint32 timeStamps;
 
-    while (game->run_game) {
-        game->frame_count++;
+    while (world_game->run_game) {
+        world_game->frame_count++;
 
-        frames = game->frame_count - game->old_frame_count;
+        frames = world_game->frame_count - world_game->old_frame_count;
         if(frames >= 100) {
-            timeStamps = game->get_timestamp_now() - game->time_stamp;
-            game->FPS = (frames*1000.0)/timeStamps;
+            timeStamps = world_game->get_timestamp_now() - world_game->time_stamp;
+            world_game->FPS = (frames * 1000.0) / timeStamps;
 
-            game->old_frame_count = game->frame_count;
+            world_game->old_frame_count = world_game->frame_count;
 
-            game->time_stamp = game->get_timestamp_now();
+            world_game->time_stamp = world_game->get_timestamp_now();
         }
 
-        update_input(game, event);
-        game->draw(&gameT1.isoEngine);
+        update_input(world_game, event);
+        world_game->draw(&gameT1.isoEngine);
     }
 
-    delete game;
+    delete world_game;
     close_down_SDL();
     return 0;
 }

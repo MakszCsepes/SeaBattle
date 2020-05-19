@@ -5,7 +5,6 @@
 #include <cstring>
 #include <SDL2/SDL_ttf.h>
 
-
 #define PUT_SHIPS 0
 #define PLAY_GAME 1
 #define ENDGAME 2
@@ -120,7 +119,7 @@ public:
     void change_turn();
     void change_run_game();
     void init_ai();
-
+    int get_current_frame();
     Uint32 get_timestamp_now();
 
     CWorld& operator =(const CWorld* obj) {

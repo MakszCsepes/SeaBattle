@@ -1,4 +1,6 @@
+#include <Headers/CWorld.h>
 #include "CShip.h"
+extern CWorld* world_game;
 
 void CShip::change_inverse() {
     inverse = !inverse;
@@ -58,10 +60,13 @@ void CShip::draw(isoEngineT* isoEngine) {
         return;
     }
 
+    update_state( world_game->get_current_frame() - start_frame);
     point2DT point;
-    point.x = (head_coordinate_x*TILESIZE) + isoEngine->scrollX + MAP_OFFSET_X + offset_x;
-    point.y = (head_coordinate_y*TILESIZE) + isoEngine->scrollY + MAP_OFFSET_Y + offset_y;
 
+    point.x = current_x + isoEngine->scrollX;
+    point.y = current_y + isoEngine->scrollY;
+
+    cout << current_x << " | " << current_y << endl;
     Converter2DToIso(&point);
 
     switch (size) {
@@ -91,8 +96,43 @@ void CShip::draw(isoEngineT* isoEngine) {
     draw_effects(isoEngine);
 }
 
-void CShip::update_state(int frame_number) {
+const int t = 250;
+double frame_count = 60*t/1000;
 
+void CShip::update_state(int frame_number) {
+    if (frame_number < frame_count) {
+        if (current_x != end_x && current_y != end_y) {
+            return;
+        }
+    }
+    int delta_x = (end_x - old_x) / frame_count;
+    int delta_y = (end_y - old_y) / frame_count;
+    if(end_x != old_x) {
+        current_x += /*old_x + */delta_x/**frame_number*/;
+
+        if (delta_x < 0) {
+            if (current_x < end_x) {
+                current_x = end_x;
+            }
+        } else {
+            if (current_x > end_x) {
+                current_x = end_x;
+            }
+        }
+    }
+    if (end_y != old_y) {
+        current_y += /*old_y + */delta_y/**frame_number*/;
+
+        if (delta_y < 0) {
+            if (current_y < end_y) {
+                current_y = end_y;
+            }
+        } else {
+            if (current_y > end_y) {
+                current_y = end_y;
+            }
+        }
+    }
 }
 void CShip::change_hidden() {
     hidden = !hidden;
@@ -191,7 +231,6 @@ int CShip::get_current_y() {
 void CShip::move(int x = 0, int y = 0) {
     head_coordinate_x = x;
     head_coordinate_y = y;
-
     if (this->get_inverse() == HORIZONTAL) {
         if (this->head_coordinate_x + this->get_size() > MAP_CELL_WIDTH) {
             this->head_coordinate_x = 0;
@@ -219,6 +258,14 @@ void CShip::move(int x = 0, int y = 0) {
             this->head_coordinate_y = MAP_CELL_WIDTH - this->get_size();
         }
     }
+
+    old_x = current_x;
+    old_y = current_y;
+
+    end_x = (head_coordinate_x*TILESIZE) + MAP_OFFSET_X + offset_x;
+    end_y = (head_coordinate_y*TILESIZE) + MAP_OFFSET_Y + offset_y;
+
+    start_frame = world_game->get_current_frame();
 }
 void CShip::add_hit_palub(int x, int y) {
     if (has_the_coordinate(x, y)) {

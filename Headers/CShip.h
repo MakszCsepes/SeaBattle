@@ -48,6 +48,17 @@ class CShip : public IDrawable, public CAnimation {
     bool hidden;
 
     list<CEffect> effects;
+
+    int old_x;
+    int old_y;
+
+    int current_x;
+    int current_y;
+
+    int end_x;
+    int end_y;
+
+    int start_frame;
 public:
     int head_coordinate_x;
     int head_coordinate_y;
@@ -58,6 +69,9 @@ public:
         head_coordinate_x = 0;
         head_coordinate_y = 0;
 
+        offset_x = 0;
+        offset_y = 0;
+
         inverse = HORIZONTAL;
         is_selected = true;
         hidden = false;
@@ -65,12 +79,21 @@ public:
         damage_level = SEC_0;
 
         size = 0;
-        offset_x = 0;
-        offset_y = 0;
+
+        start_frame = 0;
     }
     CShip(int size, int offset_x, int offset_y): CShip() {
         this->offset_x = offset_x;
         this->offset_y = offset_y;
+
+        current_x = (head_coordinate_x*TILESIZE) + offset_x + MAP_OFFSET_X;
+        current_y = (head_coordinate_y*TILESIZE) + offset_y + MAP_OFFSET_Y;
+
+        end_x = current_x;
+        end_y = current_y;
+
+        old_x = current_x;
+        old_y = current_y;
 
         this->size = size;
     }
@@ -87,6 +110,15 @@ public:
 
         head_coordinate_x = obj.head_coordinate_x;
         head_coordinate_y = obj.head_coordinate_y;
+
+        current_x = obj.current_x;
+        current_y = obj.current_y;
+
+        end_x = obj.end_x;
+        end_y = obj.end_y;
+
+        old_y = obj.old_y;
+        old_x = obj.old_x;
     }
 
     static void load_textures();
@@ -108,7 +140,7 @@ public:
     void put_ship_on_map(int** map_array);
     void add_hit_palub(int x, int y);
     void change_effects();
-    void update_state(int) override ;
+    void update_state(int) override;
 
     CShip& operator =(const CShip& ship_source) {
         this->size = ship_source.size;
