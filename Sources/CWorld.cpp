@@ -154,8 +154,7 @@ void CWorld::init_ai() {
             }
 
             if (can_move(ai.current_ship, head_ship_coordinate)) {
-                ai.current_ship->head_coordinate_x = head_ship_coordinate.j;
-                ai.current_ship->head_coordinate_y = head_ship_coordinate.i;
+                ai.current_ship->move(head_ship_coordinate.j, head_ship_coordinate.i);
 
                 if (ai.can_put_ship()) {
                     ai.add_ship_to_player_list();
