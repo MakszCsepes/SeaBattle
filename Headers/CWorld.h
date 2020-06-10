@@ -70,7 +70,7 @@ public:
         this->run_game = true;
         // text
         SDL_Color text_color = {0, 0, 0};
-        this->font = TTF_OpenFont("/usr/share/fonts/opentype/noto/NotoSansCJK.ttc", 25);
+        this->font = TTF_OpenFont("Resources/Fonts/STIX-Bold.otf", 25);
         this->text_surface = TTF_RenderText_Solid(font, NULL, text_color);
         this->text_texture = SDL_CreateTextureFromSurface(get_renderer(), text_surface);
     }

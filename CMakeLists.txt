@@ -25,11 +25,13 @@ file(GLOB CPPS "Sources/*.cpp")
 file(GLOB HS "Headers/*.h")
 file(GLOB PNGS "Images/*.png")
 file(GLOB LS "Lua\ Scripts/*.lua")
+file(GLOB FT "Fonts/*.otf")
 
 file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/Resources)
 file(MAKE_DIRECTORY ${directory} ${CMAKE_CURRENT_BINARY_DIR}/Resources)
 file(MAKE_DIRECTORY ${directory} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Images)
 file(MAKE_DIRECTORY ${directory} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Lua\ Scripts)
+file(MAKE_DIRECTORY ${directory} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Fonts)
 
 foreach(i IN LISTS PNGS)
     configure_file(${i} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Images COPYONLY)
@@ -37,6 +39,10 @@ endforeach()
 
 foreach(i IN LISTS LS)
     configure_file(${i} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Lua\ Scripts COPYONLY)
+endforeach()
+
+foreach(i IN LISTS FT)
+    configure_file(${i} ${CMAKE_CURRENT_BINARY_DIR}/Resources/Fonts COPYONLY)
 endforeach()
 
 add_executable(${PROJECT_NAME} ${CPPS})
