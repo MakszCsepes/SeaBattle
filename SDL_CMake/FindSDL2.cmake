@@ -52,7 +52,7 @@
 # is #include "SDL.h", not <SDL2/SDL.h>. This is done for portability
 # reasons because not all systems place things in SDL2/ (see FreeBSD).
 #
-# Ported by Johnny Patterson. This is a literal port for SDL2 of the FindSDL.cmake
+# Ported by Johnny Patterson. This is a literal port for SDL2 of the FindSDL.SDL_CMake
 # module with the minor edit of changing "SDL" to "SDL2" where necessary. This
 # was not created for redistribution, and exists temporarily pending official
 # SDL2 CMake modules.
