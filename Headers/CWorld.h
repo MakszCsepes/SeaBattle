@@ -25,10 +25,17 @@ public:
     CPlayer user;
     CPlayer ai;
 
-    lua_State* lua_state; // state for Lua script
     int game_state; // PUT_SHIPS, PLAY_GAME, ENDGAME
+    int frame_count;
+    int old_frame_count;
+    int time_stamp;
+
+    double FPS;
+
     bool turn;
     bool run_game;
+
+    lua_State* lua_state; // state for Lua script
 
     // text
     TTF_Font* font;
@@ -44,11 +51,6 @@ public:
     int mapScrollSpeed;
     isoEngineT isoEngine;
     int lastTiledClick;
-
-    int frame_count;
-    int old_frame_count;
-    double FPS;
-    int time_stamp;
 
     CWorld() = delete;
     CWorld(const CPlayer& User, const CPlayer& AI, int game_state, lua_State* lua, const list<coordinate>& list) {
@@ -119,7 +121,9 @@ public:
     void change_turn();
     void change_run_game();
     void init_ai();
+
     int get_current_frame();
+
     Uint32 get_timestamp_now();
 
     CWorld& operator =(const CWorld* obj) {

@@ -28,9 +28,9 @@ public:
     int offset_x;
     int offset_y;
 
-    CCursor cursor;
-
     int** cells_array;
+
+    CCursor cursor;
 
     CMap() {
         create_map();
@@ -57,6 +57,10 @@ public:
     void draw(isoEngineT*);
     void draw_mishit(SDL_Renderer*, int&, int&);
 
+    int* operator [] (int i) {
+        return cells_array[i];
+    }
+
     CMap& operator = (const CMap& obj) {
         cursor = obj.cursor;
 
@@ -72,9 +76,6 @@ public:
         }
 
         return *this;
-    }
-    int* operator [] (int i) {
-        return cells_array[i];
     }
 };
 

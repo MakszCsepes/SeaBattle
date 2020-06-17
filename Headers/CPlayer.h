@@ -63,40 +63,36 @@ public:
         this->got_the_aim= player.got_the_aim;
     }
 
+    int get_points();
+
     void add_ship_to_player_array();
     void add_ship_to_player_list();
-
     void set_name(char*);
     void increase_points();
     void change_inited();
+    void get_new_ship_for_list();
+    void do_hit(CPlayer& enemy);
+    void draw(isoEngineT*);
+    void assign_new_hit_coords_from(lua_State* luaState, const CPlayer& enemy) {
+        LuaRef get_coords = getGlobal(luaState , "get_coords");
+
+        LuaRef map_table = convert_array_to_table(generate_state_map(enemy), luaState);
+        LuaRef new_coords = get_coords(map_table);
+
+        map.cursor.position_x = new_coords['j'];
+        map.cursor.position_y = new_coords['i'];
+    }
 
     bool get_init_status();
     bool get_aim_status(); // todo RENAME (get true, if player hit last time, false, if did not);
-    int get_points();
-    CShip* get_new_ship();
-    void get_new_ship_for_list();
-    CShip* get_new_extended_ship_array();
-
     bool check_collision (CShip&, CShip&);
     bool can_put_ship();
     bool was_ever_hit_on_the_position(CMap& enemy_map, int& pos_x, int& pos_y);
-    void do_hit(CPlayer& enemy);
-    CPlayer& operator =(const CPlayer& player_source) {
-        strcpy(name, player_source.name);
 
-        got_the_aim = player_source.got_the_aim;
-        map = player_source.map;
-        points = player_source.points;
+    CShip* get_new_ship();
+    CShip* get_new_extended_ship_array();
 
-        current_ship = player_source.current_ship;
-        ship_quantity = player_source.ship_quantity;
-
-        return *this;
-    }
-
-    void draw(isoEngineT*);
     int** generate_state_map(const CPlayer&);
-
     LuaRef convert_array_to_table(int** array_map, lua_State* luaState) {
         LuaRef table_for_lua = newTable(luaState);
 
@@ -109,14 +105,18 @@ public:
 
         return table_for_lua;
     }
-    void assign_new_hit_coords_from(lua_State* luaState, const CPlayer& enemy) {
-        LuaRef get_coords = getGlobal(luaState , "get_coords");
 
-        LuaRef map_table = convert_array_to_table(generate_state_map(enemy), luaState);
-        LuaRef new_coords = get_coords(map_table);
+    CPlayer& operator =(const CPlayer& player_source) {
+        strcpy(name, player_source.name);
 
-        map.cursor.position_x = new_coords['j'];
-        map.cursor.position_y = new_coords['i'];
+        got_the_aim = player_source.got_the_aim;
+        map = player_source.map;
+        points = player_source.points;
+
+        current_ship = player_source.current_ship;
+        ship_quantity = player_source.ship_quantity;
+
+        return *this;
     }
 };
 

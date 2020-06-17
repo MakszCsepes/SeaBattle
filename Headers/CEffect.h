@@ -8,13 +8,12 @@ const int FRAME_NUMBER_IN_WIDTH = 8;
 const int FRAME_NUMBER_IN_HEIGTH = 4;
 
 class CEffect : public IDrawable, public CAnimation{
-    int FrameTime;
-
     SDL_Rect effect;
     SDL_Rect effect_position;
 
     textureT effect_texture;
 
+    int FrameTime;
     int frameWidth;
     int frameHeight;
 public:

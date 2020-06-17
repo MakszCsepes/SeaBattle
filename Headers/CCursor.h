@@ -37,6 +37,7 @@ public:
 
     void draw(isoEngineT*);
     void change_hidden();
+
     bool get_hidden();
 
     CCursor& operator =(const CCursor& cursor_source) {

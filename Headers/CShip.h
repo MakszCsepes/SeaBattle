@@ -43,12 +43,6 @@ class CShip : public IDrawable, public CAnimation {
     int offset_x;
     int offset_y;
 
-    bool is_selected;
-    bool inverse;
-    bool hidden;
-
-    list<CEffect> effects;
-
     int old_x;
     int old_y;
 
@@ -59,6 +53,12 @@ class CShip : public IDrawable, public CAnimation {
     int end_y;
 
     int start_frame;
+
+    bool is_selected;
+    bool inverse;
+    bool hidden;
+
+    list<CEffect> effects;
 public:
     int head_coordinate_x;
     int head_coordinate_y;
@@ -121,26 +121,31 @@ public:
         old_x = obj.old_x;
     }
 
-    static void load_textures();
     bool get_hidden();
     bool get_inverse();
     bool is_dead();
+
+    int get_palub_number(int x, int y);
     int get_size();
     int get_damage();
-
     int get_current_x();
     int get_current_y();
 
+    static void load_textures();
     void change_selected();
     void change_inverse();
     void change_hidden();
     bool has_the_coordinate(int& x, int& y);
 
-    int get_palub_number(int x, int y);
     void put_ship_on_map(int** map_array);
     void add_hit_palub(int x, int y);
     void change_effects();
     void update_state(int) override;
+
+    void move(int, int);
+    void add_effect(const CEffect&);
+    void draw(isoEngineT*);
+    void draw_effects(isoEngineT*);
 
     CShip& operator =(const CShip& ship_source) {
         this->size = ship_source.size;
@@ -157,11 +162,6 @@ public:
 
         return *this;
     }
-
-    void move(int, int);
-    void add_effect(const CEffect&);
-    void draw(isoEngineT*);
-    void draw_effects(isoEngineT*);
 };
 
 #endif //SEABATTLE_CSHIP_H

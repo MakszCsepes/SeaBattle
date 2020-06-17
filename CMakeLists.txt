@@ -16,6 +16,7 @@ INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include_directories("Headers")
+include_directories(SDL2)
 
 file(GLOB CPPS "Sources/*.cpp")
 file(GLOB HS "Headers/*.h")
