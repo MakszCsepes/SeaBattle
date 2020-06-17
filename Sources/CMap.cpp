@@ -18,7 +18,7 @@ void put_cell (isoEngineT* isoEngine, int& map_offset_x, int& map_offset_y, int&
 void CMap::create_map()  {
     cells_array = new int*[MAP_CELL_HEIGHT];
     for (int i = 0; i < MAP_CELL_HEIGHT; i++) {
-        this->cells_array[i] = new int[MAP_CELL_WIDTH];
+        cells_array[i] = new int[MAP_CELL_WIDTH];
 
         for (int j = 0; j < MAP_CELL_WIDTH; j++) {
             cells_array[i][j] = EMPTY_CELL;
